@@ -72,10 +72,13 @@
           toast(`บันทึก ${fileName} ลงโฟลเดอร์ ${dir.name} แล้ว`);
         })
         .catch(err => {
-          if (err && err.name === "AbortError") { toast(`ยกเลิกการบันทึก ${fileName}`, true); return; }
-          // ไม่ได้รับอนุญาต / หมดเวลาการกดปุ่ม / ข้อผิดพลาดอื่น: ดาวน์โหลดแบบปกติแทน
+          // ไม่ว่าจะกดยกเลิก เลือกโฟลเดอร์ที่เบราว์เซอร์บล็อก (เช่น Downloads ชั้นนอกสุด, Desktop) ไม่อนุญาต
+          // หรือหมดเวลาการกดปุ่ม ก็ยังต้องได้ไฟล์: ดาวน์โหลดแบบปกติลงโฟลเดอร์ Downloads แทน
           console.warn("folder save failed, falling back to download:", err);
           realClick.call(a);
+          toast(err && err.name === "AbortError"
+            ? "ไม่ได้บันทึกลงโฟลเดอร์ที่เลือก จึงดาวน์โหลดลง Downloads แทน · เลือกโฟลเดอร์ Downloads หรือ Desktop ตรง ๆ ไม่ได้ ให้เลือกโฟลเดอร์ย่อยข้างใน"
+            : "บันทึกลงโฟลเดอร์ไม่ได้ จึงดาวน์โหลดลง Downloads แทน", true);
         });
     };
   }
