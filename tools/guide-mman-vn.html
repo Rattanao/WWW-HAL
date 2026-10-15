@@ -120,11 +120,11 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
   <header class="head">
     <div class="tag">เครื่องมือแก้ไฟล์ EDI · MMAN</div>
     <h1>MMAN VN</h1>
-    <p class="lede">ตัดไฟล์ MMAN EDI ให้เหลือเฉพาะช่วง B/L ที่ต้องการ แล้วทำ Change status ต่อในขั้นตอนเดียว ได้ไฟล์ MMAN_VN.txt พร้อมส่ง</p>
+    <p class="lede">ตัดไฟล์ MMAN EDI ให้เหลือตั้งแต่ B/L ที่ต้องการจนถึงบรรทัดสุดท้าย แล้วทำ Change status ต่อในขั้นตอนเดียว ได้ไฟล์ MMAN_VN.txt พร้อมส่ง</p>
     <div class="flow" aria-label="ขั้นตอนการทำงาน">
       <span class="doc">MMAN_*.txt</span><span class="op">+</span>
       <span class="doc">STATUS .xls/.csv</span><span class="op">+</span>
-      <span class="doc">ช่วง B/L</span><span class="op">→</span>
+      <span class="doc">B/L เริ่มต้น</span><span class="op">→</span>
       <span class="out">MMAN_VN.txt</span>
     </div>
     <div class="cta">
@@ -142,7 +142,7 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
         <p><b>รายการ Status</b> — .xls / .xlsx / .csv ใช้คอลัมน์ A-C ที่มีหัว <code>B/L No.</code>, <code>Status</code>, <code>POL</code> (เรียงแบบไหนก็ได้)</p>
         <p class="note">B/L No. ใส่เลขหลัก เช่น <code>HASLS21260801066</code> จะครอบคลุม sub-B/L (…066A, …066B) ด้วย · Status เช่น <code>9  N</code> เว้นว่าง = คงเดิม</p>
       </div></li>
-      <li><div><p><b>เริ่มต้นเก็บ B/L / ถึง B/L</b> — B/L แรกและ B/L สุดท้ายที่ต้องการให้เหลือในไฟล์</p></div></li>
+      <li><div><p><b>B/L เริ่มต้นที่เก็บ</b> — เลข B/L แรกที่ต้องการให้เหลือในไฟล์ (เก็บต่อไปจนถึงบรรทัดสุดท้าย)</p></div></li>
     </ol>
   </section>
 
@@ -151,8 +151,8 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
     <ol class="steps">
       <li><div><p><b>เลือกไฟล์ MMAN (.txt)</b> และ <b>ไฟล์ STATUS</b></p></div></li>
       <li><div>
-        <p><b>พิมพ์ เริ่มต้นเก็บ B/L และ ถึง B/L</b></p>
-        <p class="note">เว้นว่าง "เริ่มต้น" = ตั้งแต่ B/L แรก · เว้นว่าง "ถึง" = ถึงบรรทัดสุดท้าย · เว้นว่างทั้งคู่ = ไม่ตัด ทำ Change status อย่างเดียว</p>
+        <p><b>พิมพ์ B/L เริ่มต้นที่เก็บ</b></p>
+        <p class="note">เว้นว่าง = ไม่ตัด ทำ Change status อย่างเดียว</p>
       </div></li>
       <li><div><p><b>แก้ SHED NO. ถ้าต้องการ</b> (ค่าเริ่มต้น 0145 สำหรับ B/L ที่มี Status / 0122 ที่เหลือ)</p></div></li>
       <li><div>
@@ -169,8 +169,8 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
         <h3>ขั้นที่ 1 ตัด</h3>
         <ul class="check-list">
           <li>เก็บบรรทัดแรก (<code>PSKV…</code>) ไว้เสมอ</li>
-          <li>เก็บตั้งแต่ B/L เริ่มต้นถึง B/L สุดท้าย รวม sub-B/L และบรรทัดตู้ของ B/L สุดท้าย</li>
-          <li>บรรทัดก่อนและหลังช่วงนี้ตัดออกทั้งหมด</li>
+          <li>ตัดทุกบรรทัดถัดจากนั้นออก จนถึงก่อน B/L เริ่มต้นที่กำหนด</li>
+          <li>เก็บตั้งแต่ B/L นั้น (รวม sub-B/L) จนถึงบรรทัดสุดท้าย</li>
         </ul>
       </div>
       <div>
@@ -192,10 +192,10 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
     <h2>ใช้แบบโปรแกรมในเครื่อง (Python)</h2>
     <p class="sub">ครั้งแรกรัน <code>pip install pandas xlrd openpyxl</code> แล้ววางไฟล์ MMAN และไฟล์ Status ในโฟลเดอร์ <code>input</code></p>
     <div class="cmd">
-      <pre id="cmd">python mman_vn.py HASLS21260801066 --to HASLS21260801762</pre>
+      <pre id="cmd">python mman_vn.py HASLS21260801066</pre>
       <button type="button" data-target="cmd">คัดลอก</button>
     </div>
-    <p class="note">ผลอยู่ที่ <code>output\MMAN_VN.txt</code> · ไม่ใส่ <code>--to</code> = เก็บถึงบรรทัดสุดท้าย</p>
+    <p class="note">เปลี่ยนเลข B/L เป็นตัวที่ต้องการเริ่มเก็บ · ผลอยู่ที่ <code>output\MMAN_VN.txt</code></p>
   </section>
 
   <section class="panel" id="help">
@@ -204,7 +204,7 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
       <table class="trouble">
         <thead><tr><th>ข้อความ / อาการ</th><th>วิธีแก้</th></tr></thead>
         <tbody>
-          <tr><td>ไม่พบ B/L ที่ระบุ</td><td>ตรวจเลข B/L เริ่มต้น/สุดท้ายว่ามีอยู่ในไฟล์ MMAN จริง</td></tr>
+          <tr><td>ไม่พบ B/L ที่ระบุ</td><td>ตรวจเลข B/L เริ่มต้นว่ามีอยู่ในไฟล์ MMAN จริง</td></tr>
           <tr><td>B/L ไม่อยู่ในรายการ / ไม่มี POL</td><td>B/L นั้นไม่มีในไฟล์ Status ให้เพิ่มลงไฟล์ Status แล้วทำใหม่</td></tr>
           <tr><td>ตำแหน่งคอลัมน์ผิดปกติ</td><td>ไฟล์ MMAN อาจไม่ใช่รูปแบบมาตรฐาน ส่งไฟล์ให้ Rattana ตรวจ</td></tr>
         </tbody>
