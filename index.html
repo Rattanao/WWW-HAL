@@ -66,6 +66,8 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
 .main { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 24px 28px 22px 34px; }
 .crumb { margin: 0 0 22px; font-size: 24px; font-weight: 400; color: #333; }
 .crumb small { display: block; font-size: 14px; color: var(--muted); margin-top: 2px; }
+.crumb .guide { display: inline-flex; align-items: center; gap: 6px; margin-left: 14px; vertical-align: middle; font-size: 14px; font-weight: 600; color: var(--blue); text-decoration: none; border: 1px solid var(--blue); border-radius: 999px; padding: 3px 12px; }
+.crumb .guide:hover { background: #eef2fb; }
 .card { flex: 1; min-height: 0; border: 1.5px solid var(--blue); border-radius: 18px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.12); background: #fff; }
 .card iframe { width: 100%; height: 100%; border: 0; display: block; }
 .card iframe[hidden] { display: none; }
@@ -135,16 +137,16 @@ const ICON = {
 };
 const GROUPS = [
   { name: "ตรวจสอบเอกสาร", tools: [
-    { id: "check-cntrs", title: "Check CNTRS", desc: "ตรวจเทียบ MANIFEST กับ CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK", src: "tools/check-cntrs.html", icon: "check" },
+    { id: "check-cntrs", title: "Check CNTRS", desc: "ตรวจเทียบ MANIFEST กับ CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK", src: "tools/check-cntrs.html", guide: "tools/guide-check-cntrs.html", icon: "check" },
     { id: "check-dem",   title: "Check DEM",   desc: "หาวันเริ่มเก็บค่า DEM และวัน REC. จาก Freedays + ATA", src: "tools/check-dem.html", icon: "clock" }
   ]},
   { name: "แก้ไขไฟล์ EDI", tools: [
-    { id: "change-status", title: "Change Status MMAN", desc: "MMAN × STATUS → MMAN_EDI.txt", src: "tools/change-status.html", icon: "swap" },
+    { id: "change-status", title: "Change Status MMAN", desc: "MMAN × STATUS → MMAN_EDI.txt", src: "tools/change-status.html", guide: "tools/guide-change-status.html", icon: "swap" },
     { id: "mman-vn",       title: "MMAN VN",            desc: "ตัด B/L + Change Status → MMAN_VN.txt", src: "tools/mman-vn.html", icon: "cut" },
     { id: "temp",          title: "Revised Temp",       desc: "แก้อุณหภูมิตู้เย็นในไฟล์ CLIST (.txt)", src: "tools/temp.html", icon: "temp" }
   ]},
   { name: "ใบสั่งปล่อยสินค้า (D/O)", tools: [
-    { id: "do", title: "DO", desc: "เติมวันเริ่มเก็บค่า DEM / ค่าไฟ / SPECIAL CONTAINER ลงในใบ D/O (.pdf)", src: "tools/do.html", icon: "doc" }
+    { id: "do", title: "DO", desc: "เติมวันเริ่มเก็บค่า DEM / ค่าไฟ / SPECIAL CONTAINER ลงในใบ D/O (.pdf)", src: "tools/do.html", guide: "tools/guide-do.html", icon: "doc" }
   ]}
 ];
 const TOOLS = GROUPS.flatMap(g => g.tools.map(t => ({ ...t, group: g.name })));
@@ -164,7 +166,7 @@ document.querySelectorAll(".group-head").forEach(b =>
 // เปิดเครื่องมือตาม hash; iframe ถูกสร้างครั้งเดียวแล้วซ่อน/แสดง เพื่อให้งานที่ทำค้างไว้ไม่หาย
 function show() {
   const t = TOOLS.find(t => t.id === location.hash.slice(1)) || TOOLS[0];
-  $("crumb").innerHTML = `${t.group} › ${t.title}<small>${t.desc}</small>`;
+  $("crumb").innerHTML = `${t.group} › ${t.title}${t.guide ? `<a class="guide" href="${t.guide}" target="_blank" rel="noopener">วิธีใช้ / คู่มือ</a>` : ""}<small>${t.desc}</small>`;
   document.title = t.title + " · EDI Tools";
   document.querySelectorAll(".item").forEach(a => a.classList.toggle("active", a.dataset.id === t.id));
   let frame = document.querySelector(`iframe[data-id="${t.id}"]`);

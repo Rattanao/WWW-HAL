@@ -85,7 +85,8 @@
 
   // ---- ปุ่มลบไฟล์ ----
   document.addEventListener("DOMContentLoaded", () => {
-    if (document.getElementById("clear")) return;            // เครื่องมือมีปุ่มของตัวเองแล้ว (DO)
+    // เครื่องมือมีปุ่มของตัวเองแล้ว (DO: #clear, Change Status: #clearAll)
+    if ([...document.querySelectorAll("button")].some(b => b.textContent.trim() === "ลบไฟล์")) return;
     const run = document.querySelector("#run, #go");
     if (!run) return;
     const b = document.createElement("button");

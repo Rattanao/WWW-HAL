@@ -139,7 +139,7 @@
     <div class="preview hidden" id="preview"><p id="previewText"></p><canvas id="canvas"></canvas></div>
   </section>
 </main>
-<footer><a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a> · เวอร์ชัน 2026-10-12g</footer>
+<footer><a href="guide-do.html">คู่มือ / ดาวน์โหลดโปรแกรม</a> · <a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a> · เวอร์ชัน 2026-10-15a</footer>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -163,6 +163,7 @@ const $ = id => document.getElementById(id);
 let pdfFiles = [], xlsFile = null;    // {name, bytes}
 let report = null;                    // {rows, ata, out, name}
 let overrides = {};                   // page no. -> {dem, rec} typed into the table
+let fileWarn = "";                    // files that were not a real PDF / Excel
 const fromInput = v => { if (!v) return null; const [y, m, d] = v.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)); };
 const toInput = d => d ? `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}` : "";
 const hidden = new Set();
@@ -223,6 +224,23 @@ function noteImage(lines, size, fam) {
 }
 
 // ---------- fill ----------
+// Older versions of this page stamped "CERTIFIED TRUE & CORRECT COPY" / a round seal with pdf-lib's
+// embedPdf, whose XObjects are always named EmbeddedPdfPage-<n>. Nothing else we (or the D/O system)
+// draw uses that name, so blanking those XObjects removes the old stamps from a file fed back in.
+function stripOldStamps(doc, page) {
+  const res = page.node.Resources();
+  const xo = res && res.lookupMaybe(PDFLib.PDFName.of("XObject"), PDFLib.PDFDict);
+  if (!xo) return 0;
+  let n = 0;
+  for (const [name, ref] of xo.entries()) {
+    if (name.toString().startsWith("/EmbeddedPdfPage-") && ref instanceof PDFLib.PDFRef) {
+      doc.context.assign(ref, doc.context.formXObject([], { BBox: [0, 0, 1, 1] }));
+      n++;
+    }
+  }
+  return n;
+}
+
 // pdfs: [{name, bytes}] merged in order; xlsBytes may be null (dates typed in instead)
 // dates: {dem, rec} for every B/L without a date in CHECK DEM; ov: page no. -> {dem, rec} for one B/L
 async function fill(pdfs, xlsBytes, size, dates, ov) {
@@ -246,15 +264,16 @@ async function fill(pdfs, xlsBytes, size, dates, ov) {
     const bl = (text.match(RE_BL) || ["?"])[0];
     const master = /[A-Z]$/.test(bl) ? bl.slice(0, -1) : bl;
     const rider = /ATTACHED\s*RIDER/.test(text), prevRow = out[out.length - 1];
+    const unstamped = stripOldStamps(doc, doc.getPage(n - 1)) ? " · ลบตรายางเก่าออกแล้ว" : "";
     if (DONE.test(text)) {                        // a DO-DEM output fed back in: never note twice
       const st0 = text.match(RE_STATUS);
       out.push({ page: n, bl, master, rider, cfs: rider ? !!(prevRow && prevRow.cfs) : !!st0 && st0[2] === "CFS",
-                 kind: "ข้าม", note: "เติมไว้แล้ว" }); continue;
+                 kind: "ข้าม", note: "เติมไว้แล้ว" + unstamped }); continue;
     }
     doc.getPage(n - 1).drawText(MARK, { x: 1, y: 1, size: 1, opacity: 0 });   // invisible "already filled" marker
     if (rider) {                                // ATTACHED RIDER pages are left as they are
       const prev = out[out.length - 1];
-      out.push({ page: n, bl, master, rider: true, cfs: prev ? prev.cfs : false, kind: "ATTACHED RIDER", note: "ไม่เติม" }); continue;
+      out.push({ page: n, bl, master, rider: true, cfs: prev ? prev.cfs : false, kind: "ATTACHED RIDER", note: "ไม่เติม" + unstamped }); continue;
     }
     const st = text.match(RE_STATUS), cfs = !!st && st[2] === "CFS";   // CFS/CFS, CY/CFS -> no DEM line
     const status = st ? st[0].replace(/\s/g, "") : "";
@@ -335,7 +354,7 @@ async function preview(n) {
 async function run(keep) {
   if (!pdfFiles.length) return;
   const page = keep === true ? +($("previewText").dataset.p || 1) : 1;
-  $("msg").textContent = ""; $("run").disabled = true; $("run").textContent = "กำลังประมวลผล...";
+  $("msg").textContent = fileWarn; $("run").disabled = true; $("run").textContent = "กำลังประมวลผล...";
   try {
     const dates = { dem: fromInput($("demAll").value), rec: fromInput($("recAll").value) };
     report = { ...(await fill(pdfFiles, xlsFile ? xlsFile.bytes : null, parseFloat($("size").value) || 15.5, dates, overrides)),
@@ -413,22 +432,36 @@ async function download() {
 // ---------- events ----------
 function update() { $("run").disabled = !pdfFiles.length; $("clear").disabled = !(pdfFiles.length || xlsFile || report); }
 function clearAll() {
-  pdfFiles = []; xlsFile = report = null; overrides = {}; hidden.clear();
+  pdfFiles = []; xlsFile = report = null; overrides = {}; fileWarn = ""; hidden.clear();
   $("pdfText").innerHTML = $("xlsText").innerHTML = "ลากไฟล์มาวาง หรือ <b>คลิกเพื่อเลือกไฟล์</b>";
   $("filePdf").value = $("fileXls").value = $("demAll").value = $("recAll").value = "";
   $("search").value = ""; $("msg").textContent = "";
   $("result").classList.add("hidden"); $("preview").classList.add("hidden");
   update();
 }
+// what a file really is, from its first bytes (a file can be named .pdf and be something else)
+function kindOf(bytes) {
+  const head = String.fromCharCode(...bytes.slice(0, 1024));
+  if (head.includes("%PDF-")) return "pdf";
+  if (head.startsWith("PK\x03\x04") || head.startsWith("\xD0\xCF\x11\xE0")) return "excel";   // .xlsx (zip) / .xls (OLE)
+  if (/^\s*</.test(head)) return "html";
+  return "other";
+}
+
 // PDFs are added to the list (1 or more DO files, merged in the order added); a new CHECK DEM replaces the old one
 async function take(files) {
   let added = false;
+  const bad = [];
   for (const f of files) {
     const item = { name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) };
-    if (/\.pdf$/i.test(f.name)) { pdfFiles.push(item); added = true; }
-    else if (/\.xlsx?$/i.test(f.name)) { xlsFile = item; added = true; $("xlsText").innerHTML = `<b>${escapeHtml(f.name)}</b> (คลิกเพื่อเปลี่ยนไฟล์)`; }
-    else $("msg").textContent = "ไฟล์นี้ใช้ไม่ได้: " + f.name;
+    const kind = kindOf(item.bytes), kb = Math.max(1, Math.round(item.bytes.length / 1024));
+    if (kind === "pdf") { pdfFiles.push(item); added = true; }
+    else if (kind === "excel") { xlsFile = item; added = true; $("xlsText").innerHTML = `<b>${escapeHtml(f.name)}</b> (คลิกเพื่อเปลี่ยนไฟล์)`; }
+    else bad.push(`"${f.name}" (${kb} KB) ไม่ใช่ไฟล์ PDF หรือ Excel จริง` +
+                  (kind === "html" ? " — เป็นหน้าเว็บที่บันทึกมา" : "") +
+                  " — เปิดไฟล์นี้ดูก่อน หรือดาวน์โหลด/Print เป็น PDF ใหม่");
   }
+  fileWarn = bad.join(" · "); $("msg").textContent = fileWarn;
   if (pdfFiles.length) $("pdfText").innerHTML = pdfFiles.map(f => `<b>${escapeHtml(f.name)}</b>`).join(" + ") + " (คลิกเพื่อเพิ่มไฟล์)";
   update();
   if (added && pdfFiles.length) { overrides = {}; await run(); }   // DO in -> process right away
