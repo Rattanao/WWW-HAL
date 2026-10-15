@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Check DEM - วิธีใช้</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
+<style>
+/* Layout: single reading column like a customs worksheet — header block, numbered procedure, colour legend as a mini CNTRS_EDI sheet, troubleshooting table */
+:root {
+  --bg: #f3f5f8;
+  --paper: #ffffff;
+  --ink: #17212e;
+  --muted: #566577;
+  --line: #d5dce5;
+  --navy: #1f4e78;
+  --navy-ink: #ffffff;
+  --accent: #1f4e78;
+  --red: #fdd7d7;   --red-ink: #8a1414;
+  --org: #ffe0b3;   --org-ink: #7a3e00;
+  --yel: #fff2cc;   --yel-ink: #6b5200;
+  --grn: #c6efce;   --grn-ink: #1d5c2b;
+  --code: #eef2f7;
+  --display: "Anuphan", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --body: "IBM Plex Sans Thai", system-ui, "Leelawadee UI", "Tahoma", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+    --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+    --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2e14; --org-ink: #ffc072;
+    --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+    --code: #0f1824; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+  --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+  --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2e14; --org-ink: #ffc072;
+  --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+  --code: #0f1824; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.7; margin: 0; }
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: clamp(2rem, 6vw, 2.9rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code); padding: 1px 6px; border-radius: 4px; }
+
+.head { display: grid; gap: 14px; padding-block: 8px 4px; }
+.tag { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.85rem; }
+.flow span.doc { background: var(--paper); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+.flow span.out { background: var(--navy); color: var(--navy-ink); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.flow span.op { color: var(--muted); }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-weight: 500; text-decoration: none; border: 1px solid var(--navy); }
+.btn.primary { background: var(--navy); color: var(--navy-ink); }
+.btn.ghost { color: var(--accent); background: transparent; border-color: var(--line); }
+
+section.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.sub { color: var(--muted); font-size: 0.95rem; }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: s; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 12px; align-items: start; min-width: 0; }
+ol.steps > li::before { content: counter(s); font-family: var(--mono); font-weight: 600; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--navy-ink); font-size: 0.95rem; }
+ol.steps li > div { min-width: 0; display: grid; gap: 4px; }
+ol.steps b { font-weight: 700; }
+.note { font-size: 0.9rem; color: var(--muted); }
+.warn { background: var(--yel); color: var(--yel-ink); border-radius: 6px; padding: 2px 8px; font-weight: 500; }
+
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.cmd pre { flex: 1; min-width: 0; margin: 0; background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.5; }
+.cmd button { font: inherit; font-size: 0.85rem; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.split > div { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.split h3 { margin: 0; font-size: 1rem; font-family: var(--display); }
+
+.sheet-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table.sheet { border-collapse: collapse; font-size: 0.8rem; width: 100%; min-width: 760px; font-variant-numeric: tabular-nums; }
+.sheet th { background: var(--navy); color: var(--navy-ink); font-weight: 600; padding: 7px 9px; text-align: center; white-space: nowrap; }
+.sheet td { padding: 7px 9px; border-top: 1px solid var(--line); white-space: nowrap; text-align: center; }
+.sheet td.l { text-align: left; }
+.r { background: var(--red); color: var(--red-ink); }
+.o { background: var(--org); color: var(--org-ink); }
+.y { background: var(--yel); color: var(--yel-ink); }
+.g { background: var(--grn); color: var(--grn-ink); }
+.caption { font-size: 0.82rem; color: var(--muted); }
+
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.legend div { border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; }
+.legend b { font-size: 0.95rem; }
+.legend span { font-size: 0.85rem; }
+
+.check-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+
+.trouble-scroll { overflow-x: auto; }
+table.trouble { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.trouble th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.trouble td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.trouble td:first-child { font-family: var(--mono); font-size: 0.82rem; width: 38%; }
+
+footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
+@media (max-width: 480px) { section.panel { padding: 18px; } .wrap { padding-inline: 16px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <div class="tag">เครื่องมือเอกสารขาเข้า · ค่า Demurrage</div>
+    <h1>Check DEM</h1>
+    <p class="lede">หาวันเริ่มเก็บค่า Demurrage (DEM.) และวันรับตู้ (REC.) ของทุก B/L จากช่อง Freedays และวันที่ ATA แล้วออกรายงาน CHECK DEM.xlsx แบบใส่สีตามวัน พร้อมพิมพ์ A4</p>
+    <div class="flow" aria-label="ขั้นตอนการทำงาน">
+      <span class="doc">DEM-*.xls (Freedays)</span><span class="op">+</span>
+      <span class="doc">ATA</span><span class="op">→</span>
+      <span class="out">CHECK DEM.xlsx</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#check-dem">ใช้งานออนไลน์ (ไม่ต้องติดตั้ง)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Check-dem/archive/refs/heads/main.zip">ดาวน์โหลดโปรแกรม (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Check-dem">เปิดหน้า GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="use">
+    <h2>ใช้งานบนเว็บ</h2>
+    <ol class="steps">
+      <li><div>
+        <p><b>ลากไฟล์ Freedays มาวาง</b> หรือคลิกเพื่อเลือกไฟล์ (.xls / .xlsx)</p>
+        <p class="note">ฟอร์มต้นฉบับมีได้หลายแบบ โปรแกรมหาหัวข้อจากชื่อ ไม่สนว่าอยู่คอลัมน์ไหน: <code>Freedays</code>, <code>TPSZ</code>, <code>B/L No.</code>, <code>RECEIPT B/L</code>, <code>Consignee</code></p>
+      </div></li>
+      <li><div>
+        <p><b>เลือกวันที่ ATA</b> แล้วกด <b>คำนวณ</b></p>
+      </div></li>
+      <li><div>
+        <p><b>ตรวจตารางบนหน้าจอ</b></p>
+        <p class="note">สีแยกตามวัน DEM. คลิกป้ายวันที่เพื่อซ่อน/แสดงวันนั้น และค้นหา B/L หรือ Consignee ได้</p>
+      </div></li>
+      <li><div>
+        <p><b>กด ดาวน์โหลด CHECK DEM.xlsx</b> แล้วเลือกโฟลเดอร์ที่จะบันทึก</p>
+        <p class="note">ไฟล์ถูกประมวลผลในเบราว์เซอร์เท่านั้น ไม่มีการอัปโหลดไปที่ใด · กด <b>ลบไฟล์</b> เพื่อเริ่มงานใหม่</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="rule">
+    <h2>กติกาการคำนวณ</h2>
+    <div class="sheet-scroll">
+      <table class="sheet">
+        <thead><tr><th class="l">ช่อง</th><th class="l">วิธีคิด</th><th class="l">ตัวอย่าง (ATA 27/09/2026)</th></tr></thead>
+        <tbody>
+          <tr><td class="l"><b>TOTAL</b></td><td class="l">เลขตัวหน้าของ Freedays + เลขตัวหน้าหลังคำว่า <code>Add</code></td><td class="l mono">7/5 Add 7/9 → 7 + 7 = 14</td></tr>
+          <tr><td class="l"><b>DEM.</b></td><td class="l">ATA + TOTAL วัน</td><td class="l mono">27/09/2026 + 14 = 11/10/2026</td></tr>
+          <tr><td class="l"><b>REC.</b></td><td class="l">ATA + 3 วัน เฉพาะแถวที่มี <code>TOS</code> หรือเป็นตู้เย็น (TPSZ ขึ้นต้นด้วย R)</td><td class="l mono">7/5 Add 7/9 TOS 3 → 30/09/2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">ตัวอย่างอื่น: <code>3/3 Add 2/11</code> = 5 วัน · <code>3/3 Add 9/4</code> = 12 วัน · <code>7/5 Add 14/2</code> = 21 วัน · ตู้เย็นถือเป็น TOS 3 เสมอเพราะมีค่าไฟ</p>
+  </section>
+
+  <section class="panel" id="read">
+    <h2>อ่านรายงาน CHECK DEM.xlsx</h2>
+    <p class="sub">คอลัมน์ No. | TPSZ | REC. | TOTAL | Freedays | DEM. | B/L No. | RECEIPT B/L | Consignee · ตั้งค่าพิมพ์ A4 แนวตั้ง พอดี 1 หน้ากว้าง</p>
+    <div class="legend">
+      <div class="g"><b>DEM. / Freedays สีเดียวกัน</b><span>วันเริ่มเก็บค่า DEM วันเดียวกัน สีไล่จากวันแรกสุด (แดง) ถึงวันหลังสุด (ฟ้า)</span></div>
+      <div class="o"><b>REC. พื้นส้ม</b><span>แถวที่มี TOS หรือเป็นตู้เย็น (Freedays ตัวหนาสีแดง)</span></div>
+      <div class="y"><b>RECEIPT B/L พื้นเหลือง</b><span>ตัวอักษรสีแดง ให้สังเกตง่าย</span></div>
+      <div class="r"><b>DEM. ขึ้น CHECK</b><span>อ่าน Freedays ไม่ได้ ต้องตรวจเอง</span></div>
+    </div>
+  </section>
+
+  <section class="panel" id="python">
+    <h2>ใช้แบบโปรแกรมในเครื่อง (Python)</h2>
+    <ol class="steps">
+      <li><div><p><b>ติดตั้ง Python 3.9+</b> จาก <a href="https://www.python.org/downloads/">python.org/downloads</a> แล้วดาวน์โหลด ZIP ด้านบน แตกไฟล์ไว้</p><p class="note">ครั้งแรกรัน <code>pip install -r requirements.txt</code></p></div></li>
+      <li><div><p><b>วางไฟล์ต้นฉบับในโฟลเดอร์ <code>input</code></b> แล้วดับเบิลคลิก <code>run_check_dem.bat</code></p></div></li>
+      <li><div><p><b>พิมพ์วันที่ ATA</b> เช่น <code>27/09/2026</code> แล้วเปิดผลที่ <code>output\CHECK DEM.xlsx</code></p></div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>ถ้าเจอปัญหา</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>ข้อความ / อาการ</th><th>วิธีแก้</th></tr></thead>
+        <tbody>
+          <tr><td>DEM. ขึ้นคำว่า CHECK</td><td>ช่อง Freedays เขียนรูปแบบที่อ่านไม่ได้ ให้ตรวจและคำนวณแถวนั้นเอง</td></tr>
+          <tr><td>ปุ่มคำนวณกดไม่ได้</td><td>ต้องเลือกทั้งไฟล์และวันที่ ATA ก่อน</td></tr>
+          <tr><td>ไม่พบหัวข้อ Freedays</td><td>ตรวจว่าไฟล์มีหัวคอลัมน์ชื่อ Freedays อยู่จริง</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>รายงานนี้เป็นตัวช่วยคำนวณ ควรตรวจแถวที่เป็นสีแดงหรือขึ้น CHECK ทุกครั้ง</p>
+    <p>ดูโค้ดที่ <a href="https://github.com/Rattanao/Check-dem">github.com/Rattanao/Check-dem</a></p>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('button[data-target]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var text = el.textContent;
+    var done = function () { btn.textContent = 'คัดลอกแล้ว'; setTimeout(function () { btn.textContent = 'คัดลอก'; }, 1600); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'กด Ctrl+C';
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MMAN VN - วิธีใช้</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
+<style>
+/* Layout: single reading column like a customs worksheet — header block, numbered procedure, colour legend as a mini CNTRS_EDI sheet, troubleshooting table */
+:root {
+  --bg: #f3f5f8;
+  --paper: #ffffff;
+  --ink: #17212e;
+  --muted: #566577;
+  --line: #d5dce5;
+  --navy: #1f4e78;
+  --navy-ink: #ffffff;
+  --accent: #1f4e78;
+  --red: #fdd7d7;   --red-ink: #8a1414;
+  --org: #ffe0b3;   --org-ink: #7a3e00;
+  --yel: #fff2cc;   --yel-ink: #6b5200;
+  --grn: #c6efce;   --grn-ink: #1d5c2b;
+  --code: #eef2f7;
+  --display: "Anuphan", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --body: "IBM Plex Sans Thai", system-ui, "Leelawadee UI", "Tahoma", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+    --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+    --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2e14; --org-ink: #ffc072;
+    --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+    --code: #0f1824; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+  --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+  --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2e14; --org-ink: #ffc072;
+  --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+  --code: #0f1824; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.7; margin: 0; }
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: clamp(2rem, 6vw, 2.9rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code); padding: 1px 6px; border-radius: 4px; }
+
+.head { display: grid; gap: 14px; padding-block: 8px 4px; }
+.tag { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.85rem; }
+.flow span.doc { background: var(--paper); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+.flow span.out { background: var(--navy); color: var(--navy-ink); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.flow span.op { color: var(--muted); }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-weight: 500; text-decoration: none; border: 1px solid var(--navy); }
+.btn.primary { background: var(--navy); color: var(--navy-ink); }
+.btn.ghost { color: var(--accent); background: transparent; border-color: var(--line); }
+
+section.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.sub { color: var(--muted); font-size: 0.95rem; }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: s; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 12px; align-items: start; min-width: 0; }
+ol.steps > li::before { content: counter(s); font-family: var(--mono); font-weight: 600; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--navy-ink); font-size: 0.95rem; }
+ol.steps li > div { min-width: 0; display: grid; gap: 4px; }
+ol.steps b { font-weight: 700; }
+.note { font-size: 0.9rem; color: var(--muted); }
+.warn { background: var(--yel); color: var(--yel-ink); border-radius: 6px; padding: 2px 8px; font-weight: 500; }
+
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.cmd pre { flex: 1; min-width: 0; margin: 0; background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.5; }
+.cmd button { font: inherit; font-size: 0.85rem; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.split > div { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.split h3 { margin: 0; font-size: 1rem; font-family: var(--display); }
+
+.sheet-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table.sheet { border-collapse: collapse; font-size: 0.8rem; width: 100%; min-width: 760px; font-variant-numeric: tabular-nums; }
+.sheet th { background: var(--navy); color: var(--navy-ink); font-weight: 600; padding: 7px 9px; text-align: center; white-space: nowrap; }
+.sheet td { padding: 7px 9px; border-top: 1px solid var(--line); white-space: nowrap; text-align: center; }
+.sheet td.l { text-align: left; }
+.r { background: var(--red); color: var(--red-ink); }
+.o { background: var(--org); color: var(--org-ink); }
+.y { background: var(--yel); color: var(--yel-ink); }
+.g { background: var(--grn); color: var(--grn-ink); }
+.caption { font-size: 0.82rem; color: var(--muted); }
+
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.legend div { border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; }
+.legend b { font-size: 0.95rem; }
+.legend span { font-size: 0.85rem; }
+
+.check-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+
+.trouble-scroll { overflow-x: auto; }
+table.trouble { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.trouble th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.trouble td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.trouble td:first-child { font-family: var(--mono); font-size: 0.82rem; width: 38%; }
+
+footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
+@media (max-width: 480px) { section.panel { padding: 18px; } .wrap { padding-inline: 16px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <div class="tag">เครื่องมือแก้ไฟล์ EDI · MMAN</div>
+    <h1>MMAN VN</h1>
+    <p class="lede">ตัดไฟล์ MMAN EDI ให้เหลือเฉพาะช่วง B/L ที่ต้องการ แล้วทำ Change status ต่อในขั้นตอนเดียว ได้ไฟล์ MMAN_VN.txt พร้อมส่ง</p>
+    <div class="flow" aria-label="ขั้นตอนการทำงาน">
+      <span class="doc">MMAN_*.txt</span><span class="op">+</span>
+      <span class="doc">STATUS .xls/.csv</span><span class="op">+</span>
+      <span class="doc">ช่วง B/L</span><span class="op">→</span>
+      <span class="out">MMAN_VN.txt</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#mman-vn">ใช้งานออนไลน์ (ไม่ต้องติดตั้ง)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/5-mman-vnsgn/archive/refs/heads/main.zip">ดาวน์โหลดโปรแกรม (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/5-mman-vnsgn">เปิดหน้า GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="prepare">
+    <h2>ไฟล์ที่ต้องเตรียม</h2>
+    <ol class="steps">
+      <li><div><p><b>MMAN</b> — <code>MMAN_*.txt</code> 1 ไฟล์</p></div></li>
+      <li><div>
+        <p><b>รายการ Status</b> — .xls / .xlsx / .csv ใช้คอลัมน์ A-C ที่มีหัว <code>B/L No.</code>, <code>Status</code>, <code>POL</code> (เรียงแบบไหนก็ได้)</p>
+        <p class="note">B/L No. ใส่เลขหลัก เช่น <code>HASLS21260801066</code> จะครอบคลุม sub-B/L (…066A, …066B) ด้วย · Status เช่น <code>9  N</code> เว้นว่าง = คงเดิม</p>
+      </div></li>
+      <li><div><p><b>เริ่มต้นเก็บ B/L / ถึง B/L</b> — B/L แรกและ B/L สุดท้ายที่ต้องการให้เหลือในไฟล์</p></div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="use">
+    <h2>ใช้งานบนเว็บ</h2>
+    <ol class="steps">
+      <li><div><p><b>เลือกไฟล์ MMAN (.txt)</b> และ <b>ไฟล์ STATUS</b></p></div></li>
+      <li><div>
+        <p><b>พิมพ์ เริ่มต้นเก็บ B/L และ ถึง B/L</b></p>
+        <p class="note">เว้นว่าง "เริ่มต้น" = ตั้งแต่ B/L แรก · เว้นว่าง "ถึง" = ถึงบรรทัดสุดท้าย · เว้นว่างทั้งคู่ = ไม่ตัด ทำ Change status อย่างเดียว</p>
+      </div></li>
+      <li><div><p><b>แก้ SHED NO. ถ้าต้องการ</b> (ค่าเริ่มต้น 0145 สำหรับ B/L ที่มี Status / 0122 ที่เหลือ)</p></div></li>
+      <li><div>
+        <p><b>กด ตัด + Change status</b> ตรวจผลในตาราง แล้วกด <b>ดาวน์โหลด MMAN_VN.txt</b> และเลือกโฟลเดอร์ที่จะบันทึก</p>
+        <p class="note">ประมวลผลในเบราว์เซอร์ทั้งหมด ไม่มีการอัปโหลดไฟล์ · กด <b>ลบไฟล์</b> เพื่อเริ่มงานใหม่</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="rule">
+    <h2>สิ่งที่โปรแกรมทำ</h2>
+    <div class="split">
+      <div>
+        <h3>ขั้นที่ 1 ตัด</h3>
+        <ul class="check-list">
+          <li>เก็บบรรทัดแรก (<code>PSKV…</code>) ไว้เสมอ</li>
+          <li>เก็บตั้งแต่ B/L เริ่มต้นถึง B/L สุดท้าย รวม sub-B/L และบรรทัดตู้ของ B/L สุดท้าย</li>
+          <li>บรรทัดก่อนและหลังช่วงนี้ตัดออกทั้งหมด</li>
+        </ul>
+      </div>
+      <div>
+        <h3>ขั้นที่ 2 Change status</h3>
+        <ul class="check-list">
+          <li>col 36-40 = POL เช่น <code>VNSGN</code></li>
+          <li>col 41-45 และ 46-50 = <code>THBKK</code></li>
+          <li>col 51-54 = Shed <code>0145</code> / <code>0122</code></li>
+          <li>col 844-845 = อักษร 2 ตัวแรกของ POL แทน <code>TH</code></li>
+          <li>บรรทัดตู้ = Status ใหม่ เช่น <code>8  N</code> → <code>9  N</code></li>
+          <li>หน่วยหีบห่อ <code>PG</code> → <code>PX</code> ทุก B/L</li>
+        </ul>
+      </div>
+    </div>
+    <p class="caption">ความยาวบรรทัดและการขึ้นบรรทัด (CRLF) คงเดิมทุกไบต์ ไฟล์ต้นฉบับไม่ถูกแก้ไข</p>
+  </section>
+
+  <section class="panel" id="python">
+    <h2>ใช้แบบโปรแกรมในเครื่อง (Python)</h2>
+    <p class="sub">ครั้งแรกรัน <code>pip install pandas xlrd openpyxl</code> แล้ววางไฟล์ MMAN และไฟล์ Status ในโฟลเดอร์ <code>input</code></p>
+    <div class="cmd">
+      <pre id="cmd">python mman_vn.py HASLS21260801066 --to HASLS21260801762</pre>
+      <button type="button" data-target="cmd">คัดลอก</button>
+    </div>
+    <p class="note">ผลอยู่ที่ <code>output\MMAN_VN.txt</code> · ไม่ใส่ <code>--to</code> = เก็บถึงบรรทัดสุดท้าย</p>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>ถ้าเจอปัญหา</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>ข้อความ / อาการ</th><th>วิธีแก้</th></tr></thead>
+        <tbody>
+          <tr><td>ไม่พบ B/L ที่ระบุ</td><td>ตรวจเลข B/L เริ่มต้น/สุดท้ายว่ามีอยู่ในไฟล์ MMAN จริง</td></tr>
+          <tr><td>B/L ไม่อยู่ในรายการ / ไม่มี POL</td><td>B/L นั้นไม่มีในไฟล์ Status ให้เพิ่มลงไฟล์ Status แล้วทำใหม่</td></tr>
+          <tr><td>ตำแหน่งคอลัมน์ผิดปกติ</td><td>ไฟล์ MMAN อาจไม่ใช่รูปแบบมาตรฐาน ส่งไฟล์ให้ Rattana ตรวจ</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>ก่อนส่งไฟล์ ควรตรวจตารางผลการเปลี่ยนและตัวอย่างบรรทัดที่แก้ทุกครั้ง</p>
+    <p>ดูโค้ดที่ <a href="https://github.com/Rattanao/5-mman-vnsgn">github.com/Rattanao/5-mman-vnsgn</a></p>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('button[data-target]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var text = el.textContent;
+    var done = function () { btn.textContent = 'คัดลอกแล้ว'; setTimeout(function () { btn.textContent = 'คัดลอก'; }, 1600); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'กด Ctrl+C';
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+</script>
+</body>
+</html>

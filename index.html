@@ -138,12 +138,12 @@ const ICON = {
 const GROUPS = [
   { name: "ตรวจสอบเอกสาร", tools: [
     { id: "check-cntrs", title: "Check CNTRS", desc: "ตรวจเทียบ MANIFEST กับ CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK", src: "tools/check-cntrs.html", guide: "tools/guide-check-cntrs.html", icon: "check" },
-    { id: "check-dem",   title: "Check DEM",   desc: "หาวันเริ่มเก็บค่า DEM และวัน REC. จาก Freedays + ATA", src: "tools/check-dem.html", icon: "clock" }
+    { id: "check-dem",   title: "Check DEM",   desc: "หาวันเริ่มเก็บค่า DEM และวัน REC. จาก Freedays + ATA", src: "tools/check-dem.html", guide: "tools/guide-check-dem.html", icon: "clock" }
   ]},
   { name: "แก้ไขไฟล์ EDI", tools: [
     { id: "change-status", title: "Change Status MMAN", desc: "MMAN × STATUS → MMAN_EDI.txt", src: "tools/change-status.html", guide: "tools/guide-change-status.html", icon: "swap" },
-    { id: "mman-vn",       title: "MMAN VN",            desc: "ตัด B/L + Change Status → MMAN_VN.txt", src: "tools/mman-vn.html", icon: "cut" },
-    { id: "temp",          title: "Revised Temp",       desc: "แก้อุณหภูมิตู้เย็นในไฟล์ CLIST (.txt)", src: "tools/temp.html", icon: "temp" }
+    { id: "mman-vn",       title: "MMAN VN",            desc: "ตัด B/L + Change Status → MMAN_VN.txt", src: "tools/mman-vn.html", guide: "tools/guide-mman-vn.html", icon: "cut" },
+    { id: "temp",          title: "Revised Temp",       desc: "แก้อุณหภูมิตู้เย็นในไฟล์ CLIST (.txt)", src: "tools/temp.html", guide: "tools/guide-temp.html", icon: "temp" }
   ]},
   { name: "ใบสั่งปล่อยสินค้า (D/O)", tools: [
     { id: "do", title: "DO", desc: "เติมวันเริ่มเก็บค่า DEM / ค่าไฟ / SPECIAL CONTAINER ลงในใบ D/O (.pdf)", src: "tools/do.html", guide: "tools/guide-do.html", icon: "doc" }
