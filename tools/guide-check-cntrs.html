@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Check CNTRS - วิธีใช้</title>
+<link rel="icon" href="assets/hal-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
 <style>
@@ -57,6 +58,9 @@ code { background: var(--code); padding: 1px 6px; border-radius: 4px; }
 .head { display: grid; gap: 14px; padding-block: 8px 4px; }
 .tag { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .lede { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand .logo-badge { background: var(--paper); border-radius: 8px; padding: 6px 12px; display: inline-flex; line-height: 0; border: 1px solid var(--line); }
+.brand .logo { height: 40px; width: auto; display: block; }
 .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.85rem; }
 .flow span.doc { background: var(--paper); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
 .flow span.out { background: var(--navy); color: var(--navy-ink); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
@@ -119,7 +123,7 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
 <div class="wrap">
   <header class="head">
     <div class="tag">เครื่องมือตรวจเอกสารขาเข้าเรือ · ใบขนสินค้าขาเข้า</div>
-    <h1>Check CNTRS</h1>
+    <div class="brand"><span class="logo-badge"><img class="logo" src="assets/hal-logo.png" alt="Heung A Line"></span><h1>Check CNTRS</h1></div>
     <p class="lede">ตรวจเทียบ MANIFEST ของสายเรือกับ CNTRS (Container List for Feeder) ให้ครบทุกตู้ แล้วออกรายงาน CNTRS_EDI.xlsx แบบใส่สี จุดไหนไม่ตรงเห็นได้ทันทีก่อนยื่นใบขน</p>
     <div class="flow" aria-label="ขั้นตอนการทำงาน">
       <span class="doc">MANIFEST.xls</span><span class="op">+</span>

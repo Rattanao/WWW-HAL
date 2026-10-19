@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Check CNTRS</title>
+<link rel="icon" href="assets/hal-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -20,6 +21,9 @@
   header { background: var(--navy); color: #fff; padding: 18px 16px; }
   header .wrap { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; justify-content: space-between; }
   header .title { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  header .brand { display: flex; align-items: center; gap: 12px; }
+  header .logo-badge { background: #fff; border-radius: 6px; padding: 5px 10px; display: inline-flex; line-height: 0; flex: 0 0 auto; }
+  header .logo { height: 30px; width: auto; display: block; }
   header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
   header p { margin: 0; opacity: .8; font-size: 15px; }
   header .credit { margin: 0; opacity: .75; font-size: 13px; text-align: right; line-height: 1.5; align-self: flex-start; }
@@ -81,7 +85,10 @@
 </head>
 <body>
 <header><div class="wrap">
-  <div class="title"><h1>CHECK CNTRS</h1><p>ตรวจเทียบ MANIFEST กับ CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK</p></div>
+  <div class="title">
+    <div class="brand"><span class="logo-badge"><img class="logo" src="assets/hal-logo.png" alt="Heung A Line"></span><h1>CHECK CNTRS</h1></div>
+    <p>ตรวจเทียบ MANIFEST กับ CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK</p>
+  </div>
   <p class="credit">Project by Ms. Rattana Mudlae<br>Position Import DOC.</p>
 </div></header>
 
@@ -242,7 +249,7 @@ function drawRows() {
     })
     .map(({ r, cells }) => `<tr class="${r.critical ? "crit" : ""}">` + cells.map((c, j) => {
         const isBl = r.isTransit && j === 3;
-        const dest = isBl ? C.transitDestination(r.cargoMovement) : null;
+        const dest = isBl ? (C.transitDestination(r.cargoMovement) || C.transitDestination(r.cntrsRemarkRaw)) : null;
         const title = isBl ? ` title="${esc(dest || "TRANSIT/TRANSHIPMENT")}"` : "";
         return `<td class="${[c.s || "", CENTER.has(j) ? "c" : "", j < 3 ? "s" + j : "", isBl ? "transit" : ""].join(" ").trim()}"${title}>${esc(c.v)}</td>`;
       }).join("") + "</tr>").join("");
@@ -277,7 +284,7 @@ async function download() {
       if (r.critical) c.fill = fill("FFE699");
       else if (r.isTransit && j === 3) {
         c.fill = fill("FFA500"); c.font = { bold: true, color: { argb: "FFFFFFFF" } };  // ส้มสดเฉพาะช่อง B/L NO.
-        c.note = C.transitDestination(r.cargoMovement) || "TRANSIT/TRANSHIPMENT";
+        c.note = C.transitDestination(r.cargoMovement) || C.transitDestination(r.cntrsRemarkRaw) || "TRANSIT/TRANSHIPMENT";
       }
       else if (cell.s === "ok") { c.fill = fill("C6EFCE"); c.font = { bold: true, color: { argb: "FF006100" } }; }
       else if (cell.s === "bad") { c.fill = fill("FFC7CE"); c.font = { bold: true, color: { argb: "FF9C0006" } }; }

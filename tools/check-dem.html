@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Check DEM</title>
+<link rel="icon" href="assets/hal-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -19,6 +20,8 @@
   header { background: var(--navy); color: #fff; padding: 18px 16px; }
   header .wrap { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
   header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
+  header .brand { display: flex; align-items: center; gap: 12px; align-self: center; }
+  header .logo { height: 30px; width: auto; display: block; background: #fff; padding: 5px 10px; border-radius: 6px; box-sizing: content-box; }
   header p { margin: 0; opacity: .8; font-size: 15px; }
   header .credit { margin-left: auto; text-align: right; font-size: 13px; line-height: 1.5; opacity: .85; }
   .wrap { max-width: 1180px; margin: 0 auto; }
@@ -65,7 +68,7 @@
 <script src="embed.js"></script>
 </head>
 <body>
-<header><div class="wrap"><h1>CHECK DEM</h1><p>หาวันเริ่มเก็บค่า DEM และวัน REC. จาก Freedays + ATA</p>
+<header><div class="wrap"><div class="brand"><img class="logo" src="assets/hal-logo.png" alt="Heung A Line"><h1>CHECK DEM</h1></div><p>หาวันเริ่มเก็บค่า DEM และวัน REC. จาก Freedays + ATA</p>
   <div class="credit">Project by Ms. Rattana Mudlae<br>Position Import DOC.</div></div></header>
 
 <main class="wrap">
@@ -101,7 +104,7 @@
     <div class="tbl"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
   </section>
 </main>
-<footer><a href="https://github.com/Rattanao/Check-dem">github.com/Rattanao/Check-dem</a></footer>
+<footer><a href="guide-check-dem.html">วิธีใช้</a> · <a href="https://github.com/Rattanao/Check-dem">github.com/Rattanao/Check-dem</a></footer>
 
 <script>
 const TOS_EXTRA_DAYS = 3;
