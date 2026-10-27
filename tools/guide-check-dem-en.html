@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Check DEM - Guide</title>
+<link rel="icon" href="assets/hal-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
+<style>
+/* Same design as Check-cntrs/guide.html: header block, numbered procedure, a mini CHECK DEM sheet with its colour legend, troubleshooting table */
+:root {
+  --bg: #f3f5f8;
+  --paper: #ffffff;
+  --ink: #17212e;
+  --muted: #566577;
+  --line: #d5dce5;
+  --navy: #1f4e78;
+  --navy-ink: #ffffff;
+  --accent: #1f4e78;
+  --red: #fdd7d7;   --red-ink: #8a1414;
+  --org: #ffe0b3;   --org-ink: #7a3e00;
+  --yel: #fff2cc;   --yel-ink: #6b5200;
+  --grn: #c6efce;   --grn-ink: #1d5c2b;
+  --info: #bdd7ee;  --info-soft: #ddebf7; --info-ink: #17212e;
+  --code: #eef2f7;
+  --display: "Anuphan", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --body: "IBM Plex Sans Thai", system-ui, "Leelawadee UI", "Tahoma", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+    --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+    --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2e14; --org-ink: #ffc072;
+    --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+    --info: #24405c; --info-soft: #1c3047; --info-ink: #e6ecf3;
+    --code: #0f1824; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+  --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+  --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2e14; --org-ink: #ffc072;
+  --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+  --info: #24405c; --info-soft: #1c3047; --info-ink: #e6ecf3;
+  --code: #0f1824; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.7; margin: 0; }
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: clamp(2rem, 6vw, 2.9rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code); padding: 1px 6px; border-radius: 4px; }
+
+.head { display: grid; gap: 14px; padding-block: 8px 4px; }
+.tag { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
+.brand { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.brand .logo-badge { background: #ffffff; border-radius: 8px; padding: 6px 12px; display: inline-flex; line-height: 0; border: 1px solid var(--line); max-width: 100%; }
+.brand .logo { height: 40px; width: auto; max-width: 100%; object-fit: contain; display: block; }
+.credit { color: var(--muted); font-size: 0.85rem; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.85rem; }
+.flow span.doc { background: var(--paper); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+.flow span.out { background: var(--navy); color: var(--navy-ink); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.flow span.op { color: var(--muted); }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-weight: 500; text-decoration: none; border: 1px solid var(--navy); }
+.btn.primary { background: var(--navy); color: var(--navy-ink); }
+.btn.ghost { color: var(--accent); background: transparent; border-color: var(--line); }
+
+section.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.sub { color: var(--muted); font-size: 0.95rem; }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: s; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 12px; align-items: start; min-width: 0; }
+ol.steps > li::before { content: counter(s); font-family: var(--mono); font-weight: 600; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--navy-ink); font-size: 0.95rem; }
+ol.steps li > div { min-width: 0; display: grid; gap: 4px; }
+ol.steps b { font-weight: 700; }
+.note { font-size: 0.9rem; color: var(--muted); }
+.warn { background: var(--yel); color: var(--yel-ink); border-radius: 6px; padding: 2px 8px; font-weight: 500; }
+
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.cmd pre { flex: 1; min-width: 0; margin: 0; background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.5; }
+.cmd button { font: inherit; font-size: 0.85rem; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.split > div { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.split h3 { margin: 0; font-size: 1rem; font-family: var(--display); }
+
+table.rules { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.rules th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.rules td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.rules td:first-child { font-weight: 700; white-space: nowrap; }
+
+.sheet-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table.sheet { border-collapse: collapse; font-size: 0.8rem; width: 100%; min-width: 760px; font-variant-numeric: tabular-nums; }
+.sheet th { background: var(--navy); color: var(--navy-ink); font-weight: 600; padding: 7px 9px; text-align: center; white-space: nowrap; }
+.sheet td { padding: 7px 9px; border-top: 1px solid var(--line); white-space: nowrap; text-align: center; }
+.sheet td.l { text-align: left; }
+.sheet tr.info td { border-top: 0; padding: 6px 9px; }
+.sheet td.k { background: var(--info); color: var(--info-ink); font-weight: 700; }
+.sheet td.v { background: var(--info-soft); color: var(--info-ink); }
+.sheet .b { font-weight: 700; }
+/* DEM. date colours as they come out of the program (fixed, same in both themes) */
+.d1 { background: #f2a5a5; color: #17212e; }
+.d2 { background: #c0f2a5; color: #17212e; }
+.d3 { background: #a5dbf2; color: #17212e; }
+.tos { color: var(--red-ink); font-weight: 700; }
+.recx { background: var(--org); color: var(--org-ink); font-weight: 700; }
+.rcpt { background: var(--yel); color: var(--red-ink); font-weight: 700; }
+.bad { background: #ff0000; color: #ffffff; font-weight: 700; }
+.caption { font-size: 0.82rem; color: var(--muted); }
+
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.legend div { border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; }
+.legend b { font-size: 0.95rem; }
+.legend span { font-size: 0.85rem; }
+.legend .grad { background: linear-gradient(90deg, #f2a5a5, #f2e4a5, #c0f2a5, #a5dbf2); color: #17212e; }
+
+.check-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+
+.trouble-scroll { overflow-x: auto; }
+table.trouble { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.trouble th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.trouble td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.trouble td:first-child { font-family: var(--mono); font-size: 0.82rem; width: 38%; }
+
+footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
+@media (max-width: 480px) { section.panel { padding: 18px; } .wrap { padding-inline: 16px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <div class="tag">Vessel import documents · DEMURRAGE</div>
+    <div class="brand"><span class="logo-badge"><img class="logo" src="assets/hal-logo.png" alt="Heung A Line"></span><h1>Check DEM</h1></div>
+    <p class="lede">Works out the demurrage start date (DEM.) and the container receipt date (REC.) for every B/L from the Freedays and the vessel arrival date (ATA), then produces a CHECK DEM.xlsx report coloured by date, ready to print on A4.</p>
+    <div class="flow" aria-label="Workflow">
+      <span class="doc">SUR.xls (Freedays)</span><span class="op">+</span>
+      <span class="doc">ATA</span><span class="op">→</span>
+      <span class="out">CHECK DEM.xlsx</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#check-dem">Use online (no install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Check-dem/archive/refs/heads/main.zip">Download the program (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Check-dem">Open on GitHub</a>
+    </div>
+    <p class="credit">Project by Ms. Rattana Mudlae · Position Import DOC.</p>
+  </header>
+
+  <section class="panel" id="online">
+    <h2>Use online</h2>
+    <p class="sub">Opens straight in the browser. Files are calculated on the computer you are using only; no data is uploaded anywhere</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Click "Use online" above</b>, then drag in the Freedays file (.xls / .xlsx) or click to choose it</p>
+      </div></li>
+      <li><div>
+        <p><b>Pick the ATA date</b> and click <b>คำนวณ (Calculate)</b></p>
+        <p class="note">The on-screen table is coloured by DEM. date. Click a date chip to hide or show that date, and search by B/L or Consignee</p>
+      </div></li>
+      <li><div>
+        <p><b>Click "ดาวน์โหลด CHECK DEM.xlsx" (Download)</b></p>
+        <p class="note">You get the same Excel file the desktop program produces, saved to your Downloads folder</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="install">
+    <h2>Install the desktop program (first time)</h2>
+    <p class="sub">Once per computer, Windows. If you use the online tool above, there is nothing to install</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Install Python 3</b> from <a href="https://www.python.org/downloads/">python.org/downloads</a></p>
+        <p class="note">On the installer's first screen <span class="warn">tick ☑ Add python.exe to PATH</span> before clicking Install Now</p>
+      </div></li>
+      <li><div>
+        <p><b>Download the program</b> with the "Download the program (ZIP)" button above</p>
+        <p class="note">Right-click the ZIP → Extract All, and keep the folder anywhere, e.g. Documents</p>
+      </div></li>
+      <li><div>
+        <p><b>The first run needs an internet connection</b></p>
+        <p class="note">The program installs the libraries it needs (pandas, openpyxl, xlrd) automatically</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="use">
+    <h2>Every job on the desktop</h2>
+    <ol class="steps">
+      <li><div>
+        <p><b>Put the Freedays file in the <code>input</code> folder</b></p>
+        <p class="note">The Excel form can vary; the program finds the headings it needs by name, so there is no need to rearrange columns (see the headings it reads below)</p>
+      </div></li>
+      <li><div>
+        <p><b>Double-click <code>run_check_dem.bat</code></b>, type the ATA date, e.g. <code>04/10/2026</code>, and press Enter</p>
+        <p class="note">Always type day/month/year (Gregorian year)</p>
+      </div></li>
+      <li><div>
+        <p><b>Open the result at <code>output\CHECK DEM.xlsx</code></b></p>
+        <p class="note">The black window shows the number of B/Ls and how many rows had unreadable Freedays. The file is already set to print A4 portrait, 1 page wide</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="rules">
+    <h2>Calculation rules</h2>
+    <table class="rules">
+      <thead><tr><th>Field</th><th>How it is worked out</th><th>Example (ATA 04/10/2026)</th></tr></thead>
+      <tbody>
+        <tr><td>TOTAL</td><td>First number of Freedays + first number after the word Add</td><td><code>3/3 Add 2/4</code> → 3 + 2 = <b>5</b></td></tr>
+        <tr><td>DEM.</td><td>ATA + TOTAL days</td><td>04/10/2026 + 5 = <b>09/10/2026</b></td></tr>
+        <tr><td>REC.</td><td>ATA + 3 days, only on rows with the word TOS or a reefer; other rows are left blank</td><td><code>7/5 Add 7/9 TOS 3</code> → <b>07/10/2026</b></td></tr>
+      </tbody>
+    </table>
+    <p class="note"><b>Reefers:</b> if TPSZ starts with R, e.g. <code>R40Hx1</code>, it always counts as TOS 3 because power charges apply. The program fills REC. even when the Freedays cell doesn't say TOS</p>
+    <div class="split">
+      <div>
+        <h3>Headings the program reads (by name, any position)</h3>
+        <ul class="check-list">
+          <li><b>Freedays</b> (required)</li>
+          <li>TPSZ</li>
+          <li>B/L No.</li>
+          <li>RECEIPT B/L</li>
+          <li>Consignee</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Not used</h3>
+        <ul class="check-list">
+          <li>All other headings, e.g. POL, STATUS</li>
+          <li>The header doesn't have to be in the first row; the program finds the row containing Freedays</li>
+          <li>The report always comes out in the same layout, whatever the column order of the source</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="read">
+    <h2>Reading the CHECK DEM.xlsx report</h2>
+    <p class="sub">One row per B/L. The top row shows the number of B/Ls, the source file name and the ATA date</p>
+    <div class="sheet-scroll">
+      <table class="sheet">
+        <thead>
+          <tr class="info"><td class="k">B/L count</td><td class="v">25</td><td></td><td></td><td class="k">Source</td><td class="v b">SUR.xls</td><td></td><td class="k">ATA</td><td class="v b">04/10/2026</td></tr>
+          <tr><th>No.</th><th>TPSZ</th><th>REC.</th><th>TOTAL</th><th>Freedays</th><th>DEM.</th><th>B/L No.</th><th>RECEIPT B/L</th><th>Consignee</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="mono">40Hx1</td><td></td><td class="b">14</td><td class="l d2">7/5 Add 7/9</td><td class="b d2">18/10/2026</td><td class="mono">HASLC…0001</td><td class="rcpt">SUR</td><td class="l">ABC LOGISTICS CO.,LTD.</td></tr>
+          <tr><td>2</td><td class="mono">20'x2</td><td></td><td class="b">21</td><td class="l d3">7/5 Add 14/2</td><td class="b d3">25/10/2026</td><td class="mono">HASLC…0002</td><td class="rcpt"></td><td class="l">TO THE ORDER OF XYZ BANK</td></tr>
+          <tr><td>3</td><td class="mono">20TKx1</td><td></td><td class="b"></td><td class="l"></td><td class="bad">CHECK</td><td class="mono">HASLC…0003</td><td class="rcpt">SUR</td><td class="l">DEF TRADING CO.,LTD.</td></tr>
+          <tr><td>4</td><td class="mono">R40Hx3</td><td class="recx">07/10/2026</td><td class="b">5</td><td class="l d1 tos">3/3 Add 2/4</td><td class="b d1">09/10/2026</td><td class="mono">HASLC…0004</td><td class="rcpt">SUR</td><td class="l">GHI FOOD CO.,LTD.</td></tr>
+          <tr><td>5</td><td class="mono">40Hx1</td><td class="recx">07/10/2026</td><td class="b">5</td><td class="l d1 tos">3/3 Add 2/4 TOS 3</td><td class="b d1">09/10/2026</td><td class="mono">HASLC…0005</td><td class="rcpt">SWB</td><td class="l">JKL SEAFOOD CO.,LTD.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">Illustration only; B/L numbers and company names are made up · Row 4 is a reefer (R40H), so it has a REC. date even though Freedays has no TOS · Row 3 has an empty Freedays cell, so it shows CHECK</p>
+    <div class="legend">
+      <div class="grad"><b>Colour by DEM. date</b><span>Freedays and DEM. cells with the same date share a colour, from the earliest date (red) to the latest (blue)</span></div>
+      <div class="o"><b>Orange (REC. cell)</b><span>Rows with TOS or a reefer: container receipt / power charges apply</span></div>
+      <div class="y"><b>Yellow (RECEIPT B/L)</b><span>How the B/L is received, e.g. SUR / SWB, in red text</span></div>
+      <div class="r"><b>Red CHECK (DEM. cell)</b><span>Freedays couldn't be read; check and calculate by hand</span></div>
+    </div>
+  </section>
+
+  <section class="panel" id="claude">
+    <h2>Use with Claude Code</h2>
+    <p class="sub">For people who already use Claude Code: let Claude run the program, summarise the results and add rules</p>
+    <p>Extract the ZIP, open a command prompt (cmd) in the program folder, and run this to install the skill:</p>
+    <div class="cmd">
+      <pre id="skill">xcopy /E /I /Y skill\check-dem "%USERPROFILE%\.claude\skills\check-dem"</pre>
+      <button type="button" data-target="skill">Copy</button>
+    </div>
+    <p class="note">Restart Claude Code, go to the job folder, and type e.g. "check dem ATA 04/10/2026"</p>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>Troubleshooting</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Python not found</td><td>Reinstall Python and tick Add python.exe to PATH</td></tr>
+          <tr><td>Python was not found; run without arguments to install from the Microsoft Store</td><td>Windows is sending the python command to the Microsoft Store. Turn it off in Settings → Apps → Advanced app settings → App execution aliases, switching off python.exe and python3.exe</td></tr>
+          <tr><td>PermissionError: [Errno 13]</td><td>CHECK DEM.xlsx is open in Excel; close it and run again</td></tr>
+          <tr><td>No Freedays heading found in the file</td><td>The source file needs a heading that reads Freedays (or Free Days); check the heading names</td></tr>
+          <tr><td>time data ... does not match format</td><td>The ATA was typed in the wrong format; it must be day/month/year, e.g. 04/10/2026</td></tr>
+          <tr><td>The DEM. cell shows CHECK</td><td>The Freedays cell is empty or has no number. Check that B/L's Freedays and calculate by hand, or fix the source file and run again</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>This report is a calculation aid. Before informing customers, a person must always review every row showing CHECK and the REC. date of every reefer</p>
+    <p>Updating the program: download the ZIP again and extract over the old folder (or <code>git pull</code>) · Source code: <a href="https://github.com/Rattanao/Check-dem">github.com/Rattanao/Check-dem</a></p>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('button[data-target]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var text = el.textContent;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Press Ctrl+C';
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+</script>
+<script src="guide-lang.js"></script>
+</body>
+</html>

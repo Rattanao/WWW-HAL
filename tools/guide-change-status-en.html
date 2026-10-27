@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Change Status - Guide</title>
+<link rel="icon" href="assets/hal-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
+<style>
+/* Layout: same single reading column as the CMA guide — header block, numbered procedure, list forms, before/after MMAN line, troubleshooting table */
+:root {
+  --bg: #f3f5f8;
+  --paper: #ffffff;
+  --ink: #17212e;
+  --muted: #566577;
+  --line: #d5dce5;
+  --navy: #1f4e78;
+  --navy-ink: #ffffff;
+  --accent: #1f4e78;
+  --red: #fdd7d7;   --red-ink: #8a1414;
+  --org: #fce4d6;   --org-ink: #8a3d0b;
+  --yel: #fff2cc;   --yel-ink: #6b5200;
+  --grn: #c6efce;   --grn-ink: #1d5c2b;
+  --blu: #dbe8f7;   --blu-ink: #173f66;
+  --code: #eef2f7;
+  --display: "Anuphan", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --body: "IBM Plex Sans Thai", system-ui, "Leelawadee UI", "Tahoma", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+    --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+    --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2d1c; --org-ink: #ffc59e;
+    --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+    --blu: #1b3048; --blu-ink: #a9cdf2;
+    --code: #0f1824; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+  --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+  --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2d1c; --org-ink: #ffc59e;
+  --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+  --blu: #1b3048; --blu-ink: #a9cdf2;
+  --code: #0f1824; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.7; }
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: clamp(2rem, 6vw, 2.9rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code); padding: 1px 6px; border-radius: 4px; }
+
+.head { display: grid; gap: 14px; padding-block: 8px 4px; }
+.logo-badge { justify-self: start; background: #ffffff; border-radius: 8px; padding: 6px 12px; display: inline-flex; line-height: 0; border: 1px solid var(--line); }
+.logo-badge img { height: 40px; width: auto; display: block; }
+@media (max-width: 480px) { .logo-badge img { height: 30px; } }
+.tag { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.85rem; }
+.flow span.doc { background: var(--paper); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+.flow span.out { background: var(--navy); color: var(--navy-ink); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.flow span.op { color: var(--muted); }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-weight: 500; text-decoration: none; border: 1px solid var(--navy); }
+.btn.primary { background: var(--navy); color: var(--navy-ink); }
+.btn.ghost { color: var(--accent); background: transparent; border-color: var(--line); }
+
+section.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.sub { color: var(--muted); font-size: 0.95rem; }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: s; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 12px; align-items: start; min-width: 0; }
+ol.steps > li::before { content: counter(s); font-family: var(--mono); font-weight: 600; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--navy-ink); font-size: 0.95rem; }
+ol.steps li > div { min-width: 0; display: grid; gap: 4px; }
+ol.steps b { font-weight: 700; }
+.note { font-size: 0.9rem; color: var(--muted); }
+.warn { background: var(--yel); color: var(--yel-ink); border-radius: 6px; padding: 2px 8px; font-weight: 500; }
+
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.cmd pre { flex: 1; min-width: 0; margin: 0; background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.5; }
+.cmd button { font: inherit; font-size: 0.85rem; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.split > div { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.split h3 { margin: 0; font-size: 1rem; font-family: var(--display); }
+
+.sheet-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table.sheet { border-collapse: collapse; font-size: 0.82rem; width: 100%; font-variant-numeric: tabular-nums; }
+.sheet th { background: var(--navy); color: var(--navy-ink); font-weight: 600; padding: 7px 10px; text-align: center; white-space: nowrap; }
+.sheet th.col { background: var(--code); color: var(--muted); font-family: var(--mono); font-weight: 400; padding: 3px 10px; }
+.sheet td { padding: 7px 10px; border-top: 1px solid var(--line); white-space: pre; font-family: var(--mono); }
+.r { background: var(--red); color: var(--red-ink); }
+.o { background: var(--org); color: var(--org-ink); }
+.y { background: var(--yel); color: var(--yel-ink); }
+.g { background: var(--grn); color: var(--grn-ink); }
+.b { background: var(--blu); color: var(--blu-ink); }
+.caption { font-size: 0.82rem; color: var(--muted); }
+
+/* before / after MMAN line */
+.line-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--code); }
+.mline { margin: 0; padding: 12px 14px; font-family: var(--mono); font-size: 0.82rem; line-height: 2; white-space: pre; }
+.mline .lab { display: inline-block; width: 4.5em; color: var(--muted); font-family: var(--body); }
+.mline mark { border-radius: 3px; padding: 1px 0; }
+.mline sup { font-size: 0.68rem; font-weight: 600; margin-left: 1px; }
+
+table.rules { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.rules th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.rules td { padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.rules td:first-child { width: 2.6rem; }
+.rules .chip { display: inline-grid; place-items: center; min-width: 1.7rem; height: 1.7rem; border-radius: 6px; font-family: var(--mono); font-weight: 600; font-size: 0.85rem; }
+.rules td.pos { font-family: var(--mono); font-size: 0.82rem; white-space: nowrap; color: var(--muted); }
+
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.legend div { border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; }
+.legend b { font-size: 0.95rem; }
+.legend span { font-size: 0.85rem; }
+
+.check-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+
+.trouble-scroll { overflow-x: auto; }
+table.trouble { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.trouble th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.trouble td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.trouble td:first-child { font-family: var(--mono); font-size: 0.82rem; width: 40%; }
+
+footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
+footer .credit { color: var(--ink); }
+@media (max-width: 480px) { section.panel { padding: 18px; } .wrap { padding-inline: 16px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <span class="logo-badge"><img src="assets/hal-logo.png" alt="Heung A Line"></span>
+    <div class="tag">MMAN EDI file tool · Import customs declaration</div>
+    <h1>Change Status → MMAN</h1>
+    <p class="lede">Fills in POL, SHED NO. and country code, and changes the container STATUS in the MMAN file from the job's B/L list. You get MMAN_EDI.txt with every line the same length as before, ready to send on.</p>
+    <div class="flow" aria-label="Workflow">
+      <span class="doc">MMAN_*.txt</span><span class="op">+</span>
+      <span class="doc">SUR.xls</span><span class="op">→</span>
+      <span class="out">MMAN_EDI.txt</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#change-status">Use online (no install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Change-status-mman/archive/refs/heads/main.zip">Download the program (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Change-status-mman">Open on GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="online">
+    <h2>Use online</h2>
+    <p class="sub">Fastest, nothing to install. Files are processed in your browser only and are never uploaded to a server.</p>
+    <ol class="steps">
+      <li><div><p><b>Open the <a href="../#change-status">online tool</a></b> and choose the MMAN file (.txt)</p></div></li>
+      <li><div><p><b>Choose the STATUS list</b> (.xls / .xlsx / .csv)</p></div></li>
+      <li><div>
+        <p><b>Start B/L … End B/L</b> (only if you want to cut the file)</p>
+        <p class="note">Keeps the PSKV line, then keeps only the B/Ls in this range (including sub-B/Ls …A, …B and their container lines); everything else is cut · Start left empty = from the first B/L · End left empty = to the last line · Both empty = no cut</p>
+      </div></li>
+      <li><div>
+        <p><b>Check SHED NO.</b> Left box = B/Ls that have a Status, right box = all other B/Ls</p>
+        <p class="note">Defaults <code>0145</code> / <code>0122</code>, change them to suit the job · <b>Jobs with no Status (e.g. LCH)</b>: enter SHED NO. in the left box and clear the right box = the same value for every B/L</p>
+      </div></li>
+      <li><div>
+        <p><b>Click Change</b>, review the summary, then click <b>Download MMAN_EDI.txt</b></p>
+        <p class="note">The file is saved to your Downloads folder · If the page still looks old, press <code>Ctrl + F5</code></p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="install">
+    <h2>First-time setup (desktop program)</h2>
+    <p class="sub">Once per computer, Windows · If you only use the online tool, skip this section</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Install Python 3</b> from <a href="https://www.python.org/downloads/">python.org/downloads</a></p>
+        <p class="note">On the installer's first screen <span class="warn">tick ☑ Add python.exe to PATH</span> before clicking Install Now</p>
+      </div></li>
+      <li><div>
+        <p><b>Download the program</b> with the “Download the program (ZIP)” button above</p>
+        <p class="note">Right-click the ZIP → Extract All, and keep the folder anywhere, e.g. Documents</p>
+      </div></li>
+      <li><div>
+        <p><b>The first run needs an internet connection</b></p>
+        <p class="note">The program installs the libraries it needs (pandas, xlrd, openpyxl) automatically</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="use">
+    <h2>Every job</h2>
+    <ol class="steps">
+      <li><div>
+        <p><b>Put the files in the <code>input</code> folder</b></p>
+        <p class="note">Remove the previous job's files first, then add one MMAN file (.txt) and one STATUS list (.xls/.xlsx/.csv). An old MMAN_EDI.txt left there is not counted as a source file</p>
+      </div></li>
+      <li><div>
+        <p><b>Double-click <code>run-change-status.bat</code></b></p>
+      </div></li>
+      <li><div>
+        <p><b>Type the SHED NO.</b> and press Enter twice</p>
+        <p class="note">It asks for two values: B/Ls with a Status and all other B/Ls. Press Enter to skip and use <code>0145</code> and <code>0122</code> · Type <code>=</code> for the second value = use the first value for every B/L (LCH jobs)</p>
+      </div></li>
+      <li><div>
+        <p><b>Open the result at <code>output\MMAN_EDI.txt</code></b></p>
+        <p class="note">The black window summarises the number of B/Ls, Status changes and PG→PX. If you see a <code>WARNING</code> line, read it before using the file</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="list">
+    <h2>STATUS list (Excel)</h2>
+    <p class="sub">Only columns A–C are used, with the header in the first row; ignore columns D–F. The program finds the columns by their header names, so both forms work</p>
+    <div class="split">
+      <div>
+        <h3>SUR form</h3>
+        <div class="sheet-scroll">
+          <table class="sheet">
+            <thead><tr><th class="col">A</th><th class="col">B</th><th class="col">C</th></tr>
+              <tr><th>POL</th><th>Status</th><th>B/L No.</th></tr></thead>
+            <tbody>
+              <tr><td>CNSHA</td><td class="y">7  N</td><td>HASLC…909702</td></tr>
+              <tr><td>CNSHA</td><td></td><td>HASLC…909850</td></tr>
+              <tr><td>KRPTK</td><td></td><td>HASLK…804417</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3>KMBK form</h3>
+        <div class="sheet-scroll">
+          <table class="sheet">
+            <thead><tr><th class="col">A</th><th class="col">B</th><th class="col">C</th></tr>
+              <tr><th>B/L No.</th><th>Status</th><th>POL</th></tr></thead>
+            <tbody>
+              <tr><td>HASLK…700462</td><td class="y">9  N</td><td>KRPUS</td></tr>
+              <tr><td>HASLK…805808</td><td></td><td>KRPUS</td></tr>
+              <tr><td>HASLK…807609</td><td></td><td>KRKAN</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Illustration only, B/L numbers shortened</p>
+    <ul class="check-list">
+      <li><b>B/L No.</b>: the master B/L number, which also covers its sub-B/Ls (…462A, …462B)</li>
+      <li><b>Status</b>: e.g. <code>9  N</code>, <code>7  N</code>; any number of spaces works (<code>7 N</code>, <code>7N</code>), the program puts it in the right position · Empty = keep the original Status</li>
+      <li><b>POL</b>: 5 letters, e.g. <code>KRPUS</code>, <code>CNSHA</code></li>
+    </ul>
+  </section>
+
+  <section class="panel" id="changes">
+    <h2>What changes in the MMAN file</h2>
+    <p class="sub">Only the defined positions are edited; file size and line endings stay identical byte for byte</p>
+    <div class="line-scroll">
+<pre class="mline"><span class="lab">Before</span>HASLK01260700462                             THBKK    GOLDWAY…   TH   …   O ACRYLONITRILE…
+<span class="lab">After</span>HASLK01260700462                   <mark class="b">KRPUS</mark><mark class="g">THBKK</mark>THBKK<mark class="o">0145</mark>GOLDWAY…   <mark class="b">KR</mark>   …   O ACRYLONITRILE…
+<span class="lab">Before</span>SKHU9545854      8  N   1        Y
+<span class="lab">After</span>SKHU9545854      <mark class="y">9</mark>  N   1        Y</pre>
+    </div>
+    <div class="trouble-scroll">
+      <table class="rules">
+        <thead><tr><th>#</th><th>Position</th><th>Value written</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip b">1</span></td><td class="pos">col 36–40</td><td>POL from the list, e.g. KRPUS</td></tr>
+          <tr><td><span class="chip g">2</span></td><td class="pos">col 41–45</td><td>The port of most B/Ls in the file (THBKK or THLCH), e.g. CNTAO<b>THLCH</b>THLKR0332</td></tr>
+          <tr><td><span class="chip">3</span></td><td class="pos">col 46–50</td><td>Port as in the original (THBKK, THLCH, THLKR, …), not changed</td></tr>
+          <tr><td><span class="chip o">4</span></td><td class="pos">col 51–54</td><td>SHED NO., locked by the original port: <b>BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · LCH with DG (has UN/CLASS) 2826 · BKK going to LAOS 0124</b> · Other BKK and LCH B/Ls use the SHED NO. boxes (<code>0145</code> if the B/L has a Status, <code>0122</code> for the rest · right box empty = use the left value)</td></tr>
+          <tr><td><span class="chip b">5</span></td><td class="pos">col 844–845</td><td>First 2 letters of the POL in place of TH (KR, CN)</td></tr>
+          <tr><td><span class="chip y">6</span></td><td class="pos">Container line</td><td>Status from the list, e.g. 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N</td></tr>
+          <tr><td><span class="chip r">PX</span></td><td class="pos">Package unit</td><td>PG → PX on every B/L</td></tr>
+          <tr><td><span class="chip g">N</span></td><td class="pos">col 881 · 974 · 1765</td><td>Consignee name and notify name = always the notify name at <b>col 1672 (TH + name), single-spaced</b>, on every B/L (BKK and LCH) · The address after the name is kept · Except TRANSIT/TRANSHIPMENT, which are left unchanged</td></tr>
+          <tr><td><span class="chip y">T</span></td><td class="pos">col 1670 · 3804</td><td><b>TRANSIT/TRANSHIPMENT</b>: the TH before the notify name = destination country (LA, MM, KH, CN, PG, MY) · Letter before the description: TRANSIT = 7, TRANSIT to LAOS = per CARGO MOVEMENT (L / 7), TRANSHIPMENT = 3</td></tr>
+          <tr><td><span class="chip">−</span></td><td class="pos">col 1742 · 1416 · 2207</td><td>Every B/L except TRANSIT/TRANSHIPMENT: clears the notify tax ID and the consignee / notify addresses (the consignee tax ID and branch code are kept)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="split">
+      <div>
+        <h3>Always kept</h3>
+        <ul class="check-list">
+          <li>The letter <code>O</code> before the description (except TRANSIT/TRANSHIPMENT)</li>
+          <li>Names on TRANSIT/TRANSHIPMENT B/Ls</li>
+          <li>The Status of B/Ls whose Status cell is empty</li>
+          <li>B/Ls not in the list (you get a warning)</li>
+          <li>The source files in input are never edited</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Check the summary every time</h3>
+        <ul class="check-list">
+          <li>Number of B/Ls changed matches the list</li>
+          <li>Number of SHED 0145 / 0122</li>
+          <li>Status changes and number of container lines</li>
+          <li>B/Ls changed PG → PX</li>
+          <li>File size equals the original</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="claude">
+    <h2>Use with Claude Code</h2>
+    <p class="sub">For people who already use Claude Code: install the skill once, then ask with the words "Change status"</p>
+    <div class="cmd">
+      <pre id="clone">git clone https://github.com/Rattanao/Change-status-mman.git %TEMP%\csm &amp;&amp; xcopy /E /I /Y %TEMP%\csm\change-status %USERPROFILE%\.claude\skills\change-status</pre>
+      <button type="button" data-target="clone">Copy</button>
+    </div>
+    <p class="note">Restart Claude Code, go to the job folder that has input, and type “Change status”</p>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>Troubleshooting</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Python not found / Python was not found</td><td>Reinstall Python and tick Add python.exe to PATH</td></tr>
+          <tr><td>ERROR: need exactly 1 MMAN .txt and 1 list file</td><td>input must hold exactly one MMAN file and one STATUS list; remove the previous job's files</td></tr>
+          <tr><td>ERROR: no B/L in the MMAN file matches the list</td><td>The STATUS list is not for this vessel; check you paired the right files</td></tr>
+          <tr><td>WARNING B/L NOT in list</td><td>B/Ls in the MMAN file that are not in the list are not changed; add them to the list and run again</td></tr>
+          <tr><td>ERROR: unrecognised Status</td><td>A Status must be 1 digit + 1 letter, e.g. 9  N</td></tr>
+          <tr><td>PermissionError: [Errno 13]</td><td>Close MMAN_EDI.txt if it is open, then run again</td></tr>
+          <tr><td>Start B/L … not found / B/L … not found in the MMAN file</td><td>Type the B/L exactly as in the MMAN file (master B/L, without the A, B suffix); the End B/L must come after the Start B/L</td></tr>
+          <tr><td>The page still looks old</td><td>Press Ctrl + F5</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p class="credit">Project by <b>Ms. Rattana Mudlae</b> · Position Import DOC.</p>
+    <p>Check the summary every time before sending MMAN_EDI.txt, especially any WARNING lines</p>
+    <p>Updating the program: download the ZIP again and extract over the old folder · Source code: <a href="https://github.com/Rattanao/Change-status-mman">github.com/Rattanao/Change-status-mman</a></p>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('button[data-target]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var text = el.textContent;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Press Ctrl+C';
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+</script>
+<script src="guide-lang.js"></script>
+</body>
+</html>

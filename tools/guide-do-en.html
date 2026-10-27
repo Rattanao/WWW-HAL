@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DO - Guide</title>
+<link rel="icon" href="assets/hal-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
+<style>
+/* Same layout as B-L-CHECK's guide: header block, numbered procedure, rules as a mini report, troubleshooting table */
+:root {
+  --bg: #f3f5f8;
+  --paper: #ffffff;
+  --ink: #17212e;
+  --muted: #566577;
+  --line: #d5dce5;
+  --navy: #1f4e78;
+  --navy-ink: #ffffff;
+  --accent: #1f4e78;
+  --red: #ffc7ce;   --red-ink: #9c0006;
+  --yel: #ffeb9c;   --yel-ink: #6b5200;
+  --grn: #c6efce;   --grn-ink: #1d5c2b;
+  --blu: #ddebf7;   --blu-ink: #1f4e78;
+  --org: #ffe0b2;   --org-ink: #7a4100;
+  --pur: #e1bee7;   --pur-ink: #5b1f66;
+  --gry: #f2f2f2;   --gry-ink: #566577;
+  --code: #eef2f7;
+  --display: "Anuphan", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --body: "IBM Plex Sans Thai", system-ui, "Leelawadee UI", "Tahoma", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+    --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+    --red: #4a1f22; --red-ink: #ffb3b3; --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+    --blu: #1b2d42; --blu-ink: #a9cdf0; --org: #47321a; --org-ink: #ffcf91; --pur: #3a2340; --pur-ink: #e6b8ee;
+    --gry: #222b37; --gry-ink: #9aa9bb; --code: #0f1824; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+  --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+  --red: #4a1f22; --red-ink: #ffb3b3; --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+  --blu: #1b2d42; --blu-ink: #a9cdf0; --org: #47321a; --org-ink: #ffcf91; --pur: #3a2340; --pur-ink: #e6b8ee;
+  --gry: #222b37; --gry-ink: #9aa9bb; --code: #0f1824; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.7; margin: 0; }
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: clamp(2rem, 6vw, 2.9rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code); padding: 1px 6px; border-radius: 4px; }
+
+.head { display: grid; gap: 14px; padding-block: 8px 4px; }
+.top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { display: inline-flex; background: #ffffff; border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; line-height: 0; }
+.brand img { height: 40px; width: auto; display: block; max-width: 100%; }
+.by { text-align: right; font-weight: 700; font-size: 0.9rem; line-height: 1.5; color: var(--muted); }
+.tag { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.85rem; }
+.flow span.doc { background: var(--paper); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+.flow span.out { background: var(--navy); color: var(--navy-ink); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.flow span.op { color: var(--muted); }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-weight: 500; text-decoration: none; border: 1px solid var(--navy); }
+.btn.primary { background: var(--navy); color: var(--navy-ink); }
+.btn.ghost { color: var(--accent); background: transparent; border-color: var(--line); }
+
+section.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.sub { color: var(--muted); font-size: 0.95rem; }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: s; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 12px; align-items: start; min-width: 0; }
+ol.steps > li::before { content: counter(s); font-family: var(--mono); font-weight: 600; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--navy-ink); font-size: 0.95rem; }
+ol.steps li > div { min-width: 0; display: grid; gap: 4px; }
+ol.steps b { font-weight: 700; }
+.note { font-size: 0.9rem; color: var(--muted); }
+.warn { background: var(--yel); color: var(--yel-ink); border-radius: 6px; padding: 2px 8px; font-weight: 500; }
+
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.cmd pre { flex: 1; min-width: 0; margin: 0; background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.5; }
+.cmd button { font: inherit; font-size: 0.85rem; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.split > div { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.split h3 { margin: 0; font-size: 1rem; font-family: var(--display); }
+
+.sheet-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table.sheet { border-collapse: collapse; font-size: 0.82rem; width: 100%; min-width: 640px; font-variant-numeric: tabular-nums; }
+.sheet th { background: var(--navy); color: var(--navy-ink); font-weight: 600; padding: 7px 10px; text-align: center; white-space: nowrap; }
+.sheet td { padding: 7px 10px; border-top: 1px solid var(--line); white-space: nowrap; }
+.sheet td.thai { font-family: var(--body); }
+.r { background: var(--red); color: var(--red-ink); }
+.y { background: var(--yel); color: var(--yel-ink); }
+.g { background: var(--grn); color: var(--grn-ink); }
+.b { background: var(--blu); color: var(--blu-ink); }
+.o { background: var(--org); color: var(--org-ink); }
+.p { background: var(--pur); color: var(--pur-ink); }
+.e { background: var(--gry); color: var(--gry-ink); }
+.caption { font-size: 0.82rem; color: var(--muted); }
+
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.legend div { border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; }
+.legend b { font-size: 0.95rem; }
+.legend span { font-size: 0.85rem; }
+
+.check-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+
+.trouble-scroll { overflow-x: auto; }
+table.trouble { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.trouble th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.trouble td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.trouble td:first-child { font-family: var(--mono); font-size: 0.82rem; width: 40%; }
+
+footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
+@media (max-width: 480px) { section.panel { padding: 18px; } .wrap { padding-inline: 16px; } .by { text-align: left; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <div class="top">
+      <div class="brand"><img src="assets/hal-logo.png" alt="Heung A Line"></div>
+      <p class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.</p>
+    </div>
+    <div class="tag">Import D/O tool · DEM / power charge start dates</div>
+    <h1>DO</h1>
+    <p class="lede">Adds the demurrage start date, the power charge start date and SPECIAL CONTAINER to the bottom of every page of a Cargo Delivery Order in one go. Dates come from CHECK DEM or are typed in, and you get files ready to print in 2 sets.</p>
+    <div class="flow" aria-label="Workflow">
+      <span class="doc">DO.pdf</span><span class="op">+</span>
+      <span class="doc">CHECK DEM.xlsx</span><span class="op">→</span>
+      <span class="out">DO-DEM.pdf</span><span class="op">+</span>
+      <span class="out">DO-DEM-PRINT x 2.pdf</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#do">Use online (no install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/DO/archive/refs/heads/main.zip">Download the program (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/DO">Open on GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="online">
+    <h2>Use online</h2>
+    <p class="sub">Nothing to install. Files are processed in the browser of the computer you are using and are not uploaded anywhere</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Drag in the DO file (.pdf)</b>; one or more files, which the page joins in order</p>
+        <p class="note"><code>CHECK DEM.xlsx</code> is optional. Without it, fill in <b>DEM. วันที่ (DEM date)</b> and/or <b>ค่าไฟ วันที่ (power charge date)</b> yourself</p>
+      </div></li>
+      <li><div>
+        <p><b>Click ประมวลผล (Process)</b></p>
+        <p class="note">The table shows what is added on each page. A red date cell = no date yet. You can edit dates per B/L in the table, then click Process again</p>
+      </div></li>
+      <li><div>
+        <p><b>Click ดาวน์โหลด DO-DEM.pdf (x1 + x2)</b> or <b>ปริ้น x2 (Print x2)</b></p>
+        <p class="note">You get 2 files in your Downloads folder: <code>DO-DEM.pdf</code> (one set) and <code>DO-DEM-PRINT x 2.pdf</code> (in print order). The first time, the browser may ask to “allow multiple downloads”; click Allow</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="install">
+    <h2>First-time setup</h2>
+    <p class="sub">Once per computer, Windows (skip this if you use the online tool)</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Install Python 3</b> from <a href="https://www.python.org/downloads/">python.org/downloads</a></p>
+        <p class="note">On the installer's first screen <span class="warn">tick ☑ Add python.exe to PATH</span> before clicking Install Now</p>
+      </div></li>
+      <li><div>
+        <p><b>Download the program</b> with the “Download the program (ZIP)” button above</p>
+        <p class="note">Right-click the ZIP → Extract All, and keep the folder anywhere, e.g. Documents</p>
+      </div></li>
+      <li><div>
+        <p><b>The first run needs an internet connection</b></p>
+        <p class="note">The program installs the libraries it needs (pymupdf, openpyxl) automatically and uses the Angsana New font that comes with Windows</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="use">
+    <h2>Every job (desktop program)</h2>
+    <ol class="steps">
+      <li><div>
+        <p><b>Put the files in the <code>input</code> folder</b></p>
+        <p class="note">The D/O file whose name starts with <code>DO</code>, e.g. <code>DO-SWSR.pdf</code>, and <code>CHECK DEM.xlsx</code> (from <a href="https://github.com/Rattanao/Check-dem">Check-dem</a>)</p>
+      </div></li>
+      <li><div>
+        <p><b>Double-click <code>run-do.bat</code></b></p>
+        <p class="note">The black window shows what is added on each page. Pages without a date show <code>** ไม่มีวันที่ DEM ใน CHECK DEM **</code> (no DEM date in CHECK DEM)</p>
+      </div></li>
+      <li><div>
+        <p><b>Open the results at <code>output\DO-DEM.pdf</code> and <code>output\DO-DEM-PRINT x 2.pdf</code></b></p>
+        <p class="note">Files in <code>input</code> are not changed. If a result file is open, close it before running again</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="rules">
+    <h2>What gets added</h2>
+    <p class="sub">One page per B/L, in bold Angsana New at the bottom left of the D/O, with only the dates underlined. The added text itself stays in Thai, as on the D/O</p>
+    <div class="sheet-scroll">
+      <table class="sheet">
+        <thead><tr><th>Type</th><th>What the D/O shows</th><th>Text added</th></tr></thead>
+        <tbody>
+          <tr class="b"><td>General</td><td>Every D/O</td><td class="thai">เริ่มเก็บค่า DEM. วันที่. <u>26-OCT-2026</u></td></tr>
+          <tr class="o"><td>DG</td><td class="mono">UN 3077 / CLASS 9 / CL9</td><td class="thai">SPECIAL CONTAINER · .......DG..........OP..........FR · DEM line</td></tr>
+          <tr class="g"><td>REEFER</td><td class="mono">20RF / 40RH / TEMP</td><td class="thai">เริ่มเก็บค่าไฟวันที่ <u>15-OCT-2026</u> · เริ่มเก็บค่า DEM. วันที่. <u>22-OCT-2026</u></td></tr>
+          <tr class="r"><td>ISO TANK + DG</td><td class="mono">ISO TANK and UN / CLASS</td><td class="thai">SPECIAL CONTAINER · .......DG..........OP..........FR only</td></tr>
+          <tr class="e"><td>CFS</td><td class="mono">CFS/CFS, CY/CFS</td><td class="thai">No DEM line</td></tr>
+          <tr class="e"><td>ATTACHED RIDER</td><td class="mono">== ATTACHED RIDER ==</td><td class="thai">Nothing added (page 2 of the B/L)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">Illustration only, dates are made up · เริ่มเก็บค่า DEM. วันที่ = demurrage starts on · เริ่มเก็บค่าไฟวันที่ = power charges start on</p>
+    <div class="split">
+      <div>
+        <h3>Where the dates come from</h3>
+        <ul class="check-list">
+          <li>DEM = the <code>DEM.</code> cell for that B/L in CHECK DEM</li>
+          <li>Power = the <code>REC.</code> cell; if empty, ATA + 3 days</li>
+          <li>A house B/L such as <code>...038A</code> that isn't in CHECK DEM uses the date of its master B/L <code>...038</code></li>
+          <li>On the web: dates edited in the table &gt; CHECK DEM &gt; the date boxes at the top</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Print x2</h3>
+        <ul class="check-list">
+          <li>One B/L = its D/O page + its ATTACHED RIDER page</li>
+          <li>CY: each B/L twice in a row, e.g. 1, 1, 2, 2</li>
+          <li>CFS: 2 sets per master B/L, e.g. 038, 038A, 038B, 038, 038A, 038B</li>
+          <li>If you load an already-filled file again, filled pages are skipped, never filled twice</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="claude">
+    <h2>Use with Claude Code</h2>
+    <p class="sub">For people who already use Claude Code: let Claude fill the D/O and report the result</p>
+    <div class="cmd">
+      <pre id="clone">git clone https://github.com/Rattanao/DO.git %USERPROFILE%\.claude\skills\do</pre>
+      <button type="button" data-target="clone">Copy</button>
+    </div>
+    <p class="note">Restart Claude Code, go to the job folder that has an <code>input</code> folder, and type <code>DO</code></p>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>Troubleshooting</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>"…" is not a real PDF or Excel file</td><td>The file is named .pdf but isn't a PDF inside. Open it first, then download it again or Print to PDF from the system</td></tr>
+          <tr><td>Red date cell / no date yet</td><td>Add CHECK DEM or fill in the DEM date box, then click Process</td></tr>
+          <tr><td>The page still looks old</td><td>Press Ctrl+F5 and check the version number at the bottom of the page</td></tr>
+          <tr><td>Python not found</td><td>Reinstall Python and tick Add python.exe to PATH</td></tr>
+          <tr><td>DO*.pdf / CHECK DEM*.xlsx not found</td><td>Check the files are in the input folder and the D/O file name starts with DO</td></tr>
+          <tr><td>Permission denied / cannot remove file</td><td>Close DO-DEM.pdf if it is open, then run again</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>Check the file every time before printing and sending to the customer, especially pages the table shows in red</p>
+    <p>Updating the program: download the ZIP again and extract over the old folder · Source code: <a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a></p>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('button[data-target]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var text = el.textContent;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Press Ctrl+C';
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+</script>
+<script src="guide-lang.js"></script>
+</body>
+</html>
