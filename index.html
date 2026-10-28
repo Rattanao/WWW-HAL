@@ -6,6 +6,7 @@
 <title>EDI Tools</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="tools/auth.js"></script>
 <style>
 :root {
   --blue: #1f3f94;
@@ -38,6 +39,24 @@ button { font: inherit; color: inherit; }
 .brand .name small { color: #222; font-size: 12px; letter-spacing: 3px; white-space: nowrap; }
 .top-right { margin-left: auto; align-self: stretch; display: flex; align-items: center; gap: 14px; background: var(--blue); padding: 0 26px; }
 .pill { color: #fff; padding: 6px 0; font-weight: 600; font-size: 13px; white-space: nowrap; }
+.who { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; border-left: 1px solid rgba(255,255,255,.35); padding-left: 14px; }
+.who[hidden] { display: none; }
+.who button { background: none; border: 1px solid #fff; color: #fff; border-radius: 999px; padding: 3px 12px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.who button:hover { background: rgba(255,255,255,.15); }
+
+/* หน้าเข้าสู่ระบบ */
+.login { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: #f4f6fa; }
+.login[hidden] { display: none; }
+.login form { width: 100%; max-width: 360px; background: #fff; border: 1.5px solid var(--blue); border-radius: 18px; padding: 28px 26px 24px; box-shadow: 0 4px 18px rgba(0,0,0,.12); }
+.login .brand { justify-content: center; margin-bottom: 18px; }
+.login h2 { margin: 0 0 14px; text-align: center; font-size: 18px; color: var(--blue-dark); }
+.login label { display: block; font-weight: 600; font-size: 14px; margin: 12px 0 4px; }
+.login input { width: 100%; font: inherit; padding: 9px 12px; border: 1px solid #9aa3ad; border-radius: 6px; }
+.login input:focus { outline: 2px solid var(--blue); outline-offset: 0; border-color: var(--blue); }
+.login button { width: 100%; margin-top: 20px; padding: 10px; border: 0; border-radius: 6px; background: var(--blue); color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; }
+.login button:hover { background: var(--blue-dark); }
+.login .err { margin: 12px 0 0; color: #c0261b; font-size: 14px; text-align: center; min-height: 1.3em; }
+.login .note { margin: 14px 0 0; color: var(--muted); font-size: 12.5px; text-align: center; }
 
 /* โครงหน้า */
 .layout { display: flex; height: calc(100% - var(--top-h) - var(--foot-h)); }
@@ -90,6 +109,7 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
   </button>
   <div class="brand" aria-label="Heung A Line">
     <svg viewBox="0 0 48 48" aria-hidden="true">
+      <g id="halLogo">
       <defs><clipPath id="lc"><circle cx="24" cy="24" r="22"/></clipPath></defs>
       <circle cx="24" cy="24" r="22" fill="#e2501f"/>
       <g clip-path="url(#lc)">
@@ -100,11 +120,13 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
       </g>
       <circle cx="24" cy="24" r="22" fill="none" stroke="#1f3f94" stroke-width="1.5"/>
       <text x="24" y="24.5" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="15" fill="#f6c443">HAL</text>
+      </g>
     </svg>
     <div class="name"><b>HEUNG A LINE</b><small>興亞 LINE 株式會社</small></div>
   </div>
   <div class="top-right">
     <span class="pill">Processed in your browser · No files are uploaded</span>
+    <span class="who" id="who" hidden><span id="whoName"></span><button id="signOut" type="button">Sign out</button></span>
   </div>
 </header>
 
@@ -125,6 +147,20 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
 </div>
 
 <footer class="foot">EDI Verification Project by Ms. Rattana Mudlae&nbsp;&nbsp;Position Import DOC (Generated Date :2026-08-03)</footer>
+
+<div class="login" id="login" hidden>
+  <form id="loginForm" autocomplete="on">
+    <div class="brand"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#halLogo"/></svg><div class="name"><b>HEUNG A LINE</b><small>EDI Tools</small></div></div>
+    <h2>Sign in</h2>
+    <label for="uid">User ID</label>
+    <input id="uid" name="username" autocomplete="username" autocapitalize="characters" spellcheck="false" required>
+    <label for="pwd">Password</label>
+    <input id="pwd" name="password" type="password" autocomplete="current-password" required>
+    <button type="submit">Sign in</button>
+    <p class="err" id="loginErr" role="alert"></p>
+    <p class="note" id="loginNote" hidden>Preview: the site is not locked yet</p>
+  </form>
+</div>
 
 <script>
 const ICON = {
@@ -178,7 +214,7 @@ function show() {
   document.querySelectorAll("#card iframe").forEach(f => f.hidden = f !== frame);
   if (matchMedia("(max-width: 760px)").matches) document.body.classList.add("side-closed");
 }
-addEventListener("hashchange", show);
+addEventListener("hashchange", () => { if ($("login").hidden) show(); });
 
 $("burger").addEventListener("click", () => document.body.classList.toggle("side-closed"));
 
@@ -201,7 +237,38 @@ $("q").addEventListener("input", filter);
 $("qClear").addEventListener("click", () => { $("q").value = ""; filter(); $("q").focus(); });
 
 if (matchMedia("(max-width: 760px)").matches) document.body.classList.add("side-closed");
-show();
+
+// ---- เข้าสู่ระบบ (ตั้งค่าใน tools/auth.js) ----
+// ล็อคอยู่: ต้องเข้าสู่ระบบก่อน · ยังไม่ล็อค: เปิด ?login เพื่อทดสอบหน้าเข้าสู่ระบบ
+// เครื่องมือ (iframe) โหลดหลังเข้าสู่ระบบแล้วเท่านั้น
+function signedIn(id) {
+  $("login").hidden = true;
+  show();
+  $("whoName").textContent = id;
+  $("who").hidden = false;
+}
+const preview = new URLSearchParams(location.search).has("login");
+if (HAL_AUTH.user()) signedIn(HAL_AUTH.user());
+else if (HAL_AUTH.locked || preview) {
+  $("login").hidden = false;
+  $("loginNote").hidden = HAL_AUTH.locked;
+  $("uid").focus();
+} else show();
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("loginErr").textContent = "";
+  if (await HAL_AUTH.signIn($("uid").value, $("pwd").value)) {
+    $("pwd").value = "";
+    signedIn(HAL_AUTH.user());
+  } else {
+    $("loginErr").textContent = "Incorrect User ID or Password";
+    $("pwd").select();
+  }
+});
+$("signOut").addEventListener("click", () => {
+  HAL_AUTH.signOut();
+  location.reload();
+});
 </script>
 </body>
 </html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add User · EDI Tools</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --blue: #1f3f94; --red: #e2501f; --line: #d9dee3; --muted: #6b7680; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Sarabun", Tahoma, sans-serif; font-size: 15px; color: #2b2b2b; background: #f4f6fa; }
+main { max-width: 620px; margin: 40px auto; padding: 0 16px; }
+.card { background: #fff; border: 1.5px solid var(--blue); border-radius: 14px; padding: 24px; }
+h1 { margin: 0 0 4px; color: var(--blue); font-size: 22px; }
+p { margin: 0 0 18px; color: var(--muted); }
+label { display: block; font-weight: 600; margin: 12px 0 4px; }
+input { width: 100%; font: inherit; padding: 9px 12px; border: 1px solid #9aa3ad; border-radius: 6px; }
+button { font: inherit; font-weight: 600; margin-top: 18px; padding: 10px 18px; border: 0; border-radius: 6px; background: var(--blue); color: #fff; cursor: pointer; }
+pre { margin: 18px 0 0; padding: 12px; background: #f4f6fa; border: 1px solid var(--line); border-radius: 6px; white-space: pre-wrap; word-break: break-all; font-size: 13px; }
+ol { margin: 18px 0 0; padding-left: 20px; color: #444; }
+li { margin: 4px 0; }
+code { background: #eef2fb; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>Add a user</h1>
+    <p>Creates the line to add to <code>tools/auth.js</code>. Nothing is saved or sent from this page.</p>
+    <form id="f">
+      <label for="id">User ID</label>
+      <input id="id" required autocomplete="off" spellcheck="false">
+      <label for="pw">Password</label>
+      <input id="pw" required autocomplete="new-password">
+      <button>Create line</button>
+    </form>
+    <pre id="out" hidden></pre>
+    <button id="copy" type="button" hidden>Copy</button>
+    <ol>
+      <li>Open <code>tools/auth.js</code> in the WWW-HAL repo on GitHub and click the pencil (Edit).</li>
+      <li>Paste the line inside <code>users: { … }</code>, under the other users.</li>
+      <li>Click <b>Commit changes</b>. The new user can sign in after 1–2 minutes.</li>
+    </ol>
+  </div>
+</main>
+<script>
+document.getElementById("f").addEventListener("submit", async e => {
+  e.preventDefault();
+  const id = document.getElementById("id").value.trim().toUpperCase();
+  const pw = document.getElementById("pw").value;
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(id + ":" + pw));
+  const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+  const out = document.getElementById("out");
+  out.textContent = `    "${id}": "${hex}",`;
+  out.hidden = document.getElementById("copy").hidden = false;
+});
+document.getElementById("copy").addEventListener("click", e => {
+  navigator.clipboard.writeText(document.getElementById("out").textContent);
+  e.target.textContent = "Copied";
+});
+</script>
+</body>
+</html>
