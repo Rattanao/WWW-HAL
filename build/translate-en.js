@@ -244,10 +244,46 @@ const FILES = {
     ['"ไม่พบหัวข้อ B/L No. ในไฟล์ CHECK DEM"', '"No B/L No. heading in the CHECK DEM file"'],
     ['"ไม่พบหัวข้อ DEM. ในไฟล์ CHECK DEM"', '"No DEM. heading in the CHECK DEM file"'],
   ],
+  "sum-edi.html": [
+    ...COMMON,
+    ["<p>แยก MF เป็น LCH / LKB / Transit แล้วทำ SUM-EDI.pdf + SUMMARY.pdf</p>", "<p>Split the MF into LCH / LKB / Transit, then make SUM-EDI.pdf + SUMMARY.pdf</p>"],
+    ["ไฟล์ MF (.xls / .xlsx) <small>CARGO MANIFEST ทั้งลำ ที่มีช่อง SHED NO. / ประเทศ / CARGO MOVEMENT</small>", "MF file (.xls / .xlsx) <small>Whole-vessel CARGO MANIFEST with the SHED NO. / country / CARGO MOVEMENT column</small>"],
+    ["ลายเซ็น <small>รูป .png/.jpg เก็บไว้ในเบราว์เซอร์นี้</small>", "Signature <small>.png/.jpg image, saved in this browser</small>"],
+    ["ยังไม่มีลายเซ็น <b>คลิกเพื่อเลือกรูป</b>", "No signature yet <b>click to choose an image</b>"],
+    [">ลบลายเซ็น<", ">Remove signature<"],
+    ["= B/L ที่ <code>SHED NO. 0332</code>", "= B/Ls with <code>SHED NO. 0332</code>"],
+    ["</code> แยกตามรหัสประเทศ <code>MM</code>", "</code> split by country code <code>MM</code>"],
+    ["<b>LCH</b> = B/L ที่เหลือ ·", "<b>LCH</b> = all other B/Ls ·"],
+    ["ขนาดตู้จากรหัส <code>22G0</code>", "Container size from the code <code>22G0</code>"],
+    ["ยอดรวมทุกกลุ่มต้องเท่ากับ <b>GRAND TOTAL</b> ของ MF ·", "The groups must add up to the MF <b>GRAND TOTAL</b> ·"],
+    ["<th>กลุ่ม</th>", "<th>Group</th>"],
+    ["<th>ตู้</th>", "<th>Containers</th>"],
+    ["<th>น้ำหนัก (KGS)</th>", "<th>Weight (KGS)</th>"],
+    ["<th>หีบห่อ</th>", "<th>Packages</th>"],
+    [">ดาวน์โหลด SUM-EDI.pdf + SUMMARY.pdf<", ">Download SUM-EDI.pdf + SUMMARY.pdf<"],
+    ['"โหลดหัวจดหมาย assets/letterhead.jpg ไม่ได้ — เปิดหน้านี้ผ่าน https://rattanao.github.io/Sum-edi/"', '"Cannot load the letterhead assets/letterhead.jpg — open this page from the website"'],
+    ['"ไม่พบ B/L (HASL...) ในไฟล์นี้"', '"No B/L (HASL...) found in this file"'],
+    ['"ไฟล์นี้ไม่มีช่อง 1) SHED NO. / 2) ประเทศ / 3) CARGO MOVEMENT — ใช้ MF ที่ export แบบมีข้อมูลนี้"', '"This file has no 1) SHED NO. / 2) country / 3) CARGO MOVEMENT column — use an MF exported with it"'],
+    ['"ทำไม่สำเร็จ: "', '"Failed: "'],
+    ['<div class="k">ไฟล์</div>', '<div class="k">File</div>'],
+    ['<div class="k">GRAND TOTAL ของ MF</div>', '<div class="k">MF GRAND TOTAL</div>'],
+    ['"✓ ตรง" : "✗ ไม่ตรงกับผลรวม"', '"✓ matches" : "✗ does not match the total"'],
+    ['` : "ไม่พบ"}', '` : "not found"}'],
+    ['<div class="k">ลายเซ็น</div>', '<div class="k">Signature</div>'],
+    ['sig ? "ใส่แล้ว" : "ไม่มี"', 'sig ? "added" : "none"'],
+    ['title="คลิกเพื่อดู B/L"', 'title="Click to see the B/Ls"'],
+    ["`SHED อื่นที่นับรวมเป็น LCH: ", "`Other SHEDs counted as LCH: "],
+    ["`ตู้ที่ไม่ทราบขนาด (ไม่ได้นับใน 20'/40'): ", "`Containers of unknown size (not counted in 20'/40'): "],
+    ["${label} หน้า ${n}", "${label} page ${n}"],
+    ['alt="ลายเซ็น"> <b>คลิกเพื่อเปลี่ยน</b>', 'alt="Signature"> <b>click to change</b>'],
+    ['"ลายเซ็นต้องเป็นรูป .png หรือ .jpg"', '"The signature must be a .png or .jpg image"'],
+    ['"บันทึกลายเซ็นในเบราว์เซอร์นี้ไม่ได้"', '"Cannot save the signature in this browser"'],
+  ],
 };
 
 // Thai that must stay: DO prints it on the D/O and uses it to detect filled pages.
-const KEEP_TH = [/เริ่มเก็บค่า/, /document\.fonts\.load/];
+// SUM-EDI prints its table headings and the cover note in Thai on SUM-EDI.pdf.
+const KEEP_TH = [/เริ่มเก็บค่า/, /document\.fonts\.load/, /await center\(X/, /thaiImage\(doc/];
 
 let problems = 0;
 for (const [file, pairs] of Object.entries(FILES)) {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -72,33 +72,33 @@
 <script src="embed.js"></script>
 </head>
 <body>
-<header><div class="wrap"><span class="brand"><img src="assets/hal-logo.png" alt="Heung A Line"></span><h1>SUMMARY</h1><p>แยก MF เป็น LCH / LKB / Transit แล้วทำ SUM-EDI.pdf + SUMMARY.pdf</p><span class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.</span></div></header>
+<header><div class="wrap"><span class="brand"><img src="assets/hal-logo.png" alt="Heung A Line"></span><h1>SUMMARY</h1><p>Split the MF into LCH / LKB / Transit, then make SUM-EDI.pdf + SUMMARY.pdf</p><span class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.</span></div></header>
 
 <main class="wrap">
   <section class="card">
     <div class="inputs">
       <div>
-        <label class="t">ไฟล์ MF (.xls / .xlsx) <small>CARGO MANIFEST ทั้งลำ ที่มีช่อง SHED NO. / ประเทศ / CARGO MOVEMENT</small></label>
-        <div class="drop" id="dropMf"><span id="mfText">ลากไฟล์มาวาง หรือ <b>คลิกเพื่อเลือกไฟล์</b></span></div>
+        <label class="t">MF file (.xls / .xlsx) <small>Whole-vessel CARGO MANIFEST with the SHED NO. / country / CARGO MOVEMENT column</small></label>
+        <div class="drop" id="dropMf"><span id="mfText">Drop the file here, or <b>click to choose a file</b></span></div>
         <input type="file" id="fileMf" accept=".xls,.xlsx" class="hidden">
       </div>
       <div>
-        <label class="t">ลายเซ็น <small>รูป .png/.jpg เก็บไว้ในเบราว์เซอร์นี้</small></label>
-        <div class="drop" id="dropSig"><span id="sigText">ยังไม่มีลายเซ็น <b>คลิกเพื่อเลือกรูป</b></span></div>
+        <label class="t">Signature <small>.png/.jpg image, saved in this browser</small></label>
+        <div class="drop" id="dropSig"><span id="sigText">No signature yet <b>click to choose an image</b></span></div>
         <input type="file" id="fileSig" accept="image/png,image/jpeg" class="hidden">
       </div>
       <div class="btns">
-        <button id="clearSig" class="ghost small" disabled>ลบลายเซ็น</button>
-        <button id="clear" class="ghost" disabled>ลบไฟล์</button>
+        <button id="clearSig" class="ghost small" disabled>Remove signature</button>
+        <button id="clear" class="ghost" disabled>Clear files</button>
       </div>
     </div>
     <p class="rules">
-      <b>LKB (GATE2)</b> = B/L ที่ <code>SHED NO. 0332</code> ·
-      <b>MYANMAR / LAOS / MALAYSIA</b> = <code>CARGO MOVEMENT (7-TRANSIT)</code> แยกตามรหัสประเทศ <code>MM</code> <code>LA</code> <code>MY</code> ·
-      <b>LCH</b> = B/L ที่เหลือ ·
-      ขนาดตู้จากรหัส <code>22G0</code> = 20' · <code>45G0</code> / <code>45R1</code> = 40'<br>
-      ยอดรวมทุกกลุ่มต้องเท่ากับ <b>GRAND TOTAL</b> ของ MF ·
-      ไฟล์ถูกประมวลผลในเบราว์เซอร์ของคุณเท่านั้น ไม่มีการอัปโหลดไปที่ใด
+      <b>LKB (GATE2)</b> = B/Ls with <code>SHED NO. 0332</code> ·
+      <b>MYANMAR / LAOS / MALAYSIA</b> = <code>CARGO MOVEMENT (7-TRANSIT)</code> split by country code <code>MM</code> <code>LA</code> <code>MY</code> ·
+      <b>LCH</b> = all other B/Ls ·
+      Container size from the code <code>22G0</code> = 20' · <code>45G0</code> / <code>45R1</code> = 40'<br>
+      The groups must add up to the MF <b>GRAND TOTAL</b> ·
+      Files are processed in your browser only and are never uploaded
     </p>
     <div class="msg" id="msg"></div>
   </section>
@@ -106,18 +106,18 @@
   <section class="card hidden" id="result">
     <div class="info" id="info"></div>
     <div class="tbl"><table>
-      <thead><tr><th>กลุ่ม</th><th>20'</th><th>40'</th><th>ตู้</th><th>B/L</th><th>น้ำหนัก (KGS)</th><th>หีบห่อ</th></tr></thead>
+      <thead><tr><th>Group</th><th>20'</th><th>40'</th><th>Containers</th><th>B/L</th><th>Weight (KGS)</th><th>Packages</th></tr></thead>
       <tbody id="tbody"></tbody>
     </table></div>
     <div class="toolbar">
-      <button id="download">ดาวน์โหลด SUM-EDI.pdf + SUMMARY.pdf</button>
+      <button id="download">Download SUM-EDI.pdf + SUMMARY.pdf</button>
       <button id="dlEdi" class="ghost">SUM-EDI.pdf</button>
       <button id="dlSum" class="ghost">SUMMARY.pdf</button>
     </div>
     <div class="preview" id="preview"></div>
   </section>
 </main>
-<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · เวอร์ชัน 2026-10-28a</footer>
+<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-10-28a</footer>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -265,7 +265,7 @@ async function buildSumEdi(vessel, summ, T) {
   const fonts = { r: await doc.embedFont(PDFLib.StandardFonts.Helvetica), b: await doc.embedFont(PDFLib.StandardFonts.HelveticaBold) };
   const p = pen(doc.addPage([595, 842]), fonts);
   const lh = await fetch("assets/letterhead.jpg").then(r => { if (!r.ok) throw new Error(); return r.arrayBuffer(); })
-    .catch(() => { throw new Error("โหลดหัวจดหมาย assets/letterhead.jpg ไม่ได้ — เปิดหน้านี้ผ่าน https://rattanao.github.io/Sum-edi/"); });
+    .catch(() => { throw new Error("Cannot load the letterhead assets/letterhead.jpg — open this page from the website"); });
   p.image(await doc.embedJpg(lh), 45, 52, 505, 102);
   [["AGENT  NAME  :", AGENT1], ["TAX ID:", "0993000456955"], ["VESSEL  :", vessel]].forEach(([k, v], i) => {
     const y = 194 + i * 21;
@@ -311,8 +311,8 @@ async function run(file) {
   $("msg").textContent = "";
   try {
     const { vessel, bls, gt } = readMf(new Uint8Array(await file.arrayBuffer()));
-    if (!Object.keys(bls).length) throw new Error("ไม่พบ B/L (HASL...) ในไฟล์นี้");
-    if (!Object.values(bls).some(b => b.shed)) throw new Error("ไฟล์นี้ไม่มีช่อง 1) SHED NO. / 2) ประเทศ / 3) CARGO MOVEMENT — ใช้ MF ที่ export แบบมีข้อมูลนี้");
+    if (!Object.keys(bls).length) throw new Error("No B/L (HASL...) found in this file");
+    if (!Object.values(bls).some(b => b.shed)) throw new Error("This file has no 1) SHED NO. / 2) country / 3) CARGO MOVEMENT column — use an MF exported with it");
     const { summ, nosize, sheds } = summarize(bls);
     const T = { bls: summ.reduce((s, x) => s + x.bls, 0), cntrs: summ.reduce((s, x) => s + x.cntrs, 0),
                 gw: Math.round(summ.reduce((s, x) => s + x.gw, 0) * 1000) / 1000, pkg: summ.reduce((s, x) => s + x.pkg, 0) };
@@ -323,7 +323,7 @@ async function run(file) {
     render();
   } catch (err) {
     report = null; $("result").classList.add("hidden");
-    $("msg").textContent = "ทำไม่สำเร็จ: " + err.message;
+    $("msg").textContent = "Failed: " + err.message;
   }
   update();
 }
@@ -333,18 +333,18 @@ async function render() {
   const ok = gt && Math.abs(gt.gw - T.gw) < .0005 && gt.pkg === T.pkg;
   let sig = false; try { sig = !!localStorage.getItem(SIG_KEY); } catch {}
   $("info").innerHTML =
-    `<div class="k">ไฟล์</div><div>${escapeHtml(name)}</div>` +
+    `<div class="k">File</div><div>${escapeHtml(name)}</div>` +
     `<div class="k">VESSEL</div><div><b>${escapeHtml(vessel)}</b></div>` +
-    `<div class="k">GRAND TOTAL ของ MF</div><div class="${ok ? "ok" : "ng"}">${gt ? `${f3(gt.gw)} / ${f0(gt.pkg)} ${ok ? "✓ ตรง" : "✗ ไม่ตรงกับผลรวม"}` : "ไม่พบ"}</div>` +
-    `<div class="k">ลายเซ็น</div><div class="${sig ? "ok" : "ng"}">${sig ? "ใส่แล้ว" : "ไม่มี"}</div>`;
+    `<div class="k">MF GRAND TOTAL</div><div class="${ok ? "ok" : "ng"}">${gt ? `${f3(gt.gw)} / ${f0(gt.pkg)} ${ok ? "✓ matches" : "✗ does not match the total"}` : "not found"}</div>` +
+    `<div class="k">Signature</div><div class="${sig ? "ok" : "ng"}">${sig ? "added" : "none"}</div>`;
   $("tbody").innerHTML = summ.map((x, i) =>
-    `<tr class="g" data-i="${i}" title="คลิกเพื่อดู B/L"><td class="b">${escapeHtml(LABEL[x.g] || x.g)}</td><td>${x.n20 || ""}</td><td>${x.n40 || ""}</td>` +
+    `<tr class="g" data-i="${i}" title="Click to see the B/Ls"><td class="b">${escapeHtml(LABEL[x.g] || x.g)}</td><td>${x.n20 || ""}</td><td>${x.n40 || ""}</td>` +
     `<td>${x.cntrs}</td><td>${x.bls}</td><td class="n">${f3(x.gw)}</td><td class="n">${f0(x.pkg)}</td></tr>` +
     `<tr class="bls hidden" id="bl${i}"><td colspan="7">${x.nos.join(", ")}</td></tr>`).join("") +
     `<tr class="total"><td>TOTAL</td><td></td><td></td><td>${T.cntrs}</td><td>${T.bls}</td><td class="n">${f3(T.gw)}</td><td class="n">${f0(T.pkg)}</td></tr>`;
   const warn = [];
-  if (sheds.length) warn.push(`SHED อื่นที่นับรวมเป็น LCH: ${sheds.join(", ")}`);
-  if (nosize.length) warn.push(`ตู้ที่ไม่ทราบขนาด (ไม่ได้นับใน 20'/40'): ${nosize.join(", ")}`);
+  if (sheds.length) warn.push(`Other SHEDs counted as LCH: ${sheds.join(", ")}`);
+  if (nosize.length) warn.push(`Containers of unknown size (not counted in 20'/40'): ${nosize.join(", ")}`);
   $("msg").textContent = warn.join("\n");
   $("result").classList.remove("hidden");
   const box = $("preview"); box.innerHTML = "";
@@ -354,7 +354,7 @@ async function render() {
       const page = await pdf.getPage(n), vp = page.getViewport({ scale: 1.2 });
       const fig = document.createElement("figure"), cv = document.createElement("canvas");
       cv.width = vp.width; cv.height = vp.height;
-      fig.append(cv); fig.insertAdjacentHTML("beforeend", `<figcaption>${label} หน้า ${n}</figcaption>`);
+      fig.append(cv); fig.insertAdjacentHTML("beforeend", `<figcaption>${label} page ${n}</figcaption>`);
       box.append(fig);
       await page.render({ canvasContext: cv.getContext("2d"), viewport: vp }).promise;
     }
@@ -371,13 +371,13 @@ function save(bytes, name) {
 // ---------- signature ----------
 function showSig() {
   let url = null; try { url = localStorage.getItem(SIG_KEY); } catch {}
-  $("sigText").innerHTML = url ? `<img src="${url}" alt="ลายเซ็น"> <b>คลิกเพื่อเปลี่ยน</b>` : "ยังไม่มีลายเซ็น <b>คลิกเพื่อเลือกรูป</b>";
+  $("sigText").innerHTML = url ? `<img src="${url}" alt="Signature"> <b>click to change</b>` : "No signature yet <b>click to choose an image</b>";
   $("clearSig").disabled = !url;
 }
 async function takeSig(file) {
-  if (!file || !/^image\/(png|jpeg)$/.test(file.type)) { $("msg").textContent = "ลายเซ็นต้องเป็นรูป .png หรือ .jpg"; return; }
+  if (!file || !/^image\/(png|jpeg)$/.test(file.type)) { $("msg").textContent = "The signature must be a .png or .jpg image"; return; }
   const url = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(file); });
-  try { localStorage.setItem(SIG_KEY, url); } catch { $("msg").textContent = "บันทึกลายเซ็นในเบราว์เซอร์นี้ไม่ได้"; return; }
+  try { localStorage.setItem(SIG_KEY, url); } catch { $("msg").textContent = "Cannot save the signature in this browser"; return; }
   showSig(); if (mfFile) run(mfFile);
 }
 
@@ -386,7 +386,7 @@ let mfFile = null;
 function update() { $("clear").disabled = !(mfFile || report); }
 function clearAll() {
   mfFile = report = null; $("fileMf").value = ""; $("msg").textContent = "";
-  $("mfText").innerHTML = "ลากไฟล์มาวาง หรือ <b>คลิกเพื่อเลือกไฟล์</b>";
+  $("mfText").innerHTML = "Drop the file here, or <b>click to choose a file</b>";
   $("result").classList.add("hidden"); $("preview").innerHTML = ""; update();
 }
 function wire(drop, input, take) {
@@ -397,7 +397,7 @@ function wire(drop, input, take) {
   d.ondragleave = () => d.classList.remove("over");
   d.ondrop = e => { e.preventDefault(); d.classList.remove("over"); if (e.dataTransfer.files[0]) take(e.dataTransfer.files[0]); };
 }
-wire("dropMf", "fileMf", f => { mfFile = f; $("mfText").innerHTML = `<b>${escapeHtml(f.name)}</b> (คลิกเพื่อเปลี่ยนไฟล์)`; run(f); });
+wire("dropMf", "fileMf", f => { mfFile = f; $("mfText").innerHTML = `<b>${escapeHtml(f.name)}</b> (click to change file)`; run(f); });
 wire("dropSig", "fileSig", takeSig);
 $("clearSig").onclick = () => { try { localStorage.removeItem(SIG_KEY); } catch {} showSig(); if (mfFile) run(mfFile); };
 $("clear").onclick = clearAll;
