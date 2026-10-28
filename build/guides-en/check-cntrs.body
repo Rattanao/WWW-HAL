@@ -1,0 +1,130 @@
+<div class="wrap">
+  <header class="head">
+    <div class="tag">Vessel import document check · Import customs declaration</div>
+    <div class="brand"><span class="logo-badge"><img class="logo" src="assets/hal-logo.png" alt="Heung A Line"></span><h1>Check CNTRS</h1></div>
+    <p class="lede">Compares the carrier's MANIFEST with the CNTRS (Container List for Feeder) for every container, then produces a colour-coded CNTRS_EDI.xlsx report so any mismatch stands out before you file the declaration.</p>
+    <div class="flow" aria-label="Workflow">
+      <span class="doc">MANIFEST.xls</span><span class="op">+</span>
+      <span class="doc">CNTRS.xls / .pdf</span><span class="op">→</span>
+      <span class="out">CNTRS_EDI.xlsx</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#check-cntrs">Check online (no install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Check-cntrs/archive/refs/heads/main.zip">Download the program (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Check-cntrs">Open on GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="install">
+    <h2>First-time setup</h2>
+    <p class="sub">Once per computer, Windows (or use "Check online" above and install nothing at all)</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Install Python 3</b> from <a href="https://www.python.org/downloads/">python.org/downloads</a></p>
+        <p class="note">On the installer's first screen <span class="warn">tick ☑ Add python.exe to PATH</span> before clicking Install Now</p>
+      </div></li>
+      <li><div>
+        <p><b>Download the program</b> with the "Download the program (ZIP)" button above</p>
+        <p class="note">Right-click the ZIP → Extract All, and keep the folder anywhere, e.g. Documents</p>
+      </div></li>
+      <li><div>
+        <p><b>The first run needs an internet connection</b></p>
+        <p class="note">The program installs the libraries it needs (pandas, openpyxl, xlrd, pdfplumber) automatically</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="use">
+    <h2>Every job</h2>
+    <ol class="steps">
+      <li><div>
+        <p><b>Put the files in the <code>input</code> folder</b></p>
+        <p class="note">One MANIFEST (.xls/.xlsx) and at least one CNTRS (.xls/.xlsx or .pdf). File names don't matter: the program tells them apart by their content. You can add several CNTRS files at once (e.g. one per destination BMT/LCH/LKR) and the program merges them into one set</p>
+      </div></li>
+      <li><div>
+        <p><b>Double-click <code>run-check-cntrs.bat</code></b></p>
+      </div></li>
+      <li><div>
+        <p><b>Open the result at <code>output\CNTRS_EDI.xlsx</code></b></p>
+        <p class="note">The black window also summarises how many containers were found and how many don't match. If CNTRS_EDI.xlsx is open in Excel, the program saves under a new name (e.g. CNTRS_EDI_2.xlsx) instead of overwriting it</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="read">
+    <h2>Reading the CNTRS_EDI.xlsx report</h2>
+    <p class="sub">One row per container. MANIFEST and CNTRS columns sit side by side for every field. Matching cells just show "-"; mismatches show both actual values on a red background</p>
+    <div class="sheet-scroll">
+      <table class="sheet">
+        <thead><tr><th class="l">Quick summary</th><th>CONTAINER NO.</th><th>B/L NO.</th><th>SHED (MANIFEST)</th><th>SHED (CNTRS)</th><th>SHED</th><th>TEMP (MANIFEST)</th><th>TEMP (CNTRS)</th><th>TEMP</th><th>REMARK (CNTRS)</th></tr></thead>
+        <tbody>
+          <tr><td class="g l">✓ Pass</td><td class="mono">HALU1234567</td><td class="mono">HASLC…0001A</td><td>-</td><td>-</td><td>✓</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr>
+          <tr><td class="r l">⚠ Mismatch: SHED</td><td class="mono">SKHU7654321</td><td class="mono">HASLC…0002F</td><td class="mono r">2835</td><td class="mono">2826</td><td>⚠</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr>
+          <tr><td class="r l">⚠ Mismatch: TEMP</td><td class="mono">FSCU1112223</td><td class="mono">HASLC…0003B</td><td>-</td><td>-</td><td>✓</td><td class="mono r">-2C</td><td class="mono">-18C</td><td>⚠</td><td>REEFER -18C</td></tr>
+          <tr><td class="y l">⚠ Not in MANIFEST</td><td class="mono y">TLLU9998887</td><td class="y">—</td><td class="y">—</td><td class="mono y">2826</td><td class="y">⚠</td><td class="y">—</td><td class="mono y">-18C</td><td class="y">⚠</td><td class="y">HAZARDOUS CLASS 9 UN3077</td></tr>
+          <tr><td class="g l">✓ Pass (TRANSIT)</td><td class="mono">SKHU4445556</td><td class="mono o">HASLS…0004</td><td>-</td><td>-</td><td>✓</td><td>-</td><td>-</td><td>✓</td><td>-</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">Illustration only; B/L and container numbers are made up. The real report has more columns (STATUS, VENT, DG CLASS/UN, etc.) · In the last row, the orange B/L NO. cell marks a TRANSIT/TRANSHIPMENT B/L: right-click → Edit Note to see the destination found (e.g. "MYANMAR")</p>
+    <div class="legend">
+      <div class="r"><b>Red</b><span>Mismatch: fix or confirm before filing</span></div>
+      <div class="y"><b>Yellow (whole row)</b><span>Container on one side only, missing from MANIFEST or CNTRS</span></div>
+      <div class="o"><b>Orange (B/L NO. cell)</b><span>TRANSIT/TRANSHIPMENT B/L; see the Note for the destination</span></div>
+      <div class="g"><b>Green</b><span>Match, shows "-", nothing to do</span></div>
+    </div>
+    <div class="split">
+      <div>
+        <h3>Fields compared for every container</h3>
+        <ul class="check-list">
+          <li>SHED NUMBER (compared as written + locked rules: DG = 2826 for destination THLCH only, BMT = 0110, Lat Krabang = 0332)</li>
+          <li>STATUS (FCL / LCL)</li>
+          <li>TEMP of reefer containers</li>
+          <li>VENT: reefers must always state it in the MANIFEST</li>
+          <li>DG CLASS / UN (the UN number is the main key)</li>
+          <li>REMARK by destination: BMT = BY BARGE, SCT = BY TRUCK, LKR = BY TRUCK (reefer/DG), otherwise BY TRAIN</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Flagged red/yellow right away</h3>
+        <ul class="check-list">
+          <li>Containers in CNTRS but missing from MANIFEST, or the reverse (critical rows)</li>
+          <li>SHED breaking the locked rule for its destination</li>
+          <li>Incomplete TRANSIT REMARK: it needs both the word TRANSIT and "TO &lt;country&gt;"</li>
+          <li>TEMP mismatch, or a reefer with no VENT</li>
+          <li>DG CLASS/UN mismatch</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="claude">
+    <h2>Use with Claude Code</h2>
+    <p class="sub">For people who already use Claude Code: let Claude run the check and explain the results; you can add rules yourself</p>
+    <div class="cmd">
+      <pre id="clone">git clone https://github.com/Rattanao/Check-cntrs.git %USERPROFILE%\.claude\skills\check-cntrs</pre>
+      <button type="button" id="copy-clone" data-target="clone">Copy</button>
+    </div>
+    <p class="note">Restart Claude Code, go to the job folder, and type e.g. "check CNTRS"</p>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>Troubleshooting</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Python not found</td><td>Reinstall Python and tick Add python.exe to PATH</td></tr>
+          <tr><td>PermissionError: [Errno 13]</td><td>CNTRS_EDI.xlsx is open in Excel. The program saves under a new name automatically, so nothing else is needed; or close the file and run again to get the original name back</td></tr>
+          <tr><td>MANIFEST / CNTRS file not found</td><td>Check the files are in the input folder with a .xls/.xlsx or .pdf extension. The program identifies them by content, not by name</td></tr>
+          <tr><td>An unusually large number of mismatches (e.g. over half)</td><td>Usually a new file layout with shifted columns. Send the file to Rattana so the program can support it</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>This report is a checking aid. Before filing, a person must always review every red or yellow cell</p>
+    <p>Updating the program: download the ZIP again and extract over the old folder (or <code>git pull</code>) · Source code: <a href="https://github.com/Rattanao/Check-cntrs">github.com/Rattanao/Check-cntrs</a></p>
+  </footer>
+</div>

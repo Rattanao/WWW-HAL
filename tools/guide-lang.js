@@ -1,15 +1,12 @@
 // ปุ่มสลับภาษา ไทย / English บนหน้าคู่มือ (ใส่ท้าย <body> ของทุก guide-*.html)
 // คู่มือภาษาไทยคือ guide-<tool>.html (ดึงจาก repo ต้นทาง), ภาษาอังกฤษคือ guide-<tool>-en.html
-// จำภาษาที่เลือกไว้ในเบราว์เซอร์ เปิดคู่มือครั้งหน้าจะได้ภาษาเดิม
+// เว็บรวมเปิดคู่มือภาษาอังกฤษเป็นค่าเริ่มต้น (ลิงก์ใน index.html ชี้ไป -en) กด ไทย เพื่อดูฉบับภาษาไทย
 (function () {
   var m = (location.pathname.split("/").pop() || "").match(/^guide-(.+?)(-en)?\.html$/);
   if (!m) return;
-  var id = m[1], isEn = !!m[2], KEY = "guideLang";
-  function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
-  function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  var id = m[1], isEn = !!m[2];
 
   var thUrl = "guide-" + id + ".html", enUrl = "guide-" + id + "-en.html";
-  if (!isEn && get() === "en") { location.replace(enUrl + location.hash); return; }
 
   var css = document.createElement("style");
   css.textContent =
@@ -29,9 +26,7 @@
     a.lang = o[0];
     a.textContent = o[1];
     if (o[3]) a.setAttribute("aria-current", "page");
-    a.addEventListener("click", function () { set(o[0]); });
     bar.appendChild(a);
   });
   document.body.appendChild(bar);
-  set(isEn ? "en" : "th");
 })();

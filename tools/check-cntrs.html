@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -87,7 +87,7 @@
 <header><div class="wrap">
   <div class="title">
     <div class="brand"><span class="logo-badge"><img class="logo" src="assets/hal-logo.png" alt="Heung A Line"></span><h1>CHECK CNTRS</h1></div>
-    <p>ตรวจเทียบ MANIFEST กับ CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK</p>
+    <p>Compare MANIFEST with CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK</p>
   </div>
   <p class="credit">Project by Ms. Rattana Mudlae<br>Position Import DOC.</p>
 </div></header>
@@ -96,19 +96,19 @@
   <section class="card">
     <div class="top">
       <div>
-        <label class="t">ไฟล์ MANIFEST และ CNTRS (.xls / .xlsx / .pdf)</label>
-        <div class="drop" id="drop"><span>ลากไฟล์มาวางทั้งหมดพร้อมกัน หรือ <b>คลิกเพื่อเลือกไฟล์</b></span></div>
+        <label class="t">MANIFEST and CNTRS files (.xls / .xlsx / .pdf)</label>
+        <div class="drop" id="drop"><span>Drop all the files here at once, or <b>click to choose files</b></span></div>
         <input type="file" id="file" accept=".xls,.xlsx,.pdf" multiple class="hidden">
         <div class="files" id="files"></div>
       </div>
-      <button id="run" disabled>ตรวจสอบ</button>
+      <button id="run" disabled>Check</button>
     </div>
     <p class="rules">
-      แยกประเภทไฟล์ให้เองจากเนื้อหา (ตั้งชื่ออะไรก็ได้) CNTRS วางได้หลายไฟล์ เช่น BMT / LCH / LKR ·
-      <b>SHED</b> ล็อก: DG <code>2826</code>, THBMT <code>0110</code>, THLKR ทั่วไป <code>0332</code> ·
-      <b>REMARK</b>: BMT=<code>BY BARGE</code>, SCT=<code>BY TRUCK</code>, LKR=<code>BY TRUCK</code> (ตู้เย็น/DG) นอกนั้น <code>BY TRAIN</code> ·
-      ตู้เย็น (xxRx) ต้องมี <code>VENT</code> · ตรวจทุก PORT ยกเว้น BKK, UCT<br>
-      ไฟล์ถูกประมวลผลในเบราว์เซอร์ของคุณเท่านั้น ไม่มีการอัปโหลดไปที่ใด
+      File types are detected from their content (any file name works). You can add several CNTRS files, e.g. BMT / LCH / LKR ·
+      <b>SHED</b> locked: DG <code>2826</code>, THBMT <code>0110</code>, THLKR general <code>0332</code> ·
+      <b>REMARK</b>: BMT=<code>BY BARGE</code>, SCT=<code>BY TRUCK</code>, LKR=<code>BY TRUCK</code> (reefer/DG), otherwise <code>BY TRAIN</code> ·
+      Reefers (xxRx) must have <code>VENT</code> · Every PORT is checked except BKK, UCT<br>
+      Files are processed in your browser only and are never uploaded
     </p>
     <div class="msg" id="msg"></div>
   </section>
@@ -117,14 +117,14 @@
     <div class="info" id="info"></div>
     <div class="chips" id="chips"></div>
     <div class="toolbar">
-      <input type="search" id="search" placeholder="ค้นหา ตู้ / B/L / หมายเหตุ">
-      <label><input type="checkbox" id="onlyBad"> แสดงเฉพาะที่ไม่ตรง</label>
-      <button id="download">ดาวน์โหลด CNTRS_EDI.xlsx</button>
+      <input type="search" id="search" placeholder="Search container / B/L / note">
+      <label><input type="checkbox" id="onlyBad"> Show mismatches only</label>
+      <button id="download">Download CNTRS_EDI.xlsx</button>
     </div>
     <div class="tbl"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
   </section>
 </main>
-<footer><a href="guide-check-cntrs.html">วิธีใช้</a> · <a href="https://github.com/Rattanao/Check-cntrs">github.com/Rattanao/Check-cntrs</a></footer>
+<footer><a href="guide-check-cntrs-en.html">Guide</a> · <a href="https://github.com/Rattanao/Check-cntrs">github.com/Rattanao/Check-cntrs</a></footer>
 
 <script src="core.js"></script>
 <script>
@@ -187,7 +187,7 @@ async function addFiles(list) {
       }
       files.push(entry);
     } catch (err) {
-      $("msg").textContent += `อ่านไฟล์ ${f.name} ไม่ได้: ${err.message}\n`;
+      $("msg").textContent += `Cannot read ${f.name}: ${err.message}\n`;
     }
   }
   renderFiles();
@@ -195,8 +195,8 @@ async function addFiles(list) {
 
 function renderFiles() {
   $("files").innerHTML = files.map((f, i) =>
-    `<span class="file">${esc(f.name)} <span class="k ${f.kind || "NONE"}">${f.kind || "ไม่รู้จัก"}</span>` +
-    `<button class="x" data-i="${i}" title="เอาออก">×</button></span>`).join("");
+    `<span class="file">${esc(f.name)} <span class="k ${f.kind || "NONE"}">${f.kind || "Unknown"}</span>` +
+    `<button class="x" data-i="${i}" title="Remove">×</button></span>`).join("");
   const has = k => files.some(f => f.kind === k);
   $("run").disabled = !(has("MANIFEST") && has("CNTRS"));
 }
@@ -219,7 +219,7 @@ function run() {
     if (f.kind === "MANIFEST" && f.rows) Object.assign(manifest, C.parseManifest(f.rows, header && header.portOfDischarge));
   }
   if (!Object.keys(manifest).length || !Object.keys(cntrs).length) {
-    $("msg").textContent = "อ่านตู้จากไฟล์ไม่ได้ ตรวจสอบว่าเป็นรายงาน CARGO MANIFEST และ CONTAINER LIST FOR FEEDER";
+    $("msg").textContent = "Could not read any containers. Check the files are a CARGO MANIFEST and a CONTAINER LIST FOR FEEDER report";
     return;
   }
   report = { ...C.buildReport(manifest, cntrs), header };
@@ -232,7 +232,7 @@ function renderResult() {
     `<div class="k">FEEDER</div><div>${esc(header.feeder)}</div><div class="k">VOYAGE</div><div>${esc(header.voyage)}</div>` +
     `<div class="k">ARRIVAL DATE</div><div>${esc(header.arrivalDate)}</div><div class="k">PORT OF DISCHARGE</div><div>${esc(header.portOfDischarge)}</div>`;
   $("chips").innerHTML =
-    `<span class="chip all">ทั้งหมด ${total} ตู้</span><span class="chip bad">⚠ ไม่ตรง ${mismatch}</span><span class="chip ok">✓ ตรง ${total - mismatch}</span>`;
+    `<span class="chip all">All ${total} containers</span><span class="chip bad">⚠ Mismatch ${mismatch}</span><span class="chip ok">✓ Match ${total - mismatch}</span>`;
   $("thead").innerHTML = "<tr>" + C.HEADERS.map((h, i) => `<th class="${i < 3 ? "s" + i : ""}">${esc(h)}</th>`).join("") + "</tr>";
   drawRows();
   $("result").classList.remove("hidden");
@@ -267,7 +267,7 @@ async function download() {
   const merge = (r, text, font) => { ws.mergeCells(r, 1, r, LAST); const c = ws.getCell(r, 1); c.value = text; c.font = font; };
   merge(1, "CNTRS EDI - MANIFEST vs CNTRS Discrepancy Report (SHED NUMBER / STATUS / TEMP / VENT / DG / REMARK)", { bold: true, size: 11 });
   merge(2, `FEEDER: ${header.feeder}   |   VOYAGE: ${header.voyage}   |   ARRIVAL DATE: ${header.arrivalDate}   |   PORT OF DISCHARGE: ${header.portOfDischarge}`, { bold: true, size: 11 });
-  merge(3, "กฎ SHED: DG=2826 (เฉพาะ THLCH), BMT=0110, ลาดกระบัง=0332  |  กฎ REMARK ตาม Port Of Delivery: BMT=BY BARGE, SCT=BY TRUCK, LKR=BY TRUCK (ตู้เย็น/DG) นอกนั้น BY TRAIN  |  ✓ สีเขียว = ตรงกัน, ⚠ สีแดง = ไม่ตรงกัน",
+  merge(3, "SHED rules: DG=2826 (THLCH only), BMT=0110, Lat Krabang=0332  |  REMARK rules by Port Of Delivery: BMT=BY BARGE, SCT=BY TRUCK, LKR=BY TRUCK (reefer/DG), otherwise BY TRAIN  |  ✓ green = match, ⚠ red = mismatch",
     { bold: true, size: 8, color: { argb: "FFFF0000" } });
 
   C.HEADERS.forEach((h, j) => {
@@ -294,8 +294,8 @@ async function download() {
     });
   });
   let r = 6 + rows.length + 1;
-  const sum = [["สรุปผล / SUMMARY", null, "000000"], ["จำนวน CONTAINER ทั้งหมด:", total, "000000"],
-               ["จำนวนที่ไม่ตรงกัน (⚠):", mismatch, "FF0000"], ["จำนวนที่ตรงกัน (✓):", total - mismatch, "000000"]];
+  const sum = [["SUMMARY", null, "000000"], ["Total containers:", total, "000000"],
+               ["Mismatches (⚠):", mismatch, "FF0000"], ["Matches (✓):", total - mismatch, "000000"]];
   sum.forEach(([label, val, color]) => {
     ws.mergeCells(r, 1, r, 4);
     const a = ws.getCell(r, 1); a.value = label; a.font = { bold: true, size: 11, color: { argb: "FF" + color } };

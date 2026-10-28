@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,50 +79,50 @@
 <script src="embed.js"></script>
 </head>
 <body>
-<header><div class="wrap"><span class="brand"><img src="assets/hal-logo.png" alt="Heung A Line"></span><h1>DO</h1><p>เติมวันเริ่มเก็บค่า DEM / ค่าไฟ / SPECIAL CONTAINER ลงในใบ D/O</p><span class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.</span></div></header>
+<header><div class="wrap"><span class="brand"><img src="assets/hal-logo.png" alt="Heung A Line"></span><h1>DO</h1><p>Add DEM / power charge start dates and SPECIAL CONTAINER to the D/O</p><span class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.</span></div></header>
 
 <main class="wrap">
   <section class="card">
     <div class="inputs">
       <div class="wide">
-        <label class="t">ไฟล์ DO (.pdf) <small>ใส่ได้ 1 ไฟล์ขึ้นไป</small></label>
-        <div class="drop" id="dropPdf"><span id="pdfText">ลากไฟล์มาวาง หรือ <b>คลิกเพื่อเลือกไฟล์</b></span></div>
+        <label class="t">DO file (.pdf) <small>1 or more files</small></label>
+        <div class="drop" id="dropPdf"><span id="pdfText">Drop the file here, or <b>click to choose a file</b></span></div>
         <input type="file" id="filePdf" accept=".pdf" multiple class="hidden">
       </div>
       <div class="wide">
-        <label class="t">ไฟล์ CHECK DEM (.xlsx) <small>ไม่ใส่ก็ได้</small></label>
-        <div class="drop" id="dropXls"><span id="xlsText">ลากไฟล์มาวาง หรือ <b>คลิกเพื่อเลือกไฟล์</b></span></div>
+        <label class="t">CHECK DEM file (.xlsx) <small>optional</small></label>
+        <div class="drop" id="dropXls"><span id="xlsText">Drop the file here, or <b>click to choose a file</b></span></div>
         <input type="file" id="fileXls" accept=".xlsx,.xls" class="hidden">
       </div>
       <div>
-        <label class="t" for="demAll">DEM. วันที่</label>
+        <label class="t" for="demAll">DEM. date</label>
         <input type="date" id="demAll" autocomplete="off">
       </div>
       <div>
-        <label class="t" for="recAll">ค่าไฟ วันที่</label>
+        <label class="t" for="recAll">Power charge date</label>
         <input type="date" id="recAll" autocomplete="off">
       </div>
       <div>
-        <label class="t" for="size">ขนาดตัวหนังสือ</label>
+        <label class="t" for="size">Font size</label>
         <input type="number" id="size" value="15.5" min="8" max="24" step="0.5">
       </div>
       <div class="btns">
-        <button id="run" disabled>ประมวลผล</button>
-        <button id="clear" class="ghost" disabled>ลบไฟล์</button>
+        <button id="run" disabled>Process</button>
+        <button id="clear" class="ghost" disabled>Clear files</button>
       </div>
     </div>
     <p class="rules">
-      <b>ทุกใบ</b> เริ่มเก็บค่า DEM. วันที่ ·
-      <b>DG</b> (<code>UN</code> / <code>CLASS</code>) เพิ่ม SPECIAL CONTAINER ·
-      <b>ตู้เย็น</b> (<code>20RF</code> / <code>40RH</code> / <code>TEMP</code>) เพิ่มวันเริ่มเก็บค่าไฟ ·
-      <b>ISO TANK + DG</b> เติมแค่ SPECIAL CONTAINER ·
-      <b>CFS/CFS, CY/CFS</b> ไม่เติม DEM ·
-      หน้า <b>ATTACHED RIDER</b> ไม่เติม<br>
-      <b>ปริ้น x2</b>: CY ซ้อนกันทีละ B/L (1,1,2,2) · CFS แยกเป็น 2 ชุดต่อ B/L หลัก (A,B,C,A,B,C)<br>
-      <b>วันที่</b>: ใส่ CHECK DEM หรือเติมเองที่ช่อง DEM. / ค่าไฟ (เติมอย่างใดอย่างหนึ่งหรือทั้งสองอย่าง) แล้วกด <b>ประมวลผล</b>
-      (ใช้กับทุก B/L ที่ CHECK DEM ไม่มีวันที่) · แก้ทีละ B/L ได้ที่ช่องวันที่ในตาราง แล้วกด <b>ประมวลผล</b> ·
-      ค่าไฟที่ไม่มีวันที่เลยใช้ ATA + 3 วัน<br>
-      ไฟล์ถูกประมวลผลในเบราว์เซอร์ของคุณเท่านั้น ไม่มีการอัปโหลดไปที่ใด
+      <b>Every D/O</b>: DEM start date ·
+      <b>DG</b> (<code>UN</code> / <code>CLASS</code>) adds SPECIAL CONTAINER ·
+      <b>Reefer</b> (<code>20RF</code> / <code>40RH</code> / <code>TEMP</code>) adds the power charge start date ·
+      <b>ISO TANK + DG</b> only SPECIAL CONTAINER ·
+      <b>CFS/CFS, CY/CFS</b> no DEM line ·
+      <b>ATTACHED RIDER</b> pages: nothing added<br>
+      <b>Print x2</b>: CY each B/L twice in a row (1,1,2,2) · CFS 2 sets per master B/L (A,B,C,A,B,C)<br>
+      <b>Dates</b>: add CHECK DEM or type them in the DEM. / power boxes (either or both), then click <b>Process</b>
+      (used for every B/L with no date in CHECK DEM) · Edit any B/L in the table's date cells, then click <b>Process</b> ·
+      Power with no date at all uses ATA + 3 days<br>
+      Files are processed in your browser only and are never uploaded
     </p>
     <div class="msg" id="msg"></div>
   </section>
@@ -131,18 +131,18 @@
     <div class="info" id="info"></div>
     <div class="chips" id="chips"></div>
     <div class="toolbar">
-      <input type="search" id="search" autocomplete="off" placeholder="ค้นหา B/L No. / วันที่">
-      <button id="download">ดาวน์โหลด DO-DEM.pdf (x1 + x2)</button>
-      <button id="print" class="ghost">ปริ้น x2</button>
+      <input type="search" id="search" autocomplete="off" placeholder="Search B/L No. / date">
+      <button id="download">Download DO-DEM.pdf (x1 + x2)</button>
+      <button id="print" class="ghost">Print x2</button>
     </div>
     <div class="tbl"><table>
-      <thead><tr><th>หน้า</th><th>B/L No.</th><th>แบบ</th><th>ค่าไฟ</th><th>DEM.</th><th>ข้อความที่เติม</th></tr></thead>
+      <thead><tr><th>Page</th><th>B/L No.</th><th>Type</th><th>Power</th><th>DEM.</th><th>Text added</th></tr></thead>
       <tbody id="tbody"></tbody>
     </table></div>
     <div class="preview hidden" id="preview"><p id="previewText"></p><canvas id="canvas"></canvas></div>
   </section>
 </main>
-<footer><a href="guide-do.html">คู่มือ / ดาวน์โหลดโปรแกรม</a> · <a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a> · เวอร์ชัน 2026-10-22a</footer>
+<footer><a href="guide-do-en.html">Guide / Download program</a> · <a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a> · Version 2026-10-22a</footer>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -157,7 +157,7 @@ const RE_DG = /\bUN\s*(NO\.?)?\s*:?\s*\d{4}\b|\bCLASS\s*:?\s*\d|\bCL\s*\d/;
 const RE_REEFER = /\b(20|40|45)R[FH]|\bTEMP\b/;
 const RE_TANK = /ISO\s*TANK|\b\d\dTK\b/;
 const RE_STATUS = /\b(CY|CFS)\s*\/\s*(CY|CFS)\b/;
-const KINDS = { "ทั่วไป": "DDEBF7", "DG": "FFE0B2", "REEFER": "C8E6C9", "REEFER+DG": "E1BEE7", "ISO TANK+DG": "FFCDD2", "ATTACHED RIDER": "BBDEFB", "ข้าม": "E0E0E0" };
+const KINDS = { "GENERAL": "DDEBF7", "DG": "FFE0B2", "REEFER": "C8E6C9", "REEFER+DG": "E1BEE7", "ISO TANK+DG": "FFCDD2", "ATTACHED RIDER": "BBDEFB", "SKIPPED": "E0E0E0" };
 const MARK = "DO-DEM-FILLED";         // invisible text on every page we fill (same as scripts/fill_do.py)
 const DONE = /DO-DEM-FILLED|CERTIFIED\s*TRUE\s*&\s*CORRECT\s*COPY|เริ่มเก็บค่า/;   // marker, or the old stamp / note in older outputs
 const MON = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
@@ -188,10 +188,10 @@ function readCheckDem(bytes) {
   const grid = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: true, defval: null });
   const norm = v => String(v ?? "").trim();
   const h = grid.findIndex(r => r.some(v => norm(v) === "B/L No."));
-  if (h < 0) throw new Error("ไม่พบหัวข้อ B/L No. ในไฟล์ CHECK DEM");
+  if (h < 0) throw new Error("No B/L No. heading in the CHECK DEM file");
   const col = name => grid[h].findIndex(v => norm(v) === name);
   const cBl = col("B/L No."), cRec = col("REC."), cDem = col("DEM.");
-  if (cDem < 0) throw new Error("ไม่พบหัวข้อ DEM. ในไฟล์ CHECK DEM");
+  if (cDem < 0) throw new Error("No DEM. heading in the CHECK DEM file");
   let ata = null;
   for (const r of grid.slice(0, h)) { const i = r.findIndex(v => norm(v) === "ATA"); if (i >= 0) ata = toDate(r[i + 1]); }
   const rows = {};
@@ -268,21 +268,21 @@ async function fill(pdfs, xlsBytes, size, dates, ov) {
     const master = /[A-Z]$/.test(bl) ? bl.slice(0, -1) : bl;
     // rider page = its "== ATTACHED RIDER ==" heading; a D/O page saying "AS PER ATTACHED RIDER" is not one
     const rider = /=\s*ATTACHED\s*RIDER\s*=/.test(text) && !/CARGO\s*DELIVERY\s*ORDER/.test(text), prevRow = out[out.length - 1];
-    const unstamped = stripOldStamps(doc, doc.getPage(n - 1)) ? " · ลบตรายางเก่าออกแล้ว" : "";
+    const unstamped = stripOldStamps(doc, doc.getPage(n - 1)) ? " · old stamp removed" : "";
     if (DONE.test(text)) {                        // a DO-DEM output fed back in: never note twice
       const st0 = text.match(RE_STATUS);
       out.push({ page: n, bl, master, rider, cfs: rider ? !!(prevRow && prevRow.cfs) : !!st0 && st0[2] === "CFS",
-                 kind: "ข้าม", note: "เติมไว้แล้ว" + unstamped }); continue;
+                 kind: "SKIPPED", note: "already filled" + unstamped }); continue;
     }
     doc.getPage(n - 1).drawText(MARK, { x: 1, y: 1, size: 1, opacity: 0 });   // invisible "already filled" marker
     if (rider) {                                // ATTACHED RIDER pages are left as they are
       const prev = out[out.length - 1];
-      out.push({ page: n, bl, master, rider: true, cfs: prev ? prev.cfs : false, kind: "ATTACHED RIDER", note: "ไม่เติม" + unstamped }); continue;
+      out.push({ page: n, bl, master, rider: true, cfs: prev ? prev.cfs : false, kind: "ATTACHED RIDER", note: "not filled" + unstamped }); continue;
     }
     const st = text.match(RE_STATUS), cfs = !!st && st[2] === "CFS";   // CFS/CFS, CY/CFS -> no DEM line
     const status = st ? st[0].replace(/\s/g, "") : "";
     if ((await p.getAnnotations()).some(a => a.subtype === "FreeText")) {
-      out.push({ page: n, bl, master, cfs, kind: "ข้าม", note: "มีข้อความอยู่แล้ว" }); continue;
+      out.push({ page: n, bl, master, cfs, kind: "SKIPPED", note: "text already present" }); continue;
     }
     // house B/L (HASL...A, B, ...) not in CHECK DEM -> use its master B/L
     const key0 = bl in rows ? bl : master in rows ? master : null;
@@ -299,7 +299,7 @@ async function fill(pdfs, xlsBytes, size, dates, ov) {
       if (dg) { kind = "REEFER+DG"; parts = [[684, SPECIAL], ...parts.map(([y, l]) => [y + 20, l])]; }
     }
     else if (dg) { kind = "DG"; parts = [[690, SPECIAL], [760, demLine]]; }
-    else { kind = "ทั่วไป"; parts = [[728, demLine]]; }
+    else { kind = "GENERAL"; parts = [[728, demLine]]; }
     const page = doc.getPage(n - 1), H = page.getHeight();
     for (const [y, lines] of parts) {
       if (!lines) continue;
@@ -321,21 +321,21 @@ function render() {
   const { rows, ata, name, font } = report;
   const bad = rows.filter(x => x.missing || x.recMissing).length;
   $("info").innerHTML =
-    `<div class="k">ต้นฉบับ</div><div>${escapeHtml(name)}</div>` +
+    `<div class="k">Source</div><div>${escapeHtml(name)}</div>` +
     `<div class="k">ATA</div><div class="ata">${ata ? dmy(ata) : "-"}</div>` +
-    `<div class="k">จำนวนหน้า</div><div>${rows.length}</div>` +
-    `<div class="k">ฟอนต์</div><div>${escapeHtml(font)}</div>` +
-    (bad ? `<div class="k" style="color:var(--red)">ยังไม่มีวันที่</div><div style="color:var(--red);font-weight:700">${bad} หน้า (เติมในช่องสีแดง)</div>` : "");
+    `<div class="k">Pages</div><div>${rows.length}</div>` +
+    `<div class="k">Font</div><div>${escapeHtml(font)}</div>` +
+    (bad ? `<div class="k" style="color:var(--red)">No date yet</div><div style="color:var(--red);font-weight:700">${bad} pages (fill in the red cells)</div>` : "");
   const counts = {};
   rows.forEach(x => counts[x.kind] = (counts[x.kind] || 0) + 1);
   $("chips").innerHTML = Object.keys(KINDS).filter(k => counts[k]).map(k =>
-    `<span class="chip ${hidden.has(k) ? "off" : ""}" data-k="${k}" style="background:#${KINDS[k]}" title="คลิกเพื่อซ่อน/แสดง">${k}<small>${counts[k]} หน้า</small></span>`).join("");
+    `<span class="chip ${hidden.has(k) ? "off" : ""}" data-k="${k}" style="background:#${KINDS[k]}" title="Click to hide/show">${k}<small>${counts[k]} pages</small></span>`).join("");
   const q = $("search").value.trim().toLowerCase();
   // date cells are inputs: a date typed here applies to that B/L only
-  const dateIn = (x, k) => `<input type="date" data-p="${x.page}" data-k="${k}" value="${toInput(x[k])}" title="แก้วันที่เฉพาะ B/L นี้">`;
+  const dateIn = (x, k) => `<input type="date" data-p="${x.page}" data-k="${k}" value="${toInput(x[k])}" title="Change the date for this B/L only">`;
   const recCell = x => x.reefer ? `<td class="${x.recMissing ? "bad" : ""}">${dateIn(x, "rec")}</td>` : "<td></td>";
-  const demCell = x => x.rider || x.kind === "ข้าม" || x.kind === "ISO TANK+DG" ? "<td></td>"
-    : x.cfs ? `<td style="color:var(--muted)">${x.status} ไม่เติม</td>`
+  const demCell = x => x.rider || x.kind === "SKIPPED" || x.kind === "ISO TANK+DG" ? "<td></td>"
+    : x.cfs ? `<td style="color:var(--muted)">${x.status} not filled</td>`
     : `<td class="${x.missing ? "bad" : "b"}">${dateIn(x, "dem")}</td>`;
   $("tbody").innerHTML = rows.filter(x => !hidden.has(x.kind) && (!q || (x.bl + " " + x.note).toLowerCase().includes(q))).map(x =>
     `<tr data-p="${x.page}"><td>${x.page}</td><td class="b">${escapeHtml(x.bl)}</td>` +
@@ -349,7 +349,7 @@ async function preview(n) {
   const page = await doc.getPage(n), vp = page.getViewport({ scale: 1.5 });
   const cv = $("canvas"); cv.width = vp.width; cv.height = vp.height;
   await page.render({ canvasContext: cv.getContext("2d"), viewport: vp }).promise;
-  $("previewText").textContent = `ตัวอย่างหน้า ${n}`; $("previewText").dataset.p = n;
+  $("previewText").textContent = `Preview page ${n}`; $("previewText").dataset.p = n;
   $("preview").classList.remove("hidden");
   document.querySelectorAll("#tbody tr").forEach(tr => tr.classList.toggle("sel", +tr.dataset.p === n));
 }
@@ -358,7 +358,7 @@ async function preview(n) {
 async function run(keep) {
   if (!pdfFiles.length) return;
   const page = keep === true ? +($("previewText").dataset.p || 1) : 1;
-  $("msg").textContent = fileWarn; $("run").disabled = true; $("run").textContent = "กำลังประมวลผล...";
+  $("msg").textContent = fileWarn; $("run").disabled = true; $("run").textContent = "Processing...";
   try {
     const dates = { dem: fromInput($("demAll").value), rec: fromInput($("recAll").value) };
     report = { ...(await fill(pdfFiles, xlsFile ? xlsFile.bytes : null, parseFloat($("size").value) || 15.5, dates, overrides)),
@@ -367,9 +367,9 @@ async function run(keep) {
     render();
     preview(Math.min(page, report.rows.length));   // not awaited: the button is usable again at once
   } catch (err) {
-    $("msg").textContent = "ทำไม่สำเร็จ: " + err.message;
+    $("msg").textContent = "Failed: " + err.message;
   }
-  $("run").textContent = "ประมวลผล"; update();
+  $("run").textContent = "Process"; update();
 }
 
 // x2 for printing. A B/L = its page plus any ATTACHED RIDER pages after it.
@@ -406,7 +406,7 @@ async function printX2() {
     };
     f.src = url;
   } catch (err) {
-    $("msg").textContent = "สร้างไฟล์ปริ้นไม่สำเร็จ: " + err.message;
+    $("msg").textContent = "Could not create the print file: " + err.message;
   }
   $("print").disabled = false;
 }
@@ -428,7 +428,7 @@ async function download() {
     await new Promise(r => setTimeout(r, 600));   // a short gap so the browser takes the second download too
     save(x2, PRINT_NAME);
   } catch (err) {
-    $("msg").textContent = "ดาวน์โหลดไม่สำเร็จ: " + err.message;
+    $("msg").textContent = "Download failed: " + err.message;
   }
   $("download").disabled = false;
 }
@@ -437,7 +437,7 @@ async function download() {
 function update() { $("run").disabled = !pdfFiles.length; $("clear").disabled = !(pdfFiles.length || xlsFile || report); }
 function clearAll() {
   pdfFiles = []; xlsFile = report = null; overrides = {}; fileWarn = ""; hidden.clear();
-  $("pdfText").innerHTML = $("xlsText").innerHTML = "ลากไฟล์มาวาง หรือ <b>คลิกเพื่อเลือกไฟล์</b>";
+  $("pdfText").innerHTML = $("xlsText").innerHTML = "Drop the file here, or <b>click to choose a file</b>";
   $("filePdf").value = $("fileXls").value = $("demAll").value = $("recAll").value = "";
   $("search").value = ""; $("msg").textContent = "";
   $("result").classList.add("hidden"); $("preview").classList.add("hidden");
@@ -460,13 +460,13 @@ async function take(files) {
     const item = { name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) };
     const kind = kindOf(item.bytes), kb = Math.max(1, Math.round(item.bytes.length / 1024));
     if (kind === "pdf") { pdfFiles.push(item); added = true; }
-    else if (kind === "excel") { xlsFile = item; added = true; $("xlsText").innerHTML = `<b>${escapeHtml(f.name)}</b> (คลิกเพื่อเปลี่ยนไฟล์)`; }
-    else bad.push(`"${f.name}" (${kb} KB) ไม่ใช่ไฟล์ PDF หรือ Excel จริง` +
-                  (kind === "html" ? " — เป็นหน้าเว็บที่บันทึกมา" : "") +
-                  " — เปิดไฟล์นี้ดูก่อน หรือดาวน์โหลด/Print เป็น PDF ใหม่");
+    else if (kind === "excel") { xlsFile = item; added = true; $("xlsText").innerHTML = `<b>${escapeHtml(f.name)}</b> (click to change file)`; }
+    else bad.push(`"${f.name}" (${kb} KB) is not a real PDF or Excel file` +
+                  (kind === "html" ? " — it is a saved web page" : "") +
+                  " — open it first, or download / Print to PDF again");
   }
   fileWarn = bad.join(" · "); $("msg").textContent = fileWarn;
-  if (pdfFiles.length) $("pdfText").innerHTML = pdfFiles.map(f => `<b>${escapeHtml(f.name)}</b>`).join(" + ") + " (คลิกเพื่อเพิ่มไฟล์)";
+  if (pdfFiles.length) $("pdfText").innerHTML = pdfFiles.map(f => `<b>${escapeHtml(f.name)}</b>`).join(" + ") + " (click to add files)";
   update();
   if (added && pdfFiles.length) { overrides = {}; await run(); }   // DO in -> process right away
 }

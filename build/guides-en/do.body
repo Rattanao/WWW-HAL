@@ -1,0 +1,149 @@
+<div class="wrap">
+  <header class="head">
+    <div class="top">
+      <div class="brand"><img src="assets/hal-logo.png" alt="Heung A Line"></div>
+      <p class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.</p>
+    </div>
+    <div class="tag">Import D/O tool · DEM / power charge start dates</div>
+    <h1>DO</h1>
+    <p class="lede">Adds the demurrage start date, the power charge start date and SPECIAL CONTAINER to the bottom of every page of a Cargo Delivery Order in one go. Dates come from CHECK DEM or are typed in, and you get files ready to print in 2 sets.</p>
+    <div class="flow" aria-label="Workflow">
+      <span class="doc">DO.pdf</span><span class="op">+</span>
+      <span class="doc">CHECK DEM.xlsx</span><span class="op">→</span>
+      <span class="out">DO-DEM.pdf</span><span class="op">+</span>
+      <span class="out">DO-DEM-PRINT x 2.pdf</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#do">Use online (no install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/DO/archive/refs/heads/main.zip">Download the program (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/DO">Open on GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="online">
+    <h2>Use online</h2>
+    <p class="sub">Nothing to install. Files are processed in the browser of the computer you are using and are not uploaded anywhere</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Drag in the DO file (.pdf)</b>; one or more files, which the page joins in order</p>
+        <p class="note"><code>CHECK DEM.xlsx</code> is optional. Without it, fill in <b>DEM. date</b> and/or <b>Power charge date</b> yourself</p>
+      </div></li>
+      <li><div>
+        <p><b>Click Process</b></p>
+        <p class="note">The table shows what is added on each page. A red date cell = no date yet. You can edit dates per B/L in the table, then click Process again</p>
+      </div></li>
+      <li><div>
+        <p><b>Click Download DO-DEM.pdf (x1 + x2)</b> or <b>Print x2</b></p>
+        <p class="note">You get 2 files in your Downloads folder: <code>DO-DEM.pdf</code> (one set) and <code>DO-DEM-PRINT x 2.pdf</code> (in print order). The first time, the browser may ask to “allow multiple downloads”; click Allow</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="install">
+    <h2>First-time setup</h2>
+    <p class="sub">Once per computer, Windows (skip this if you use the online tool)</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Install Python 3</b> from <a href="https://www.python.org/downloads/">python.org/downloads</a></p>
+        <p class="note">On the installer's first screen <span class="warn">tick ☑ Add python.exe to PATH</span> before clicking Install Now</p>
+      </div></li>
+      <li><div>
+        <p><b>Download the program</b> with the “Download the program (ZIP)” button above</p>
+        <p class="note">Right-click the ZIP → Extract All, and keep the folder anywhere, e.g. Documents</p>
+      </div></li>
+      <li><div>
+        <p><b>The first run needs an internet connection</b></p>
+        <p class="note">The program installs the libraries it needs (pymupdf, openpyxl) automatically and uses the Angsana New font that comes with Windows</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="use">
+    <h2>Every job (desktop program)</h2>
+    <ol class="steps">
+      <li><div>
+        <p><b>Put the files in the <code>input</code> folder</b></p>
+        <p class="note">The D/O file whose name starts with <code>DO</code>, e.g. <code>DO-SWSR.pdf</code>, and <code>CHECK DEM.xlsx</code> (from <a href="https://github.com/Rattanao/Check-dem">Check-dem</a>)</p>
+      </div></li>
+      <li><div>
+        <p><b>Double-click <code>run-do.bat</code></b></p>
+        <p class="note">The black window shows what is added on each page. Pages without a date show <code>** ไม่มีวันที่ DEM ใน CHECK DEM **</code> (no DEM date in CHECK DEM)</p>
+      </div></li>
+      <li><div>
+        <p><b>Open the results at <code>output\DO-DEM.pdf</code> and <code>output\DO-DEM-PRINT x 2.pdf</code></b></p>
+        <p class="note">Files in <code>input</code> are not changed. If a result file is open, close it before running again</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="rules">
+    <h2>What gets added</h2>
+    <p class="sub">One page per B/L, in bold Angsana New at the bottom left of the D/O, with only the dates underlined. The added text itself stays in Thai, as on the D/O</p>
+    <div class="sheet-scroll">
+      <table class="sheet">
+        <thead><tr><th>Type</th><th>What the D/O shows</th><th>Text added</th></tr></thead>
+        <tbody>
+          <tr class="b"><td>General</td><td>Every D/O</td><td class="thai">เริ่มเก็บค่า DEM. วันที่. <u>26-OCT-2026</u></td></tr>
+          <tr class="o"><td>DG</td><td class="mono">UN 3077 / CLASS 9 / CL9</td><td class="thai">SPECIAL CONTAINER · .......DG..........OP..........FR · DEM line</td></tr>
+          <tr class="g"><td>REEFER</td><td class="mono">20RF / 40RH / TEMP</td><td class="thai">เริ่มเก็บค่าไฟวันที่ <u>15-OCT-2026</u> · เริ่มเก็บค่า DEM. วันที่. <u>22-OCT-2026</u></td></tr>
+          <tr class="r"><td>ISO TANK + DG</td><td class="mono">ISO TANK and UN / CLASS</td><td class="thai">SPECIAL CONTAINER · .......DG..........OP..........FR only</td></tr>
+          <tr class="e"><td>CFS</td><td class="mono">CFS/CFS, CY/CFS</td><td class="thai">No DEM line</td></tr>
+          <tr class="e"><td>ATTACHED RIDER</td><td class="mono">== ATTACHED RIDER ==</td><td class="thai">Nothing added (page 2 of the B/L)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="caption">Illustration only, dates are made up · เริ่มเก็บค่า DEM. วันที่ = demurrage starts on · เริ่มเก็บค่าไฟวันที่ = power charges start on</p>
+    <div class="split">
+      <div>
+        <h3>Where the dates come from</h3>
+        <ul class="check-list">
+          <li>DEM = the <code>DEM.</code> cell for that B/L in CHECK DEM</li>
+          <li>Power = the <code>REC.</code> cell; if empty, ATA + 3 days</li>
+          <li>A house B/L such as <code>...038A</code> that isn't in CHECK DEM uses the date of its master B/L <code>...038</code></li>
+          <li>On the web: dates edited in the table &gt; CHECK DEM &gt; the date boxes at the top</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Print x2</h3>
+        <ul class="check-list">
+          <li>One B/L = its D/O page + its ATTACHED RIDER page</li>
+          <li>CY: each B/L twice in a row, e.g. 1, 1, 2, 2</li>
+          <li>CFS: 2 sets per master B/L, e.g. 038, 038A, 038B, 038, 038A, 038B</li>
+          <li>If you load an already-filled file again, filled pages are skipped, never filled twice</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="claude">
+    <h2>Use with Claude Code</h2>
+    <p class="sub">For people who already use Claude Code: let Claude fill the D/O and report the result</p>
+    <div class="cmd">
+      <pre id="clone">git clone https://github.com/Rattanao/DO.git %USERPROFILE%\.claude\skills\do</pre>
+      <button type="button" data-target="clone">Copy</button>
+    </div>
+    <p class="note">Restart Claude Code, go to the job folder that has an <code>input</code> folder, and type <code>DO</code></p>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>Troubleshooting</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>"…" is not a real PDF or Excel file</td><td>The file is named .pdf but isn't a PDF inside. Open it first, then download it again or Print to PDF from the system</td></tr>
+          <tr><td>Red date cell / no date yet</td><td>Add CHECK DEM or fill in the DEM date box, then click Process</td></tr>
+          <tr><td>The page still looks old</td><td>Press Ctrl+F5 and check the version number at the bottom of the page</td></tr>
+          <tr><td>Python not found</td><td>Reinstall Python and tick Add python.exe to PATH</td></tr>
+          <tr><td>DO*.pdf / CHECK DEM*.xlsx not found</td><td>Check the files are in the input folder and the D/O file name starts with DO</td></tr>
+          <tr><td>Permission denied / cannot remove file</td><td>Close DO-DEM.pdf if it is open, then run again</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>Check the file every time before printing and sending to the customer, especially pages the table shows in red</p>
+    <p>Updating the program: download the ZIP again and extract over the old folder · Source code: <a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a></p>
+  </footer>
+</div>

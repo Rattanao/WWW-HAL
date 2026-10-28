@@ -1,0 +1,90 @@
+<div class="wrap">
+  <header class="head">
+    <div class="tag">EDI file tool · Reefer CLIST</div>
+    <h1>Revised Temp</h1>
+    <p class="lede">Fixes reefer temperatures in a CLIST file (.txt) by removing the last digit before C, then saves it as Revised temp.txt with an Excel report.</p>
+    <div class="flow" aria-label="Workflow">
+      <span class="doc">CLIST*.txt</span><span class="op">→</span>
+      <span class="out">Revised temp.txt</span><span class="op">+</span>
+      <span class="out">Revised temp.xlsx</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#temp">Use online (no install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/TEMP./archive/refs/heads/main.zip">Download the program (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/TEMP.">Open on GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="use">
+    <h2>Use on the web</h2>
+    <ol class="steps">
+      <li><div><p><b>Drag the CLIST file</b> into the dashed box, or click to choose it</p></div></li>
+      <li><div><p><b>Click Fix temperature</b></p></div></li>
+      <li><div>
+        <p><b>Check the results table</b> (line, container no., Size/Type, old and new value)</p>
+        <p class="note">Click "Not changed: … lines" to see containers that were left as they are, with the reason</p>
+      </div></li>
+      <li><div>
+        <p><b>Click Save Revised temp.txt</b>, and for the report click <b>Download Excel</b>. Files are saved to your Downloads folder</p>
+        <p class="note">The file is read and changed in the browser only · Click <b>Clear files</b> to start a new job</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="rule">
+    <h2>Rules</h2>
+    <div class="sheet-scroll">
+      <table class="sheet" style="min-width:420px">
+        <thead><tr><th>Old</th><th>New</th><th class="l">Note</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">S-20C</td><td class="mono g">S-2C</td><td class="l">Last digit before C removed</td></tr>
+          <tr><td class="mono">S-180C</td><td class="mono g">S-18C</td><td class="l"></td></tr>
+          <tr><td class="mono">S50C</td><td class="mono g">S5C</td><td class="l"></td></tr>
+          <tr><td class="mono">S0C</td><td class="mono y">S0C</td><td class="l">Not changed: only one digit</td></tr>
+          <tr><td class="mono">S</td><td class="mono y">S</td><td class="l">Not changed: no digits</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="check-list">
+      <li>The temperature field is at character 145 of each line (right after Size/Type, e.g. <code>45R1  8  Q</code>)</li>
+      <li>The removed character is replaced with a space, so every line keeps its length and the following columns stay in place</li>
+      <li>Nothing else in the file is changed, including line endings (CRLF)</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="read">
+    <h2>The Revised temp.xlsx report</h2>
+    <p class="sub">Formatted to print on A4 portrait, with 2 sheets</p>
+    <div class="legend">
+      <div class="g"><b>Changes</b><span>Report header, old values (struck through) and new values (green), with a count per temperature</span></div>
+      <div class="y"><b>Not changed</b><span>Containers whose temperature is S0C or S, with the reason</span></div>
+    </div>
+  </section>
+
+  <section class="panel" id="python">
+    <h2>Use the desktop program (Python)</h2>
+    <p class="sub">Needs Python 3.8 or later. The result is saved as Revised temp.txt in the same folder as the source file</p>
+    <div class="cmd">
+      <pre id="cmd">python revised_temp.py "CLISTHLCH_xxxx.txt"</pre>
+      <button type="button" data-target="cmd">Copy</button>
+    </div>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>Troubleshooting</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>No lines were changed</td><td>Check it is a CLIST file with reefer containers and the temperature is at position 145</td></tr>
+          <tr><td>Some containers were not changed</td><td>See the "Not changed" list: S0C and S need no change under the rules</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>Before sending the file, always check the old/new values table</p>
+    <p>Source code: <a href="https://github.com/Rattanao/TEMP.">github.com/Rattanao/TEMP.</a></p>
+  </footer>
+</div>

@@ -5,10 +5,10 @@
 
   const EXCLUDED_PORTS = ["BKK", "UCT"]; // ตรวจทุก PORT ยกเว้นรหัสที่ลงท้ายด้วยชุดนี้ (THBKK, THUCT)
   const SHED_RULES = {
-    "2826": "DG (สินค้าอันตราย)",
+    "2826": "DG (dangerous goods)",
     "0302": "SCT", "302": "SCT",
     "0110": "BMT", "110": "BMT",
-    "0332": "ลาดกระบัง (ราง/รถไฟ)", "332": "ลาดกระบัง (ราง/รถไฟ)",
+    "0332": "Lat Krabang (rail)", "332": "Lat Krabang (rail)",
   };
 
   const PKG_RE = /^[\d,]+\s+[A-Z/]+\s*\(/;
@@ -357,7 +357,7 @@
     if (r.includes("BARGE")) actual = "BY BARGE";
     else if (r.includes("TRUCK")) actual = "BY TRUCK";
     else if (r.includes("TRAN") || r.includes("TRAIN")) actual = "BY TRAIN";
-    else actual = "(ไม่ระบุ)";
+    else actual = "(not specified)";
     return { expected, actual, ok: expected === actual };
   }
   function ventOk(mb, tempM, tempC) {
@@ -388,8 +388,8 @@
       if (!mb) {
         const tC0 = extractCntrsTemp(cc.remarkRaw), dC0 = extractDg(cc.remarkRaw);
         const transitGood0 = transitOk(cc.remarkRaw);
-        let note0 = "⚠ CONTAINER นี้มีใน CNTRS แต่ไม่พบใน MANIFEST";
-        if (!transitGood0) note0 += " | REMARK ของ TRANSIT ไม่ครบ ต้องมีทั้งคำว่า TRANSIT และปลายทาง 'TO <ประเทศ>'";
+        let note0 = "⚠ This CONTAINER is in CNTRS but not in MANIFEST";
+        if (!transitGood0) note0 += " | Incomplete TRANSIT REMARK: needs both the word TRANSIT and the destination 'TO <country>'";
         let remark0 = simplifyRemark(cc.remarkRaw, tC0, dC0);
         if (transitGood0 && remark0) remark0 = remark0.replace(TRANSIT_TO_PHRASE_RE, " ").replace(/\s+/g, " ").trim() || null;
         rows.push({ critical: true, item: cc.item, cno, blNo: "-", consignee: cc.consignee || "-",
@@ -404,7 +404,7 @@
         rows.push({ critical: true, item: "-", cno, blNo: mb.blNo, consignee: mb.consignee,
           shedM: mb.shedNo, shedC: "-", shedOk: false, statusM: normStatus(mb.statusRaw), statusC: "-", statusOk: false,
           tempM: tM, tempC: "-", tempOk: false, dgM: extractDg(mb.descAll.join(" ")), dgC: "-", dgOk: false,
-          ventOk: ventOk(mb, tM, null), remark: "-", remarkOk: false, note: "⚠ CONTAINER นี้มีใน MANIFEST แต่ไม่พบใน CNTRS" });
+          ventOk: ventOk(mb, tM, null), remark: "-", remarkOk: false, note: "⚠ This CONTAINER is in MANIFEST but not in CNTRS" });
         mismatch++; continue;
       }
       const shedM = mb.shedNo, shedC = cc.shedNo;
@@ -440,18 +440,18 @@
       const notes = [];
       if (!shedEqual) {
         const hint = SHED_RULES[cc.shedNo];
-        notes.push(`SHED ไม่ตรง: MANIFEST=${shedM || "-"} / CNTRS=${shedC || "-"}${hint ? ` (CNTRS จัดเก็บที่ ${hint})` : ""}`);
+        notes.push(`SHED mismatch: MANIFEST=${shedM || "-"} / CNTRS=${shedC || "-"}${hint ? ` (CNTRS stores it at ${hint})` : ""}`);
       }
-      if (shedRuleBad) notes.push(`SHED ผิดกฎที่ล็อกไว้: ควรเป็น ${expShed} แต่ CNTRS อยู่ SHED ${cc.shedNo} (ปลายทาง ${effectiveDelivery(cc) || "-"})`);
-      if (!statusOk) notes.push(`STATUS ไม่ตรง: MANIFEST=${statusM || "-"} / CNTRS=${statusC || "-"}`);
-      if (!tempOk) notes.push(`TEMP ไม่ตรง: MANIFEST=${tempM || "-"} / CNTRS=${tempC || "-"}`);
-      if (!dgOk) notes.push(`DG ไม่ตรง: MANIFEST=${dgM || "-"} / CNTRS=${dgC || "-"}`);
-      if (!vent) notes.push("VENT ไม่ระบุใน MANIFEST");
-      if (rc.ok === false && rc.expected) notes.push(`REMARK ไม่ตรงกฎ: ควรเป็น '${rc.expected}' แต่พบ '${rc.actual}'`);
+      if (shedRuleBad) notes.push(`SHED breaks the locked rule: should be ${expShed} but CNTRS has SHED ${cc.shedNo} (destination ${effectiveDelivery(cc) || "-"})`);
+      if (!statusOk) notes.push(`STATUS mismatch: MANIFEST=${statusM || "-"} / CNTRS=${statusC || "-"}`);
+      if (!tempOk) notes.push(`TEMP mismatch: MANIFEST=${tempM || "-"} / CNTRS=${tempC || "-"}`);
+      if (!dgOk) notes.push(`DG mismatch: MANIFEST=${dgM || "-"} / CNTRS=${dgC || "-"}`);
+      if (!vent) notes.push("VENT not stated in MANIFEST");
+      if (rc.ok === false && rc.expected) notes.push(`REMARK breaks the rule: should be '${rc.expected}' but found '${rc.actual}'`);
       if (!transitGood) {
         notes.push(mb.isTransit && !cc.remarkRaw
-          ? "B/L นี้เป็น TRANSIT/TRANSHIPMENT ตาม MANIFEST แต่ CNTRS ไม่มี REMARK ระบุไว้เลย"
-          : "REMARK ของ TRANSIT ไม่ครบ ต้องมีทั้งคำว่า TRANSIT และปลายทาง 'TO <ประเทศ>' (เช่น 'TRANSIT TO MYANMAR')");
+          ? "This B/L is TRANSIT/TRANSHIPMENT per MANIFEST but CNTRS has no REMARK at all"
+          : "Incomplete TRANSIT REMARK: needs both the word TRANSIT and the destination 'TO <country>' (e.g. 'TRANSIT TO MYANMAR')");
       }
 
       const bad = !(shedOk && statusOk && tempOk && dgOk && vent && rc.ok !== false);
@@ -486,7 +486,7 @@
   const HEADERS = ["NO.", "ITEM", "CONTAINER NO.", "B/L NO.", "CONSIGNEE",
     "SHED (MANIFEST)", "SHED (CNTRS)", "SHED ✓/⚠", "STATUS (MANIFEST)", "STATUS (CNTRS)", "STATUS ✓/⚠",
     "TEMP (MANIFEST)", "TEMP (CNTRS)", "TEMP ✓/⚠", "VENT (MANIFEST)",
-    "DG CLASS/UN (MANIFEST)", "DG CLASS/UN (CNTRS)", "DG ✓/⚠", "REMARK (CNTRS)", "REMARK ✓/⚠", "หมายเหตุ / NOTE"];
+    "DG CLASS/UN (MANIFEST)", "DG CLASS/UN (CNTRS)", "DG ✓/⚠", "REMARK (CNTRS)", "REMARK ✓/⚠", "NOTE"];
 
   root.CheckCntrs = {
     HEADERS, classifyRows, classifyText, parseManifest, parseCntrsRows, parseCntrsHeaderRows,

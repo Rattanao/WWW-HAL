@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -85,7 +85,7 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
 <body>
 
 <header class="topbar">
-  <button class="burger" id="burger" aria-label="เปิด/ปิดเมนู">
+  <button class="burger" id="burger" aria-label="Open / close menu">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
   </button>
   <div class="brand" aria-label="Heung A Line">
@@ -111,11 +111,11 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
 <div class="layout">
   <nav class="side" id="side">
     <div class="search">
-      <input id="q" type="text" placeholder="ค้นหาเครื่องมือ" autocomplete="off">
-      <button id="qClear" aria-label="ล้างคำค้นหา"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <input id="q" type="text" placeholder="Search tools" autocomplete="off">
+      <button id="qClear" aria-label="Clear search"><svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div id="menu"></div>
-    <div class="none" id="none" hidden>ไม่พบรายการ</div>
+    <div class="none" id="none" hidden>No results</div>
   </nav>
 
   <main class="main">
@@ -135,16 +135,16 @@ const ICON = {
   doc:   '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>'
 };
 const GROUPS = [
-  { name: "ตรวจสอบเอกสาร", tools: [
-    { id: "check-cntrs", title: "Check CNTRS", desc: "ตรวจเทียบ MANIFEST กับ CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK", src: "tools/check-cntrs.html", guide: "tools/guide-check-cntrs.html", icon: "check" },
-    { id: "check-dem",   title: "Check DEM",   desc: "หาวันเริ่มเก็บค่า DEM และวัน REC. จาก Freedays + ATA", src: "tools/check-dem.html", guide: "tools/guide-check-dem.html", icon: "clock" }
+  { name: "Document checks", tools: [
+    { id: "check-cntrs", title: "Check CNTRS", desc: "Compare MANIFEST with CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK", src: "tools/check-cntrs.html", guide: "tools/guide-check-cntrs-en.html", icon: "check" },
+    { id: "check-dem",   title: "Check DEM",   desc: "Find the DEM start date and the REC. date from Freedays + ATA", src: "tools/check-dem.html", guide: "tools/guide-check-dem-en.html", icon: "clock" }
   ]},
-  { name: "แก้ไขไฟล์ EDI", tools: [
-    { id: "change-status", title: "Change Status", desc: "MMAN × STATUS → MMAN_EDI.txt · ตัดช่วง B/L (เริ่มต้น–ถึง) ได้", src: "tools/change-status.html", guide: "tools/guide-change-status.html", icon: "swap" },
-    { id: "temp",          title: "Revised Temp",       desc: "แก้อุณหภูมิตู้เย็นในไฟล์ CLIST (.txt)", src: "tools/temp.html", guide: "tools/guide-temp.html", icon: "temp" }
+  { name: "EDI file editing", tools: [
+    { id: "change-status", title: "Change Status", desc: "MMAN × STATUS → MMAN_EDI.txt · can cut a B/L range (start–end)", src: "tools/change-status.html", guide: "tools/guide-change-status-en.html", icon: "swap" },
+    { id: "temp",          title: "Revised Temp",       desc: "Fix reefer temperatures in a CLIST file (.txt)", src: "tools/temp.html", guide: "tools/guide-temp-en.html", icon: "temp" }
   ]},
-  { name: "ใบสั่งปล่อยสินค้า (D/O)", tools: [
-    { id: "do", title: "DO", desc: "เติมวันเริ่มเก็บค่า DEM / ค่าไฟ / SPECIAL CONTAINER ลงในใบ D/O (.pdf)", src: "tools/do.html", guide: "tools/guide-do.html", icon: "doc" }
+  { name: "Delivery Order (D/O)", tools: [
+    { id: "do", title: "DO", desc: "Add DEM / power charge start dates and SPECIAL CONTAINER to the D/O (.pdf)", src: "tools/do.html", guide: "tools/guide-do-en.html", icon: "doc" }
   ]}
 ];
 const TOOLS = GROUPS.flatMap(g => g.tools.map(t => ({ ...t, group: g.name })));
@@ -164,7 +164,7 @@ document.querySelectorAll(".group-head").forEach(b =>
 // เปิดเครื่องมือตาม hash; iframe ถูกสร้างครั้งเดียวแล้วซ่อน/แสดง เพื่อให้งานที่ทำค้างไว้ไม่หาย
 function show() {
   const t = TOOLS.find(t => t.id === location.hash.slice(1)) || TOOLS[0];
-  $("crumb").innerHTML = `${t.group} › ${t.title}${t.guide ? `<a class="guide" href="${t.guide}" target="_blank" rel="noopener">วิธีใช้ / คู่มือ</a>` : ""}<small>${t.desc}</small>`;
+  $("crumb").innerHTML = `${t.group} › ${t.title}${t.guide ? `<a class="guide" href="${t.guide}" target="_blank" rel="noopener">Guide</a>` : ""}<small>${t.desc}</small>`;
   document.title = t.title + " · EDI Tools";
   document.querySelectorAll(".item").forEach(a => a.classList.toggle("active", a.dataset.id === t.id));
   let frame = document.querySelector(`iframe[data-id="${t.id}"]`);

@@ -24,14 +24,14 @@
   // ---- ปุ่มลบไฟล์ ----
   document.addEventListener("DOMContentLoaded", () => {
     // เครื่องมือมีปุ่มของตัวเองแล้ว (DO: #clear, Change Status: #clearAll)
-    if ([...document.querySelectorAll("button")].some(b => b.textContent.trim() === "ลบไฟล์")) return;
+    if (document.querySelector("#clear, #clearAll") || [...document.querySelectorAll("button")].some(b => ["ลบไฟล์", "Clear files"].includes(b.textContent.trim()))) return;
     const run = document.querySelector("#run, #go");
     if (!run) return;
     const b = document.createElement("button");
     b.type = "button";
     b.className = "x-clear";
-    b.textContent = "ลบไฟล์";
-    b.title = "ล้างไฟล์และผลลัพธ์ทั้งหมด เริ่มใหม่";
+    b.textContent = "Clear files";
+    b.title = "Clear all files and results and start over";
     // โหลดหน้าใหม่ด้วย URL ใหม่ เพื่อไม่ให้เบราว์เซอร์คืนค่าที่กรอกไว้
     b.addEventListener("click", () => location.replace(location.pathname + "?clear=" + Date.now()));
     if (run.parentElement.classList.contains("row")) {
