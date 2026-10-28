@@ -5,7 +5,7 @@
 //
 // เพิ่มผู้ใช้: เปิด tools/add-user.html กรอก User ID + Password แล้วคัดลอกบรรทัดที่ได้มาวางใน users ด้านล่าง
 // ลบผู้ใช้: ลบบรรทัดของคนนั้นออก
-// รหัสผ่านเก็บเป็นค่า SHA-256 ของ "USERID:password" (User ID ตัวพิมพ์ใหญ่, Password ต้องพิมพ์ให้ตรงตัวพิมพ์)
+// รหัสผ่านเก็บเป็นค่า SHA-256 ของ "USERID:PASSWORD" (แปลงเป็นตัวพิมพ์ใหญ่ทั้งคู่ จึงพิมพ์ตัวเล็กหรือตัวใหญ่ก็ได้)
 window.HAL_AUTH = {
   locked: false,
   users: {
@@ -15,6 +15,7 @@ window.HAL_AUTH = {
     "FAH": "2e561c2bcb4f44c50636ad7085ca55276be3759e2c29f3eaf935ead9ed6b5b41",
     "BEN": "c1fa68fc129ab3a71e9ce7964317dd68220a863fd3e67be54e346d1bf6ac9164",
     "BEE": "ba8ff32a405a61ecdb35cc8b4f6a31bbe86c78778dc045c2819673a491a51cc8",
+    "HAL": "319ace84969b93e778e83a5120280626c3318091386cc4be0857d282b9f972a2",
   },
 
   // ผู้ใช้ที่เข้าสู่ระบบอยู่ (จำไว้จนปิดเบราว์เซอร์)
@@ -25,7 +26,7 @@ window.HAL_AUTH = {
     id = id.trim().toUpperCase();
     const want = this.users[id];
     if (!want) return false;
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(id + ":" + password));
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(id + ":" + password.toUpperCase()));
     const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
     if (hex !== want) return false;
     try { sessionStorage.setItem("hal-user", id); } catch (e) {}

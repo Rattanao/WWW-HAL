@@ -48,7 +48,7 @@ code { background: #eef2fb; padding: 1px 5px; border-radius: 4px; }
 document.getElementById("f").addEventListener("submit", async e => {
   e.preventDefault();
   const id = document.getElementById("id").value.trim().toUpperCase();
-  const pw = document.getElementById("pw").value;
+  const pw = document.getElementById("pw").value.toUpperCase();
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(id + ":" + pw));
   const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
   const out = document.getElementById("out");
