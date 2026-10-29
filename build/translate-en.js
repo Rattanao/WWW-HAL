@@ -246,8 +246,6 @@ const FILES = {
   ],
   "sum-edi.html": [
     ...COMMON,
-    // fix: some MANIFEST exports put the container numbers in column G (6), not F (5). Drop when upstream fixes it.
-    ["b.cntrs.push(...(v[5].match(RE_CN) || []));", "b.cntrs.push(...((v[5] + \" \" + v[6]).match(RE_CN) || []));"],
     ["<p>แยก MF เป็นกลุ่มท่าเรือ / Transit + ตู้ SOC แล้วทำ SUM-EDI.pdf + SUMMARY.pdf</p>", "<p>Split the MF into port / transit groups + SOC containers, then make SUM-EDI.pdf + SUMMARY.pdf</p>"],
     ["ไฟล์ MF / MANIFEST + CNTRS (.xls / .xlsx) <small>ใส่พร้อมกันได้ · CNTRS ไม่ใส่ก็ได้ (ใช้หาตู้ SOC)</small>", "MF / MANIFEST + CNTRS files (.xls / .xlsx) <small>Add both at once · CNTRS is optional (used to find SOC containers)</small>"],
     ["ลายเซ็น <small>รูป .png/.jpg เก็บไว้ในเบราว์เซอร์นี้</small>", "Signature <small>.png/.jpg image, saved in this browser</small>"],
