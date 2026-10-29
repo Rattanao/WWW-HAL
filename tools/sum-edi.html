@@ -43,7 +43,8 @@
   button:disabled { opacity: .4; cursor: not-allowed; }
   button.ghost { background: #fff; color: var(--navy); border: 1px solid var(--navy); }
   button.small { padding: 6px 12px; font-size: 14px; }
-  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btns { display: grid; grid-template-columns: auto auto; gap: 8px; align-items: stretch; }
+  .btns .wide { grid-column: 1 / -1; }
   .rules { font-size: 14px; color: var(--muted); margin: 12px 0 0; line-height: 1.6; }
   .rules code { background: var(--navy-soft); color: var(--navy); padding: 1px 6px; border-radius: 4px; }
   .msg { color: var(--red); font-weight: 600; margin-top: 10px; white-space: pre-line; }
@@ -53,6 +54,9 @@
   .info .ok { color: var(--green); font-weight: 700; }
   .info .ng { color: var(--red); font-weight: 700; }
   .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 14px 0; }
+  .hint { color: #555; font-size: 14px; margin-top: 8px; text-align: right; }
+  .hint.stale { color: #b00; font-weight: 600; }
+  select { font: inherit; padding: 9px 10px; border: 1px solid #c7ccd6; border-radius: 8px; width: 100%; background: #fff; }
   .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
   table { border-collapse: collapse; width: 100%; font-size: 15px; }
   th { background: var(--navy); color: #fff; padding: 10px 8px; white-space: nowrap; }
@@ -92,20 +96,20 @@
         <input type="file" id="fileSig" accept="image/png,image/jpeg" class="hidden">
       </div>
       <div class="btns">
+        <button id="process" class="wide" disabled>Process</button>
         <button id="clearSig" class="ghost small" disabled>Remove signature</button>
         <button id="clear" class="ghost" disabled>Clear files</button>
       </div>
     </div>
+    <div id="state" class="hint">Add the MF file (+ CNTRS), then click Process</div>
     <div class="staff">
       <div><label class="t" for="stName">Prepared by <small>at the end of SUM-EDI · each person can set their own</small></label><input type="text" id="stName" autocomplete="off"></div>
       <div><label class="t" for="stPos">Position</label><input type="text" id="stPos" autocomplete="off"></div>
       <div><label class="t" for="stTel">Phone</label><input type="text" id="stTel" autocomplete="off"></div>
     </div>
     <div class="staff">
-      <div><label class="t" for="gate">LATKRABANG GATE <small>on the THLKR SUMMARY page · 8 = TLC GATE 8 · 9 = ESCO GATE 2 · or type your own</small></label>
-        <input type="text" id="gate" list="gateList" autocomplete="off" placeholder="empty = (GATE 2)">
-        <datalist id="gateList"><option value="8">(TLC GATE 8)</option><option value="9">(ESCO GATE 2)</option></datalist></div>
-      <div><label class="t">Shown on the document</label><div id="gateShow" style="padding:8px 0;font-weight:600"></div></div>
+      <div><label class="t" for="gate">LATKRABANG GATE <small>on the THLKR SUMMARY page</small></label>
+        <select id="gate"><option value="2">2 — LATKRABANG (ESCO GATE 2)</option><option value="8">8 — LATKRABANG (TIFFA GATE 8)</option></select></div>
     </div>
     <p class="rules">
       Split by <b>DELIVERY</b> from CNTRS (<code>Port Of Delivery</code> and SHED NUMBER):
@@ -134,7 +138,7 @@
     <div class="preview" id="preview"></div>
   </section>
 </main>
-<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-10-29g</footer>
+<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-10-29l</footer>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -150,16 +154,10 @@ const ORDER = ["THLCH", "THLKR", "THBMT", "THSCT", "THBKK", "MYANMAR", "LAOS", "
 const TRANSIT = new Set(["MYANMAR", "LAOS", "MALAYSIA", "CHINA", "CAMBODIA", "VIETNAM"]);
 const RE_TRANSIT = new RegExp(`TRANSIT\\s+TO\\s+(${[...TRANSIT].join("|")})\\b`);
 // SUMMARY page "<PORT> / <place>"; THLKR = LATKRABANG + the GATE field
-const PLACE = { THLKR: "LATKRABANG (GATE 2)", THBMT: "BANGKOK MODERN TERMINAL", THSCT: "SIAM CONTAINER TERMINAL", THBKK: "BANGKOK" };
-const GATES = { "8": "(TLC GATE 8)", "9": "(ESCO GATE 2)" };
-// GATE field -> text after LATKRABANG: "8" -> (TLC GATE 8), "9" -> (ESCO GATE 2), empty -> (GATE 2)
-function gateText(gate) {
-  const g = (gate || "").trim().toUpperCase();
-  if (!g) return "(GATE 2)";
-  if (GATES[g]) return GATES[g];
-  if (/^\d+$/.test(g)) return `(GATE ${g})`;
-  return g.startsWith("(") ? g : `(${g})`;
-}
+const PLACE = { THLKR: "LATKRABANG (ESCO GATE 2)", THBMT: "BANGKOK MODERN TERMINAL", THSCT: "SIAM CONTAINER TERMINAL", THBKK: "BANGKOK" };
+const GATES = { "2": "(ESCO GATE 2)", "8": "(TIFFA GATE 8)" };   // the only Latkrabang gates in use
+// GATE field -> text after LATKRABANG: "2" -> (ESCO GATE 2), "8" -> (TIFFA GATE 8)
+const gateText = gate => GATES[String(gate).trim()] || GATES["2"];
 // SOC owner = first word of the CONSIGNEE: "ORIENT OVERSEAS CONTAINER LINE" -> "ORIENT", "NS INTERNATIONAL ..." -> "NS"
 const SOC_STOP = new Set(["AGENCIES", "AGENCY", "INTERNATIONAL", "(THAILAND)", "THAILAND", "CO.", "CO.,", "CO.,LTD.", "CO.,LTD",
   "LTD.", "LTD", "LIMITED", "SHIPPING", "LOGISTICS", "CORPORATION", "CORP.", "COMPANY"]);
@@ -167,7 +165,7 @@ const RE_HAL = /HEUNG[\s-]*A\b/i;
 const AGENT1 = "HEUNG A LINE CO., LTD. C/O HEUNG A LINE (THAILAND) CO.,LTD.";
 const AGENT2 = "HEUNG A LINE CO.,LTD C/O HEUNG-A SHIPPING (THAILAND) CO.,LTD.";
 const SIG_KEY = "sum-edi-signature", STAFF_KEY = "sum-edi-staff";
-const STAFF = { name: "MISS RATTANA", position: "Import Documentation", tel: "02-059 6253 (Direct)" };
+const STAFF = { name: "MISS RATTANA", position: "Document Inbound", tel: "02-059 6253 (Direct)" };
 const $ = id => document.getElementById(id);
 const escapeHtml = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const num = t => parseFloat(String(t).replace(/,/g, ""));
@@ -498,7 +496,7 @@ async function buildSumEdi(vessel, port, summ, T, soc, staff) {
     if (x.n20) p.text(208, y, `${x.n20}   X 20'`, 8.5, { ...B, right: true });
     if (x.n40) p.text(268, y, `${x.n40}   X 40'`, 8.5, { ...B, right: true });
     if (x.bls) {
-      p.text(X[3] - 6, y, String(x.bls), 8.5, { ...B, right: true });
+      center(X[2], X[3], y, String(x.bls));
       p.text(X[4] - 6, y, f3(x.gw), 8.5, { ...B, right: true });
       p.text(X[5] - 6, y, f0(x.pkg), 8.5, { ...B, right: true });
     }
@@ -635,7 +633,7 @@ async function takeFiles(list) {
   const names = fs => fs.map(f => `<b>${escapeHtml(f.name)}</b>`).join(", ");
   $("mfText").innerHTML = [mfFiles().length && `MF: ${names(mfFiles())}`, cnFiles().length && `CNTRS: ${names(cnFiles())}`]
     .filter(Boolean).join(" · ") + (files.length ? " (click to add files · Clear files = start over)" : "Drop the file here, or <b>click to choose a file</b>");
-  await run();
+  dirty();
   if (bad.length) $("msg").textContent = [bad.join("\n"), $("msg").textContent].filter(Boolean).join("\n");
   if (!mfFiles().length && cnFiles().length) $("msg").textContent = [$("msg").textContent, "No MF file yet"].filter(Boolean).join("\n");
 }
@@ -651,30 +649,29 @@ async function takeSig(files) {
   if (!file || !/^image\/(png|jpeg)$/.test(file.type)) { $("msg").textContent = "The signature must be a .png or .jpg image"; return; }
   const url = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(file); });
   if (!store.set(SIG_KEY, url)) { $("msg").textContent = "Cannot save the signature in this browser"; return; }
-  showSig(); run();
+  showSig(); dirty();
 }
 
 // ---------- staff (each person keeps their own in this browser) ----------
 function loadStaff() {
   let s = STAFF;
   try { s = { ...STAFF, ...JSON.parse(store.get(STAFF_KEY) || "{}") }; } catch {}
+  if (s.position === "Import Documentation") s.position = STAFF.position;   // old default -> new default
   $("stName").value = s.name; $("stPos").value = s.position; $("stTel").value = s.tel;
 }
 let staffTimer = null;
 for (const id of ["stName", "stPos", "stTel"]) $(id).oninput = () => {
   store.set(STAFF_KEY, JSON.stringify(staffNow()));
-  clearTimeout(staffTimer); staffTimer = setTimeout(run, 400);
+  dirty();
 };
-const showGate = () => { $("gateShow").textContent = `LATKRABANG ${gateText($("gate").value)}`; };
-$("gate").oninput = () => { showGate(); clearTimeout(staffTimer); staffTimer = setTimeout(run, 400); };
-showGate();
+$("gate").onchange = dirty;
 
 // ---------- events ----------
-function update() { $("clear").disabled = !(files.length || report); }
+function update() { $("clear").disabled = !(files.length || report); $("process").disabled = !mfFiles().length; }
 function clearAll() {
   files = []; report = null; $("fileMf").value = ""; $("msg").textContent = "";
   $("mfText").innerHTML = "Drop the file here, or <b>click to choose a file</b>";
-  $("result").classList.add("hidden"); $("preview").innerHTML = ""; update();
+  $("result").classList.add("hidden"); $("preview").innerHTML = ""; dirty();
 }
 function wire(drop, input, take) {
   const d = $(drop);
@@ -686,8 +683,23 @@ function wire(drop, input, take) {
 }
 wire("dropMf", "fileMf", takeFiles);
 wire("dropSig", "fileSig", takeSig);
-$("clearSig").onclick = () => { store.del(SIG_KEY); showSig(); run(); };
+$("clearSig").onclick = () => { store.del(SIG_KEY); showSig(); dirty(); };
 $("clear").onclick = clearAll;
+$("process").onclick = async () => {
+  const b = $("process"); b.disabled = true; b.textContent = "Processing…";
+  await run();
+  b.textContent = "Process"; update();
+  $("state").className = "hint";
+  $("state").textContent = report ? "Documents ready (after changing anything, click Process again)" : "Failed — see the message below";
+};
+// something changed after the last Process: the documents shown are out of date until Process is pressed again
+function dirty() {
+  update();
+  const st = $("state");
+  if (!mfFiles().length) { st.className = "hint"; st.textContent = "Add the MF file (+ CNTRS), then click Process"; return; }
+  st.className = report ? "hint stale" : "hint";
+  st.textContent = report ? "Something changed — click Process to make the documents again" : "Ready — click Process";
+}
 $("tbody").onclick = e => { const tr = e.target.closest("tr.g"); if (tr) $("bl" + tr.dataset.i)?.classList.toggle("hidden"); };
 $("dlEdi").onclick = () => save(report.edi, "SUM-EDI.pdf");
 $("dlSum").onclick = () => save(report.sum, "SUMMARY.pdf");
