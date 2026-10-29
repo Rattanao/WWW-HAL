@@ -199,7 +199,7 @@ function readMf(bytes) {
     if ((m = v[15].match(/SHED NO\.\s*(\d+)/))) b.shed = m[1];
     if ((m = v[15].match(/^2\).*\(([A-Z]{2})\)\s*$/))) b.country = m[1];
     if (v[15].includes("CARGO MOVEMENT") && v[15].includes("TRANSIT")) b.transit = true;
-    b.cntrs.push(...(v[5].match(RE_CN) || []));
+    b.cntrs.push(...((v[5] + " " + v[6]).match(RE_CN) || []));
     if ((m = v[10].match(/^(\d{2}[A-Z]\d)X\d+/))) b.types.push(m[1]);
   }
   return { vessel, port: port || "LAEM CHABANG", bls, gt };
