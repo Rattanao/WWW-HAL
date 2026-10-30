@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MMAN LCH — Cut + Change Status</title>
+<link rel="icon" href="assets/hal-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root {
+  --bg: #f0f2f5; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --line: #d1d5db;
+  --navy: #2c4f7c; --navy-hover: #23426a; --navy-text: #2c4f7c; --on-navy: #ffffff; --input-bg: #ffffff;
+  --ok: #1a7f4b; --ok-soft: #e3f4ea;
+  --warn: #9a5b00; --warn-soft: #fdf1dc; --hl: #fff2a8; --hl-text: #1f2937;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161d; --card: #1b212b; --text: #e6e9ef; --muted: #9aa3b2; --line: #343c4a;
+    --navy: #2c4f7c; --navy-hover: #3a6399; --navy-text: #9dbbe6; --on-navy: #ffffff; --input-bg: #141920;
+    --ok: #5fd39a; --ok-soft: #173326;
+    --warn: #f0b457; --warn-soft: #3a2d15; --hl: #5c4d00; --hl-text: #fff6c7;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161d; --card: #1b212b; --text: #e6e9ef; --muted: #9aa3b2; --line: #343c4a;
+  --navy: #2c4f7c; --navy-hover: #3a6399; --navy-text: #9dbbe6; --on-navy: #ffffff; --input-bg: #141920;
+  --ok: #5fd39a; --ok-soft: #173326;
+  --warn: #f0b457; --warn-soft: #3a2d15; --hl: #5c4d00; --hl-text: #fff6c7;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.6 "Sarabun", system-ui, sans-serif; }
+header.bar { background: var(--navy); color: var(--on-navy); padding: 16px 28px;
+  display: flex; justify-content: space-between; align-items: center; gap: 8px 24px; flex-wrap: wrap; }
+header.bar .by { font: 14px/1.5 "Sarabun", sans-serif; text-align: right; opacity: .9; }
+@media (max-width: 640px) { header.bar .by { text-align: left; } }
+header.bar h1 { font: 600 24px/1.4 "Kanit", sans-serif; margin: 0; }
+header.bar .brand { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; min-width: 0; }
+.logo-badge { background: #fff; border-radius: 6px; padding: 5px 10px; display: inline-flex; line-height: 0; flex: none; }
+.logo-badge img { height: 30px; width: auto; display: block; }
+main { max-width: 1200px; margin: 0 auto; padding: 24px 28px 60px; }
+@media (max-width: 640px) { header.bar, main { padding-left: 16px; padding-right: 16px; } }
+.card { background: var(--card); border-radius: 10px; padding: 24px 26px; margin-bottom: 18px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 14px rgba(0,0,0,.04); }
+.form { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr auto; gap: 18px; align-items: end; }
+.form > * { min-width: 0; }
+@media (max-width: 1000px) { .form { grid-template-columns: 1fr; } .form button { width: 100%; } }
+@media (max-width: 640px) { .card { padding: 18px 16px; } }
+.fld > .lb { display: block; font: 500 17px/1.4 "Kanit", sans-serif; margin-bottom: 10px; }
+.fld input[type=file] { font: 14px "Sarabun", sans-serif; color: var(--muted); max-width: 100%; }
+.fld input[type=file]::file-selector-button { font: 14px "Sarabun", sans-serif; padding: 4px 8px; margin-right: 8px;
+  border: 1px solid #9ca3af; border-radius: 2px; background: #efefef; color: #111; cursor: pointer; }
+.fld .fn { display: block; font-size: 12.5px; color: var(--ok); margin-top: 4px; min-height: 1em; word-break: break-all; }
+.shed { display: flex; gap: 10px; }
+.shed input, .fld input[type=text] { flex: 1; min-width: 0; font: 17px "Sarabun", sans-serif; padding: 9px 12px; border: 1px solid var(--line);
+  border-radius: 5px; background: var(--input-bg); color: var(--text); }
+.fld input[type=text] { width: 100%; text-transform: uppercase; }
+.shed input:focus, .fld input[type=text]:focus { outline: 2px solid var(--navy); outline-offset: -1px; }
+.note { margin: 18px 0 0; font-size: 14px; color: var(--muted); }
+button { font: 500 15px "Kanit", sans-serif; border: 0; border-radius: 5px; padding: 12px 22px; cursor: pointer;
+  background: var(--navy); color: var(--on-navy); white-space: nowrap; }
+button:hover:not(:disabled) { background: var(--navy-hover); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.sec { background: #2f7a4f; }
+button.sec:hover:not(:disabled) { background: #256340; }
+button.ghost { background: var(--card); color: var(--navy-text); border: 1.5px solid var(--navy-text); padding: 10.5px 20px; }
+button.ghost:hover:not(:disabled) { background: var(--bg); }
+.btns { display: flex; gap: 10px; }
+@media (max-width: 1000px) { .btns > button { flex: 1; } }
+.res-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+h2 { font: 500 18px "Kanit", sans-serif; margin: 0; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.stat { background: var(--bg); border-radius: 8px; padding: 10px 12px; border-left: 4px solid var(--navy); }
+.stat .n { font-size: 22px; font-weight: 600; }
+.stat .l { font-size: 12.5px; color: var(--muted); }
+.warn { background: var(--warn-soft); color: var(--warn); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+.okmsg { background: var(--ok-soft); color: var(--ok); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { color: var(--muted); font-weight: 600; }
+code, .mono { font-family: "IBM Plex Mono", monospace; font-size: 13px; }
+mark { background: var(--hl); color: var(--hl-text); border-radius: 2px; }
+.pre { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; background: var(--bg); padding: 10px; border-radius: 8px; }
+details summary { cursor: pointer; color: var(--muted); }
+.hidden { display: none; }
+</style>
+<script src="embed.js"></script>
+</head>
+<body>
+<header class="bar"><div class="brand"><span class="logo-badge"><img src="assets/hal-logo.png" alt="Heung A Line"></span><h1>MMAN LCH — Cut B/Ls + Change Status → MMAN_LCH.txt</h1></div>
+  <div class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.<br><span style="opacity:.75;font-size:12px">Version 30/10/2026 · 9 N: O → 5</span></div>
+</header>
+<main>
+  <div class="card">
+    <div class="form">
+      <div class="fld" id="dropTxt">
+        <label class="lb" for="inTxt">MMAN (.txt)</label>
+        <input type="file" id="inTxt" accept=".txt">
+        <span class="fn" id="fnTxt"></span>
+      </div>
+      <div class="fld" id="dropList">
+        <label class="lb" for="inList">STATUS (.xls / .xlsx / .csv)</label>
+        <input type="file" id="inList" accept=".xls,.xlsx,.csv">
+        <span class="fn" id="fnList"></span>
+      </div>
+      <div class="fld">
+        <label class="lb" for="startBl">Start B/L</label>
+        <input type="text" id="startBl" maxlength="35" placeholder="empty = from the first B/L" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="fld">
+        <label class="lb" for="endBl">End B/L</label>
+        <input type="text" id="endBl" maxlength="35" placeholder="empty = to the last line" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="fld">
+        <label class="lb" for="shed">SHED NO.</label>
+        <div class="shed">
+          <input id="shed" value="2813" maxlength="4" placeholder="2813">
+        </div>
+      </div>
+      <div class="btns">
+        <button id="run" disabled>Cut + Change status</button>
+        <button id="clear" class="ghost" type="button">Clear files</button>
+      </div>
+    </div>
+    <p class="note">Start B/L … End B/L: keeps the PSKV line, then keeps only the B/Ls from the start B/L to the end B/L (including sub-B/Ls …A, …B and their container lines); the rest is cut · Start empty = from the first B/L · End empty = to the last line · Both empty = no cut · SHED NO.: used for THLCH B/Ls that are not DG (THLCH DG = 2826 · BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113) · Processed in your browser, no file upload</p>
+  </div>
+
+  <div class="card hidden" id="result">
+    <div class="res-head">
+      <h2>Cut and Status change results</h2>
+      <button id="dl" class="sec hidden">Download MMAN_LCH.txt</button>
+    </div>
+    <div id="msgs"></div>
+    <div class="stats" id="stats"></div>
+    <div class="tbl-wrap"><table id="tbl"></table></div>
+    <details style="margin-top:12px"><summary>Sample changed lines (highlight = changed position)</summary><div class="pre" id="preview"></div></details>
+  </div>
+
+  <div class="card">
+    <details><summary>Rules applied</summary>
+      <p><b>Step 1 Cut</b> — always keeps the first line (PSKV), keeps from "Start B/L" to "End B/L" (including the sub-B/Ls and container lines of the last B/L); every line before and after this range is cut</p>
+      <p><b>Step 2 Change status</b> (on the B/Ls kept)</p>
+      <ol>
+        <li>col 36-40 = POL (column C)</li>
+        <li>col 41-45 = the port most B/Ls in the file have (e.g. THBKK, THLCH)</li>
+        <li>col 46-50 = original port (THLCH, THLKR, …), kept unchanged</li>
+        <li>col 51-54 = Shed by original port: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THLCH DG (with UN/CLASS) 2826 · THBKK to LAOS 0124 · the rest from the SHED NO. box</li>
+        <li>col 844-845 = first 2 letters of the POL (in place of TH)</li>
+        <li>Container line = Status from column B (e.g. 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N), empty = unchanged</li>
+        <li>Package unit PG → PX on every B/L · The letter O before the description (col 3804) → 5 only for B/Ls with Status 9 N · other B/Ls keep O (TRANSIT/TRANSHIPMENT use 7/3/L, see below)</li>
+        <li>Consignee name (col 881, 974) and notify name (col 1765) = always the notify name at col 1672 (the TH + name position), single-spaced only, on every B/L (BKK and LCH) · At col 974 and 1765 only the name part changes, the address after it is kept · Except TRANSIT/TRANSHIPMENT B/Ls, which are left unchanged</li>
+        <li>TRANSIT/TRANSHIPMENT B/Ls: col 1670-1671 (the TH before the notify name) = destination country LA=LAO · MM=MYANMAR · KH=CAMBODIA · CN=CHINA · PG=PAPUA NEW GUINEA · MY=MALAYSIA</li>
+        <li>Every B/L except TRANSIT/TRANSHIPMENT: clears the notify tax ID (col 1742-1754) and the consignee (col 1416-1669) / notify (col 2207-2460) addresses · The consignee tax ID and branch code are kept</li>
+        <li>TRANSIT/TRANSHIPMENT B/Ls: col 3804 (letter before the description) TRANSIT = 7 · TRANSIT to LAOS = per "CARGO MOVEMENT = L / 7" in the MMAN (none = 7) · TRANSHIPMENT = 3 · Other B/Ls keep O (Status 9 N = 5)</li>
+      </ol>
+      A B/L in column A also covers its sub-B/Ls (…462A, …462B) · After cutting, line lengths and line breaks (CRLF) stay byte-for-byte the same
+    </details>
+  </div>
+</main>
+
+<script>
+const COL = { POL: 35, COPY: 40, PORT: 45, SHED: 50, CTRY: 843, STATUS: 17 };
+// consignee name (880), consignee name+address (973), notify name (1671) <- name at notify name+address (1764)
+const NAME = { C_NAME: 880, C_FULL: 973, N_NAME: 1671, N_FULL: 1764, W: 70, W_FULL: 696 };  // name = 70 chars; tax ID + branch follow, never touched
+// shed by the original port (col 46-50); THLCH DG (UN/CLASS) = 2826; the rest = SHED NO.
+const PORT_SHED = { THBMT: "0110", THSCT: "0302", THLKR: "0332", THUCT: "0113" }, SHED_LCH_DG = "2826", SHED_BKK_LAOS = "0124";  // THBKK B/L going to LAOS = 0124 every time
+const DG_RE = /\bUN\s?(?:NO\.?\s?)?\d{4}\b|\bIMO\b|\bIMDG\b|\bCLASS\s?\d/i;
+const TRANSIT_RE = /TRANSIT\b|\bTRANS[\s-]?S?HIP/i;  // also "INTRANSIT"
+// TRANSIT/TRANSHIPMENT: notify country (col 1669, "TH") = destination country,
+// found in the consignee name+address (col 973, last mention), else in the description (first mention)
+const N_CTRY = 1669;
+// every B/L except TRANSIT/TRANSHIPMENT: blank the notify tax ID and the consignee / notify address fields
+// (the consignee tax ID at 950 and both branch codes stay)
+const CLEAR = [[1741, 13], [1415, 254], [2206, 254]];
+// TRANSIT/TRANSHIPMENT: code before the description (col 3803, normally "O"):
+// TRANSHIPMENT = 3, TRANSIT = 7, TRANSIT to LAOS = the "CARGO MOVEMENT = L / 7" in the B/L (7 if none)
+const MOVE = 3803, TRANSHIP_RE = /\bTRANS[\s-]?S?HIP/i, MOVEMENT_RE = /MOVEMENT\s*[=:]?\s*([L7])\b/i;
+function transitMove(line, dest) {
+  if (TRANSHIP_RE.test(line)) return "3";
+  if (dest === "LA") { const m = MOVEMENT_RE.exec(line.slice(3302)); return m ? m[1].toUpperCase() : "7"; }
+  return "7";
+}
+const DEST_CTRY = [["LA", /\bLAOS?\b|\bLAO\s*P\.?\s*D\.?\s*R|\bVIENTIANE\b/gi], ["MM", /\bMYANMAR\b|\bBURMA\b|\bYANGON\b/gi],
+  ["KH", /\bCAMBODIA\b|\bPHNOM\s*PENH\b/gi], ["CN", /\bCHINA\b/gi], ["PG", /\bPAPUA\s+NEW\s+GUINEA\b/gi], ["MY", /\bMALAYSIA\b/gi]];
+function destCountry(line) {
+  const hits = t => DEST_CTRY.flatMap(([c, re]) => [...t.matchAll(re)].map(m => [m.index, c])).sort((a, b) => a[0] - b[0] || (a[1] < b[1] ? -1 : 1));
+  const addr = hits(line.slice(NAME.C_FULL, NAME.C_FULL + NAME.W_FULL)), desc = hits(line.slice(3302));
+  if (addr.length) return addr[addr.length - 1][1];
+  return desc.length ? desc[0][1] : null;
+}
+const words = t => t.trim().split(/\s+/).filter(Boolean).join(" ");
+const setAt = (t, pos, v) => t.slice(0, pos) + v + t.slice(pos + v.length);
+
+// Master name = the notify name at col 1672 (after "TH"), single spaces only -> consignee name (881),
+// name part of consignee name+address (974) and of notify name+address (1765). TRANSIT/TRANSHIPMENT: names kept.
+// returns [line, result]: changed / same / transit (kept) / differ (no notify name and no name at 1765, kept)
+function fixNames(line) {
+  if (TRANSIT_RE.test(line)) {
+    const c = destCountry(line);
+    line = setAt(line, MOVE, transitMove(line, c));
+    return [c ? setAt(line, N_CTRY, c) : line, "transit"];
+  }
+  const oldC = line.slice(NAME.C_NAME, NAME.C_NAME + NAME.W).trimEnd();
+  const oldN = line.slice(NAME.N_NAME, NAME.N_NAME + NAME.W).trimEnd();
+  const nFull = line.slice(NAME.N_FULL, NAME.N_FULL + NAME.W_FULL);
+  const prefix = (full, target) => {
+    if (!target) return null;
+    for (const m of full.matchAll(/\S+/g)) {
+      const w = words(full.slice(0, m.index + m[0].length));
+      if (w === target) return full.slice(0, m.index + m[0].length);
+      if (w.length >= target.length) return null;
+    }
+    return null;
+  };
+  const lead = full => (full.match(/^\s*\S+(?: \S+)*/) || [""])[0];  // name before the first double space
+  let nw = words(oldN);
+  if (!nw) nw = words(prefix(nFull, words(oldC)) || "");  // no notify name: the name written at 1765
+  if (!nw) return [line, "differ"];
+  nw = nw.slice(0, NAME.W);
+  let out = setAt(line, NAME.C_NAME, nw.padEnd(NAME.W));
+  out = setAt(out, NAME.N_NAME, nw.padEnd(NAME.W));
+  const cFull = out.slice(NAME.C_FULL, NAME.C_FULL + NAME.W_FULL);
+  let part = oldC ? prefix(cFull, words(oldC)) : null;
+  if (part === null && cFull.trim()) part = lead(cFull);  // a different name sits there: replace it anyway
+  if (part !== null) {
+    const nf = nw + cFull.slice(part.length);
+    if (!nf.slice(NAME.W_FULL).trim()) out = setAt(out, NAME.C_FULL, nf.slice(0, NAME.W_FULL).padEnd(NAME.W_FULL));
+  }
+  part = prefix(nFull, words(oldC)) ?? prefix(nFull, words(oldN));
+  if (part === null) part = lead(nFull);  // a different name (or nothing) sits there: replace it anyway
+  if (part !== null) {
+    const nf = nw + nFull.slice(part.length);
+    if (!nf.slice(NAME.W_FULL).trim()) out = setAt(out, NAME.N_FULL, nf.slice(0, NAME.W_FULL).padEnd(NAME.W_FULL));
+  }
+  return [out, out === line ? "same" : "changed"];
+}
+let txtBuf = null, listRows = null, outBytes = null, cutBuf = null;
+const $ = id => document.getElementById(id);
+
+function bindDrop(dropId, inputId, fnId, onFile) {
+  const d = $(dropId), inp = $(inputId);
+  inp.addEventListener("change", () => inp.files[0] && handle(inp.files[0]));
+  ["dragenter", "dragover"].forEach(e => d.addEventListener(e, ev => { ev.preventDefault(); d.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(e => d.addEventListener(e, ev => { ev.preventDefault(); d.classList.remove("over"); }));
+  d.addEventListener("drop", ev => ev.dataTransfer.files[0] && handle(ev.dataTransfer.files[0]));
+  async function handle(f) {
+    try { await onFile(f); $(fnId).textContent = f.name; d.classList.add("done"); }
+    catch (e) { $(fnId).textContent = "Cannot read the file: " + e.message; d.classList.remove("done"); }
+    $("run").disabled = !(txtBuf && listRows);
+    $("dl").classList.add("hidden");
+  }
+}
+
+bindDrop("dropTxt", "inTxt", "fnTxt", async f => { txtBuf = new Uint8Array(await f.arrayBuffer()); });
+bindDrop("dropList", "inList", "fnList", async f => {
+  const buf = await f.arrayBuffer();
+  const wb = /\.csv$/i.test(f.name) ? XLSX.read(new TextDecoder().decode(buf), { type: "string", raw: true })
+                                     : XLSX.read(buf, { type: "array" });
+  const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: false, defval: "" });
+  // find columns A-C by header name, so any order works (KMBK: B/L, Status, POL · SUR: POL, Status, B/L)
+  const key = h => String(h).toLowerCase().replace(/[^a-z]/g, "");
+  const head = (rows[0] || []).slice(0, 3).map(key);
+  const find = p => head.findIndex(h => h.startsWith(p));
+  let ci = { bl: find("bl"), st: find("status"), pol: find("pol") };
+  const dgCol = (rows[0] || []).map(key).indexOf("dg");  // SUR form has a DG column ("DG:3  UN:1245")
+  if (Object.values(ci).some(i => i < 0)) ci = { bl: 0, st: 1, pol: 2 };
+  const cfg = {};
+  rows.slice(1).forEach(r => {
+    const bl = String(r[ci.bl] || "").trim();
+    if (!bl) return;
+    const st = normStatus(String(r[ci.st] || ""));
+    cfg[bl] = { status: st, pol: String(r[ci.pol] || "").trim().toUpperCase(), dg: dgCol >= 0 && String(r[dgCol] || "").trim() !== "" };
+  });
+  if (!Object.keys(cfg).length) throw new Error("No data in columns A-C");
+  listRows = cfg;
+});
+
+// "7 N" / "7N" / "7   N" -> "7  N" (code at col 17, flag at col 20, as in the file)
+function normStatus(st) {
+  if (!st.trim()) return null;
+  let t = st.trim().split(/\s+/);
+  if (t.length === 1 && t[0].length === 2) t = [t[0][0], t[0][1]];
+  if (t.length === 2 && t[0].length === 1 && t[1].length === 1) return (t[0] + "  " + t[1]).toUpperCase();
+  throw new Error("Unrecognised Status: " + st);
+}
+
+const str = (b, s, e) => { let o = ""; for (let i = s; i < e; i++) o += String.fromCharCode(b[i]); return o; };
+const put = (b, pos, text) => { for (let i = 0; i < text.length; i++) b[pos + i] = text.charCodeAt(i); };
+
+// keep the PSKV header line + the lines from B/L `from` through B/L `to`
+// (with its sub-B/Ls …A, …B and their container lines). Blank from = first B/L, blank to = last line.
+function cut(buf, from, to) {
+  const starts = [0];
+  for (let i = 0; i < buf.length; i++) if (buf[i] === 10 && i + 1 < buf.length) starts.push(i + 1);
+  const total = starts.length, at = n => n < total ? starts[n] : buf.length;
+  if (str(buf, 0, 4) !== "PSKV") throw new Error("The first line is not a PSKV line");
+  const blAt = n => { const s = starts[n], h = str(buf, s, Math.min(at(n + 1), s + 35)); return h.startsWith("HASL") ? h.trim() : null; };
+  const inGroup = (bl, key) => bl === key || (bl.length === key.length + 1 && bl.startsWith(key) && /[A-Z]$/.test(bl));
+  let first = 1;
+  if (from) {
+    first = starts.findIndex((_, n) => n >= 1 && blAt(n) === from);
+    if (first < 0) throw new Error("Start B/L " + from + " not found in the MMAN file");
+  }
+  let stop = total;
+  if (to) {
+    let last = -1;
+    for (let n = first; n < total; n++) { const bl = blAt(n); if (bl && inGroup(bl, to)) last = n; }
+    if (last < 0) throw new Error("B/L " + to + " not found in the MMAN file" + (from ? " after start B/L " + from : ""));
+    stop = last + 1;
+    while (stop < total && !blAt(stop)) stop++;
+  }
+  const head = at(1), s = at(first), e = at(stop);
+  const res = new Uint8Array(head + e - s);
+  res.set(buf.subarray(0, head), 0);
+  res.set(buf.subarray(s, e), head);
+  const kept = 1 + stop - first;
+  return { buf: res, removed: total - kept, total, kept };
+}
+
+function run() {
+  const bl0 = $("startBl").value.trim().toUpperCase(), bl1 = $("endBl").value.trim().toUpperCase();
+  let cutInfo = null;
+  try {
+    if (bl0 || bl1) { cutInfo = cut(txtBuf, bl0, bl1); cutBuf = cutInfo.buf; } else cutBuf = txtBuf;
+  } catch (e) {
+    $("msgs").innerHTML = `<div class="warn">${esc(e.message)}</div>`;
+    $("stats").innerHTML = $("tbl").innerHTML = $("preview").innerHTML = "";
+    $("result").classList.remove("hidden"); $("dl").classList.add("hidden");
+    return;
+  }
+  const src = cutBuf, out = new Uint8Array(src);
+  const shed = $("shed").value.trim().padEnd(4).slice(0, 4);
+  const rep = { bl: [], statusCount: {}, pg: [], notInList: [], noPol: [], layout: [], cut: cutInfo, sheds: {}, dg: [], transitCtry: [], transitNoCtry: [], cleared: [], o5: [],
+                names: { changed: [], same: [], transit: [], differ: [] } };
+  const lines = [];
+  let cur = null, start = 0;
+  for (let i = 0; i <= src.length; i++) {
+    if (i === src.length || src[i] === 10) {
+      let end = i; if (end > start && src[end - 1] === 13) end--;
+      lines.push([start, end]); start = i + 1;
+    }
+  }
+  // port of discharge = the port most B/Ls have in col 46-50 (THBKK, THLCH); THLKR and others stay in col 46-50
+  const ports = {};
+  for (const [s, e] of lines) if (str(src, s, s + 4) === "HASL") { const p = str(src, s + COL.PORT, s + COL.PORT + 5); if (p.trim()) ports[p] = (ports[p] || 0) + 1; }
+  const port = Object.keys(ports).sort((a, b) => ports[b] - ports[a])[0] || "";
+  rep.port = port;
+  const previews = [];
+  for (const [s, e] of lines) {
+    const head = str(src, s, Math.min(e, s + 20));
+    if (head.startsWith("HASL")) {
+      const bl = head.trim(), c = listRows[bl.slice(0, 16)];
+      if (!c) { rep.notInList.push(bl); cur = null; continue; }
+      cur = c.status;
+      if (e - s < COL.CTRY + 2 || !str(src, s + COL.PORT, s + COL.PORT + 5).trim() || str(src, s + COL.POL, s + COL.COPY).trim()) rep.layout.push(bl);
+      if (c.pol) { put(out, s + COL.POL, c.pol.padEnd(5).slice(0, 5)); put(out, s + COL.CTRY, c.pol.slice(0, 2)); }
+      else rep.noPol.push(bl);
+      put(out, s + COL.COPY, port || str(src, s + COL.PORT, s + COL.PORT + 5));
+      const dg = !!c.dg || DG_RE.test(str(src, s + 3302, e)), orig = str(src, s + COL.PORT, s + COL.PORT + 5);
+      const sh = orig === "THBKK" && destCountry(str(src, s, e)) === "LA" ? SHED_BKK_LAOS
+        : PORT_SHED[orig] || (orig === "THLCH" && dg ? SHED_LCH_DG : shed);
+      put(out, s + COL.SHED, sh);
+      rep.sheds[sh] = (rep.sheds[sh] || 0) + 1;
+      if (dg) rep.dg.push(bl);
+      const m = /\d{11}KGM\d{8}PG\d{11}MTQ/.exec(str(src, s, e));
+      if (m) { put(out, s + m.index + 22, "PX"); rep.pg.push(bl); }
+      if (e - s >= NAME.N_FULL + NAME.W_FULL) {
+        const [nl, res] = fixNames(str(out, s, e));
+        put(out, s, nl);
+        rep.names[res].push(bl);
+        if (res !== "transit") {
+          let cl = nl;
+          for (const [pos, w] of CLEAR) cl = setAt(cl, pos, " ".repeat(w));
+          if (cl !== nl) { put(out, s, cl); rep.cleared.push(bl); }
+          if (c.status === "9  N" && str(out, s + MOVE, s + MOVE + 1) === "O") { put(out, s + MOVE, "5"); rep.o5.push(bl); }  // Status 9 N: O -> 5
+        }
+        if (res === "transit") { const c = nl.slice(N_CTRY, N_CTRY + 2); if (c !== "TH") rep.transitCtry.push(`${bl}=${c} (${nl[MOVE]})`); else rep.transitNoCtry.push(bl); }
+      }
+      rep.bl.push({ bl, status: c.status, pol: c.pol, shed: sh, port: orig, dg });
+      if (previews.length < 6) previews.push([s, Math.min(e, s + 70)]);
+    } else if (cur && /^[A-Z]{4}\d{7} /.test(head)) {
+      put(out, s + COL.STATUS, cur);
+      rep.statusCount[cur] = (rep.statusCount[cur] || 0) + 1;
+      if (previews.length < 6) previews.push([s, e]);
+    }
+  }
+  let changed = 0; for (let i = 0; i < src.length; i++) if (src[i] !== out[i]) changed++;
+  outBytes = out;
+  render(rep, changed, previews, shed);
+}
+
+function esc(t) { return t.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
+
+function render(rep, changed, previews, shed) {
+  const nYes = rep.bl.filter(b => b.status).length;
+  const statusTxt = Object.entries(rep.statusCount).map(([k, v]) => `${k.trim()} ×${v}`).join(", ") || "none";
+  $("stats").innerHTML = [
+    [rep.bl.length, "B/Ls changed"], [nYes, "B/Ls with a Status"], ...Object.entries(rep.sheds).map(([k, v]) => [v, `Shed ${k}`]), [rep.dg.length, "B/L DG"],
+    [Object.values(rep.statusCount).reduce((a, b) => a + b, 0), "Container lines with Status changed"], [rep.pg.length, "PG → PX"], [changed, "Bytes changed"]
+  ].map(([n, l]) => `<div class="stat"><div class="n">${n}</div><div class="l">${esc(l)}</div></div>`).join("");
+  const cutTxt = rep.cut ? `Cut ${rep.cut.removed} lines (${rep.cut.total} → ${rep.cut.kept} lines) · ` : "Not cut (no B/L given) · ";
+  let msgs = `<div class="okmsg">${cutTxt}File size ${outBytes.length.toLocaleString()} bytes · Status: ${esc(statusTxt)}${rep.pg.length ? " · PG→PX: " + rep.pg.join(", ") : ""}</div>`;
+  if (rep.notInList.length) msgs += `<div class="warn">B/Ls not in the list (not changed): ${rep.notInList.join(", ")}</div>`;
+  if (rep.noPol.length) msgs += `<div class="warn">B/Ls with no POL: ${rep.noPol.join(", ")}</div>`;
+  msgs += `<div class="okmsg">Port col 41-45: ${esc(rep.port || "-")} · Names per col 1672: changed ${rep.names.changed.length} B/L${rep.names.changed.length ? " (" + rep.names.changed.join(", ") + ")" : ""} · already correct ${rep.names.same.length} B/L</div>`;
+  if (rep.names.transit.length) msgs += `<div class="warn">TRANSIT/TRANSHIPMENT B/Ls, names kept: ${rep.names.transit.join(", ")}${rep.transitCtry.length ? " · destination country col 1670 (and description code): " + rep.transitCtry.join(", ") : ""}</div>`;
+  if (rep.o5.length) msgs += `<div class="okmsg">O → 5 (Status 9 N): ${rep.o5.join(", ")}</div>`;
+  if (rep.cleared.length) msgs += `<div class="okmsg">Cleared notify tax ID and consignee / notify addresses: ${rep.cleared.join(", ")}</div>`;
+  if (rep.transitNoCtry.length) msgs += `<div class="warn">TRANSIT B/Ls with no destination country found (TH kept, please check): ${rep.transitNoCtry.join(", ")}</div>`;
+  if (rep.names.differ.length) msgs += `<div class="warn">No notify name at col 1672 (kept, please check): ${rep.names.differ.join(", ")}</div>`;
+  if (rep.layout.length) msgs += `<div class="warn">Unusual column positions, check before use: ${rep.layout.join(", ")}</div>`;
+  $("msgs").innerHTML = msgs;
+  $("tbl").innerHTML = "<tr><th>B/L No.</th><th>POL</th><th>Port</th><th>Status</th><th>DG</th><th>Shed</th></tr>" +
+    rep.bl.map(b => `<tr><td class="mono">${b.bl}</td><td class="mono">${esc(b.pol)}</td><td class="mono">${esc(b.port)}</td><td class="mono">${b.status ? esc(b.status).replace(/ /g, "&nbsp;") : "—"}</td><td class="mono">${b.dg ? "DG" : ""}</td><td class="mono">${esc(b.shed)}</td></tr>`).join("");
+  $("preview").innerHTML = previews.map(([s, e]) => {
+    let h = ""; for (let i = s; i < e; i++) { const ch = esc(String.fromCharCode(outBytes[i])); h += cutBuf[i] !== outBytes[i] ? `<mark>${ch}</mark>` : ch; }
+    return h;
+  }).join("\n");
+  $("result").classList.remove("hidden");
+  $("dl").classList.remove("hidden");
+}
+
+$("run").addEventListener("click", run);
+// clear the chosen files, the B/L and the result so the next job starts fresh
+$("clear").addEventListener("click", () => {
+  txtBuf = listRows = outBytes = cutBuf = null;
+  ["inTxt", "inList", "startBl", "endBl"].forEach(id => $(id).value = "");
+  ["fnTxt", "fnList"].forEach(id => $(id).textContent = "");
+  ["dropTxt", "dropList"].forEach(id => $(id).classList.remove("done"));
+  ["msgs", "stats", "tbl", "preview"].forEach(id => $(id).innerHTML = "");
+  $("result").classList.add("hidden");
+  $("dl").classList.add("hidden");
+  $("run").disabled = true;
+});
+["startBl", "endBl"].forEach(id => $(id).addEventListener("input", () => $("dl").classList.add("hidden")));
+$("dl").addEventListener("click", () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([outBytes], { type: "text/plain" }));
+  a.download = "MMAN_LCH.txt"; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+</script>
+</body>
+</html>

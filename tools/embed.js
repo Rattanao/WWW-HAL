@@ -24,7 +24,7 @@ document.write('<script src="auth.js"><\/script><script>HAL_AUTH.guard()<\/scrip
       background: #fff !important; color: var(--navy, #1f3f94) !important; border: 1px solid var(--navy, #1f3f94) !important; white-space: nowrap; }
     button.x-clear:hover { background: #eef2fb !important; }
 
-    /* SUM-EDI: ตัวหนังสือเล็กลง ให้ดูไม่รก */
+    /* ตัวหนังสือเล็กลง ให้ดูไม่รก (ทุกเครื่องมือในเว็บรวม) */
     html.compact body { font-size: 14px; }
     html.compact .card { padding: 14px 16px; }
     html.compact label.t { font-size: 14px; margin-bottom: 4px; }
@@ -43,8 +43,38 @@ document.write('<script src="auth.js"><\/script><script>HAL_AUTH.guard()<\/scrip
     html.compact td { padding: 5px 8px; }
     html.compact tr.bls td { font-size: 12px; }
   `;
-  if (/sum-edi\.html$/.test(location.pathname)) root.classList.add("compact");
+  if (root.classList.contains("embedded")) root.classList.add("compact");
   document.head.appendChild(style);
+
+  // ---- สีของเว็บรวม: ตัวหนังสือสีน้ำเงิน -> ส้ม, เส้นประ -> เขียวเข้ม, ตัวหนังสือใหญ่ -> เล็กลง ----
+  // อ่าน CSS ของเครื่องมือแล้วแก้ค่าในกฎเดิม จึงใช้ได้กับทุกเครื่องมือโดยไม่แก้โค้ดต้นฉบับ
+  const ORANGE = "#e2501f", GREEN = "#1b5e20";
+  function restyle() {
+    if (!root.classList.contains("embedded")) return;
+    const rootStyle = getComputedStyle(root);
+    const resolve = v => v.replace(/var\((--[\w-]+)\)/g, (m, n) => rootStyle.getPropertyValue(n).trim() || m);
+    const probe = document.createElement("span");
+    document.body.appendChild(probe);
+    const rgb = v => { probe.style.color = ""; probe.style.color = resolve(v); return (getComputedStyle(probe).color.match(/\d+/g) || []).map(Number); };
+    const isBlue = v => { const [r, g, b] = rgb(v); return b !== undefined && b > r + 30 && b >= g && r < 110; };
+    const walk = rules => [...rules].forEach(r => {
+      if (r.cssRules && !r.selectorText) return walk(r.cssRules);
+      if (!r.style || !r.selectorText) return;
+      const sel = r.selectorText, st = r.style;
+      if (/prefers-color-scheme|data-theme="dark"/.test(sel)) return;
+      // ปุ่มและหัวตารางเป็นตัวหนังสือบนพื้นสี ไม่เปลี่ยน
+      if (st.color && !/button|\bth\b|\.btn|header|footer|\.over/.test(sel) && isBlue(st.color)) st.setProperty("color", ORANGE, "important");
+      if (/dashed/.test(st.borderStyle || st.border) && !/\.over/.test(sel)) st.setProperty("border-color", GREEN, "important");
+      const px = parseFloat(st.fontSize);
+      if (/px$/.test(st.fontSize) && px >= 16 && !/header|footer|\.topbar/.test(sel)) st.setProperty("font-size", Math.round(px * 0.875 * 2) / 2 + "px");
+    });
+    for (const sheet of document.styleSheets) {
+      if (sheet.ownerNode === style) continue;
+      try { walk(sheet.cssRules); } catch (e) { /* stylesheet ของเว็บอื่น (Google Fonts) อ่านไม่ได้ */ }
+    }
+    probe.remove();
+  }
+  document.addEventListener("DOMContentLoaded", restyle);
 
   // ---- ปุ่มลบไฟล์ ----
   document.addEventListener("DOMContentLoaded", () => {

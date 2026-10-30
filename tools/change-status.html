@@ -102,7 +102,7 @@ button.ghost:hover:not(:disabled) { background: #eef3f9; }
     <span class="logo-badge"><img src="assets/hal-logo.png" alt="Heung A Line"></span>
     <h1>Change Status — MMAN × STATUS → MMAN_EDI.txt</h1>
   </div>
-  <div class="credit">Project by <b>Ms. Rattana Mudlae</b><br>Position Import DOC.<br><span style="opacity:.75;font-size:12px">Version 22/10/2026 · names per col 1672</span></div>
+  <div class="credit">Project by <b>Ms. Rattana Mudlae</b><br>Position Import DOC.<br><span style="opacity:.75;font-size:12px">Version 30/10/2026 · 9 N: O → 5</span></div>
 </header>
 <main>
   <div class="card">
@@ -164,11 +164,11 @@ button.ghost:hover:not(:disabled) { background: #eef3f9; }
         <li>col 51-54 = Shed locked by the original port: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · LCH with DG (has UN/CLASS) 2826 · BKK going to LAOS 0124 · other BKK and LCH B/Ls use the SHED NO. boxes (0145 if the B/L has a Status / 0122 for the rest · right box empty = use the left box)</li>
         <li>col 844-845 = first 2 letters of the POL (in place of TH)</li>
         <li>Container line = Status from column B (e.g. 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N), empty = unchanged</li>
-        <li>Package unit PG → PX on every B/L · The letter O before the description is kept (except TRANSIT/TRANSHIPMENT, see below)</li>
+        <li>Package unit PG → PX on every B/L · The letter O before the description (col 3804) → 5 only for B/Ls with Status 9 N · other B/Ls keep O (TRANSIT/TRANSHIPMENT use 7/3/L, see below)</li>
         <li>Consignee name (col 881, 974) and notify name (col 1765) = always the notify name at col 1672 (the TH + name position), single-spaced only, on every B/L (BKK and LCH) · At col 974 and 1765 only the name part changes, the address after it is kept · Except TRANSIT/TRANSHIPMENT B/Ls, which are left unchanged</li>
         <li>TRANSIT/TRANSHIPMENT B/Ls: col 1670-1671 (the TH before the notify name) = destination country LA=LAO · MM=MYANMAR · KH=CAMBODIA · CN=CHINA · PG=PAPUA NEW GUINEA · MY=MALAYSIA</li>
         <li>Every B/L except TRANSIT/TRANSHIPMENT: clears the notify tax ID (col 1742-1754) and the consignee (col 1416-1669) / notify (col 2207-2460) addresses · The consignee tax ID and branch code are kept</li>
-        <li>TRANSIT/TRANSHIPMENT B/Ls: col 3804 (letter before the description) TRANSIT = 7 · TRANSIT to LAOS = per "CARGO MOVEMENT = L / 7" in the MMAN (none = 7) · TRANSHIPMENT = 3 · Other B/Ls keep O</li>
+        <li>TRANSIT/TRANSHIPMENT B/Ls: col 3804 (letter before the description) TRANSIT = 7 · TRANSIT to LAOS = per "CARGO MOVEMENT = L / 7" in the MMAN (none = 7) · TRANSHIPMENT = 3 · Other B/Ls keep O (Status 9 N = 5)</li>
       </ol>
       A B/L in column A also covers its sub-B/Ls (…462A, …462B) · Line lengths and line endings (CRLF) stay identical byte for byte · Without a cut, the file size equals the original
     </details>
@@ -349,7 +349,7 @@ function run() {
   // ช่อง "อื่น" ว่าง = ใช้ SHED NO. ช่องซ้ายกับทุก B/L (เช่นงาน LCH ที่ไม่มี Status)
   const yes = $("shedYes").value.trim(), no = $("shedNo").value.trim() || yes;
   const shedYes = yes.padEnd(4).slice(0, 4), shedNo = no.padEnd(4).slice(0, 4);
-  const rep = { bl: [], statusCount: {}, pg: [], notInList: [], noPol: [], layout: [], cut: cutInfo, sheds: {}, dg: [], transitCtry: [], transitNoCtry: [], cleared: [],
+  const rep = { bl: [], statusCount: {}, pg: [], notInList: [], noPol: [], layout: [], cut: cutInfo, sheds: {}, dg: [], transitCtry: [], transitNoCtry: [], cleared: [], o5: [],
                 names: { changed: [], same: [], transit: [], differ: [] } };
   const lines = [];
   let cur = null, start = 0;
@@ -391,6 +391,7 @@ function run() {
           let cl = nl;
           for (const [pos, w] of CLEAR) cl = setAt(cl, pos, " ".repeat(w));
           if (cl !== nl) { put(out, s, cl); rep.cleared.push(bl); }
+          if (c.status === "9  N" && str(out, s + MOVE, s + MOVE + 1) === "O") { put(out, s + MOVE, "5"); rep.o5.push(bl); }  // Status 9 N: O -> 5
         }
         if (res === "transit") { const c = nl.slice(N_CTRY, N_CTRY + 2); if (c !== "TH") rep.transitCtry.push(`${bl}=${c} (${nl[MOVE]})`); else rep.transitNoCtry.push(bl); }
       }
@@ -425,6 +426,7 @@ function render(rep, changed, previews, shedYes, shedNo) {
   msgs += `<div class="okmsg">Port col 41-45: ${esc(rep.port || "-")}</div>`;
   msgs += `<div class="okmsg">Consignee / notify names per col 1672 (single-spaced): changed ${rep.names.changed.length} B/L${rep.names.changed.length ? " (" + rep.names.changed.join(", ") + ")" : ""} · already correct ${rep.names.same.length} B/L</div>`;
   if (rep.names.transit.length) msgs += `<div class="warn">TRANSIT/TRANSHIPMENT B/Ls, names kept: ${rep.names.transit.join(", ")}${rep.transitCtry.length ? " · destination country col 1670 (and description code): " + rep.transitCtry.join(", ") : ""}</div>`;
+  if (rep.o5.length) msgs += `<div class="okmsg">O → 5 (Status 9 N): ${rep.o5.length} B/L</div>`;
   if (rep.cleared.length) msgs += `<div class="okmsg">Cleared notify tax ID and consignee / notify addresses: ${rep.cleared.length} B/L</div>`;
   if (rep.transitNoCtry.length) msgs += `<div class="warn">TRANSIT B/Ls with no destination country found (TH kept, please check): ${rep.transitNoCtry.join(", ")}</div>`;
   if (rep.names.differ.length) msgs += `<div class="warn">No notify name at col 1672 (kept, please check): ${rep.names.differ.join(", ")}</div>`;

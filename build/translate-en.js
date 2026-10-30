@@ -131,7 +131,6 @@ const FILES = {
   "change-status.html": [
     ...COMMON,
     ['href="guide-change-status.html"', 'href="guide-change-status-en.html"'],
-    ["ชื่อตาม col 1672", "names per col 1672"],
     ["SHED NO. (มี Status / อื่น)", "SHED NO. (with Status / others)"],
     ['aria-label="Shed B/L ที่มี Status"', 'aria-label="Shed for B/Ls with a Status"'],
     ['placeholder="ว่าง = ใช้ช่องซ้าย"', 'placeholder="empty = use left box"'],
@@ -157,7 +156,7 @@ const FILES = {
      "col 51-54 = Shed locked by the original port: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · LCH with DG (has UN/CLASS) 2826 · BKK going to LAOS 0124 · other BKK and LCH B/Ls use the SHED NO. boxes (0145 if the B/L has a Status / 0122 for the rest · right box empty = use the left box)"],
     ["col 844-845 = อักษร 2 ตัวแรกของ POL (แทน TH)", "col 844-845 = first 2 letters of the POL (in place of TH)"],
     ["บรรทัดตู้ = Status จากคอลัมน์ B (เช่น 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N) ว่าง = คงเดิม", "Container line = Status from column B (e.g. 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N), empty = unchanged"],
-    ["หน่วยหีบห่อ PG → PX ทุก B/L · ตัวอักษร O หน้า description คงเดิม (ยกเว้น TRANSIT/TRANSHIPMENT ตามข้อด้านล่าง)", "Package unit PG → PX on every B/L · The letter O before the description is kept (except TRANSIT/TRANSHIPMENT, see below)"],
+    ["หน่วยหีบห่อ PG → PX ทุก B/L · ตัวอักษร O หน้า description (col 3804) → 5 เฉพาะ B/L ที่ Status 9 N · B/L อื่น O คงเดิม (TRANSIT/TRANSHIPMENT ใช้ 7/3/L ตามข้อด้านล่าง)", "Package unit PG → PX on every B/L · The letter O before the description (col 3804) → 5 only for B/Ls with Status 9 N · other B/Ls keep O (TRANSIT/TRANSHIPMENT use 7/3/L, see below)"],
     ["ชื่อ consignee (col 881, 974) และชื่อ notify (col 1765) = ตามชื่อ notify ที่ col 1672 (ตำแหน่ง TH+ชื่อ) เสมอ เว้นวรรค 1 เคาะเท่านั้น ทุก B/L (BKK และ LCH) · ที่ col 974 และ 1765 แก้เฉพาะส่วนชื่อ ที่อยู่ต่อท้ายคงไว้ · ยกเว้น B/L TRANSIT/TRANSHIPMENT ห้ามแก้ คงเดิม",
      "Consignee name (col 881, 974) and notify name (col 1765) = always the notify name at col 1672 (the TH + name position), single-spaced only, on every B/L (BKK and LCH) · At col 974 and 1765 only the name part changes, the address after it is kept · Except TRANSIT/TRANSHIPMENT B/Ls, which are left unchanged"],
     ["B/L TRANSIT/TRANSHIPMENT: col 1670-1671 (TH หน้าชื่อ notify) = ประเทศปลายทาง LA=LAO", "TRANSIT/TRANSHIPMENT B/Ls: col 1670-1671 (the TH before the notify name) = destination country LA=LAO"],
@@ -298,6 +297,31 @@ const FILES = {
 };
 
 // Thai that must stay: DO prints it on the D/O and uses it to detect filled pages.
+// MMAN LCH (repo 5-mman-vnsgn) shares most text with Change Status: its own pairs
+// first, then the Change Status pairs (marked shared, so they never report MISS).
+FILES["mman-lch.html"] = [
+  ...COMMON,
+  ...[
+    ["<title>MMAN LCH — ตัด + Change Status</title>", "<title>MMAN LCH — Cut + Change Status</title>"],
+    ["<h1>MMAN LCH — ตัด B/L + Change Status → MMAN_LCH.txt</h1>", "<h1>MMAN LCH — Cut B/Ls + Change Status → MMAN_LCH.txt</h1>"],
+    [">ตัด + Change status<", ">Cut + Change status<"],
+    ["เริ่มต้นเก็บ B/L … ถึง B/L: เก็บบรรทัด PSKV ไว้ แล้วเก็บเฉพาะตั้งแต่ B/L เริ่มต้นจนถึง B/L สุดท้ายที่กำหนด (รวม sub-B/L …A, …B และบรรทัดตู้ของ B/L นั้น) ที่เหลือตัดออก · เว้นว่างช่องเริ่มต้น = ตั้งแต่ B/L แรก · เว้นว่างช่องถึง = ถึงบรรทัดสุดท้าย · เว้นว่างทั้งสองช่อง = ไม่ตัด · SHED NO.: ใช้กับ THLCH ที่ไม่ใช่ DG (THLCH DG = 2826 · BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113) · ประมวลผลในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์", "Start B/L … End B/L: keeps the PSKV line, then keeps only the B/Ls from the start B/L to the end B/L (including sub-B/Ls …A, …B and their container lines); the rest is cut · Start empty = from the first B/L · End empty = to the last line · Both empty = no cut · SHED NO.: used for THLCH B/Ls that are not DG (THLCH DG = 2826 · BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113) · Processed in your browser, no file upload"],
+    ["<h2>ผลการตัดและเปลี่ยน Status</h2>", "<h2>Cut and Status change results</h2>"],
+    [">ดาวน์โหลด MMAN_LCH.txt<", ">Download MMAN_LCH.txt<"],
+    ["<b>ขั้นที่ 1 ตัด</b> — เก็บบรรทัดแรก (PSKV) เสมอ เก็บตั้งแต่ \"เริ่มต้นเก็บ B/L\" จนถึง \"ถึง B/L\" (รวม sub-B/L และบรรทัดตู้ของ B/L สุดท้าย) บรรทัดก่อนและหลังช่วงนี้ตัดออกทั้งหมด", "<b>Step 1 Cut</b> — always keeps the first line (PSKV), keeps from \"Start B/L\" to \"End B/L\" (including the sub-B/Ls and container lines of the last B/L); every line before and after this range is cut"],
+    ["<b>ขั้นที่ 2 Change status</b> (กับ B/L ที่เหลือ)", "<b>Step 2 Change status</b> (on the B/Ls kept)"],
+    ["col 41-45 = ท่าเรือของ B/L ส่วนใหญ่ในไฟล์ (เช่น THBKK, THLCH)", "col 41-45 = the port most B/Ls in the file have (e.g. THBKK, THLCH)"],
+    ["col 46-50 = ท่าเรือตามต้นฉบับ (THLCH, THLKR, …) คงเดิม ห้ามแก้", "col 46-50 = original port (THLCH, THLKR, …), kept unchanged"],
+    ["col 51-54 = Shed ตามท่าต้นฉบับ: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THLCH ที่เป็น DG (มี UN/CLASS) 2826 · THBKK ที่ไป LAOS 0124 · ที่เหลือตามช่อง SHED NO.", "col 51-54 = Shed by original port: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THLCH DG (with UN/CLASS) 2826 · THBKK to LAOS 0124 · the rest from the SHED NO. box"],
+    ["B/L ในคอลัมน์ A ครอบคลุม sub-B/L ด้วย (…462A, …462B) · หลังตัดแล้ว ความยาวบรรทัดและการขึ้นบรรทัด (CRLF) คงเดิมทุกไบต์", "A B/L in column A also covers its sub-B/Ls (…462A, …462B) · After cutting, line lengths and line breaks (CRLF) stay byte-for-byte the same"],
+    ["\"B/L ที่มี Status\"", "\"B/Ls with a Status\""],
+    ["`ตัดออก ${rep.cut.removed} บรรทัด (${rep.cut.total} → ${rep.cut.kept} บรรทัด) · ` : \"ไม่ได้ตัด (ไม่ได้ระบุ B/L) · \"", "`Cut ${rep.cut.removed} lines (${rep.cut.total} → ${rep.cut.kept} lines) · ` : \"Not cut (no B/L given) · \""],
+    ["${cutTxt}ขนาดไฟล์ ${outBytes.length.toLocaleString()} ไบต์ · ", "${cutTxt}File size ${outBytes.length.toLocaleString()} bytes · "],
+    [" · ชื่อตาม col 1672: แก้ ${rep.names.changed.length} B/L", " · Names per col 1672: changed ${rep.names.changed.length} B/L"],
+  ],
+  ...FILES["change-status.html"].filter(p => p !== COMMON).map(([a, b]) => [a, b, "shared"]),
+];
+
 // SUM-EDI prints its table headings and the cover note in Thai on SUM-EDI.pdf.
 const KEEP_TH = [/เริ่มเก็บค่า/, /document\.fonts\.load/, /await center\(X/, /thaiImage\(doc/];
 
@@ -305,9 +329,9 @@ let problems = 0;
 for (const [file, pairs] of Object.entries(FILES)) {
   const p = path.join(TOOLS, file);
   let s = fs.readFileSync(p, "utf8");
-  for (const [from, to] of pairs) {
+  for (const [from, to, shared] of pairs) {
     if (!s.includes(from)) {
-      if (!s.includes(to) && !COMMON.some(c => c[0] === from)) { console.log(`MISS ${file}: ${from.slice(0, 90)}`); problems++; }
+      if (!shared && !s.includes(to) && !COMMON.some(c => c[0] === from)) { console.log(`MISS ${file}: ${from.slice(0, 90)}`); problems++; }
       continue;
     }
     s = s.split(from).join(to);
