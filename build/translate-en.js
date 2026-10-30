@@ -245,6 +245,13 @@ const FILES = {
   ],
   "sum-edi.html": [
     ...COMMON,
+    [">‹ ก่อนหน้า<", ">‹ Previous<"],
+    [">ถัดไป ›<", ">Next ›<"],
+    ["\"ขยาย 100%\"", "\"Zoom 100%\""],
+    [">ขยาย 100%<", ">Zoom 100%<"],
+    ["\"พอดีจอ\"", "\"Fit to screen\""],
+    [">ปิด ✕<", ">Close ✕<"],
+    [">ดูภาพเต็ม<", ">Full view<"],
     ["GATE ลาดกระบัง <small>หน้า SUMMARY ของ THLKR</small>", "LATKRABANG GATE <small>on the THLKR SUMMARY page</small>"],
     ["ใส่ไฟล์ MF (+ CNTRS) แล้วกด Process", "Add the MF file (+ CNTRS), then click Process"],
     ["\"กำลังประมวลผล…\"", "\"Processing…\""],

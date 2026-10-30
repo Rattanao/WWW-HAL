@@ -72,7 +72,16 @@
   .preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 6px; }
   .preview figure { margin: 0; text-align: center; }
   .preview canvas { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
-  .preview figcaption { font-size: 13px; color: var(--muted); }
+  .preview figcaption { font-size: 13px; color: var(--muted); display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 4px; }
+  .preview canvas { cursor: zoom-in; }
+  .viewer { position: fixed; inset: 0; background: rgba(20, 28, 45, .94); z-index: 50; display: flex; flex-direction: column; }
+  .viewer.hidden { display: none; }
+  .viewer .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 16px; color: #fff; font-weight: 600; }
+  .viewer .bar span { flex: 1 1 200px; }
+  .viewer .bar button { padding: 6px 14px; font-size: 14px; white-space: nowrap; }
+  .viewer .page { flex: 1; overflow: auto; text-align: center; padding: 0 16px 16px; }
+  .viewer canvas { background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,.4); max-width: none; }
+  .viewer.fit canvas { max-width: 100%; height: auto; }
   .hidden { display: none; }
   footer { text-align: center; color: var(--muted); font-size: 13px; padding-bottom: 24px; }
   footer a { color: var(--navy); }
@@ -137,8 +146,14 @@
     </div>
     <div class="preview" id="preview"></div>
   </section>
+  <div class="viewer fit hidden" id="viewer">
+    <div class="bar"><span id="vTitle"></span>
+      <button id="vPrev" class="ghost">‹ Previous</button><button id="vNext" class="ghost">Next ›</button>
+      <button id="vZoom" class="ghost">Zoom 100%</button><button id="vClose">Close ✕</button></div>
+    <div class="page" id="vPage"></div>
+  </div>
 </main>
-<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-10-29l</footer>
+<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-10-30d</footer>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -151,6 +166,9 @@ const SHED_DELIVERY = { "0332": "THLKR", "0110": "THBMT", "0302": "THSCT", "0122
 const PORTS = { "LAEM CHABANG": "THLCH", "BANGKOK": "THBKK" };   // port of discharge -> delivery code
 const ORDER = ["THLCH", "THLKR", "THBMT", "THSCT", "THBKK", "MYANMAR", "LAOS", "MALAYSIA", "CHINA", "CAMBODIA",
                "TRANSHIPMENT", "EMPTY"];
+// DELIVERY shown without the country prefix: THLCH -> LCH, THLKR -> LKR (TRANSHIPMENT, MYANMAR … unchanged)
+const LABEL = { THBKK: "BKK (PAT)" };
+const label = g => LABEL[g] || g.replace(/^TH(?=[A-Z]{3}$)/, "");
 const TRANSIT = new Set(["MYANMAR", "LAOS", "MALAYSIA", "CHINA", "CAMBODIA", "VIETNAM"]);
 const RE_TRANSIT = new RegExp(`TRANSIT\\s+TO\\s+(${[...TRANSIT].join("|")})\\b`);
 // SUMMARY page "<PORT> / <place>"; THLKR = LATKRABANG + the GATE field
@@ -447,7 +465,7 @@ async function buildSummary(vessel, port, main, summ) {
     }
     p.text(433, y + 38, "TOTAL", 7.5);
     p.line(470, y + 26, 738, y + 26); p.line(470, y + 45, 738, y + 45);
-    if (double) p.line(470, y + 47, 738, y + 47);
+    p.line(470, y + 47, 738, y + 47);                       // double line under TOTAL on every page
     if (sig) { const h = 44.5, w = Math.min(60, h * sig.width / sig.height); p.image(sig, 88, 358, w, h); }
     p.line(75, 404, 690, 404, .6, true);
     p.text(75, 424, "FOR HEUNG A LINE (THAILAND) CO.,LTD.", 7.5);
@@ -492,7 +510,7 @@ async function buildSumEdi(vessel, port, summ, T, soc, staff) {
   center(X[4], X[5], top + 35, "TOTAL PKGS", 9.5);
   let y = body + 14;
   for (const x of summ) {
-    p.text(X[0] + 3, y, x.g, 9, { ...B, max: X[1] - X[0] - 6 });
+    p.text(X[0] + 3, y, label(x.g), 9, { ...B, max: X[1] - X[0] - 6 });
     if (x.n20) p.text(208, y, `${x.n20}   X 20'`, 8.5, { ...B, right: true });
     if (x.n40) p.text(268, y, `${x.n40}   X 40'`, 8.5, { ...B, right: true });
     if (x.bls) {
@@ -578,7 +596,7 @@ async function render() {
     `<div class="k">MF GRAND TOTAL</div><div class="${ok ? "ok" : "ng"}">${gt ? `${f3(gt.gw)} / ${f0(gt.pkg)} ${ok ? "✓ matches" : "✗ does not match the total"}` : "not found"}</div>` +
     `<div class="k">Signature</div><div class="${store.get(SIG_KEY) ? "ok" : "ng"}">${store.get(SIG_KEY) ? "added" : "none"}</div>`;
   $("tbody").innerHTML = summ.map((x, i) =>
-    `<tr class="g" data-i="${i}" title="Click to see the B/Ls"><td class="b">${escapeHtml(x.g)}</td><td>${x.n20 || ""}</td><td>${x.n40 || ""}</td>` +
+    `<tr class="g" data-i="${i}" title="Click to see the B/Ls"><td class="b">${escapeHtml(label(x.g))}</td><td>${x.n20 || ""}</td><td>${x.n40 || ""}</td>` +
     (x.empty ? `<td>${x.cntrs}</td><td></td><td></td><td></td></tr>`
              : `<td>${x.cntrs}</td><td>${x.bls}</td><td class="n">${f3(x.gw)}</td><td class="n">${f0(x.pkg)}</td></tr>`) +
     `<tr class="bls hidden" id="bl${i}"><td colspan="7">${x.nos.join(", ")}${x.extra ? `<br>HEUNG A, not in the MF: ${x.extra.join(", ")}` : ""}</td></tr>`).join("") +
@@ -594,14 +612,17 @@ async function render() {
   if (nosize.length) warn.push(`Containers of unknown size (not counted in 20'/40'): ${nosize.join(", ")}`);
   $("msg").textContent = warn.join("\n");
   $("result").classList.remove("hidden");
-  const box = $("preview"); box.innerHTML = "";
+  const box = $("preview"); box.innerHTML = ""; pages = [];
   for (const [label, bytes] of [["SUM-EDI", report.edi], ["SUMMARY", report.sum]]) {
     const pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
     for (let n = 1; n <= pdf.numPages; n++) {
       const page = await pdf.getPage(n), vp = page.getViewport({ scale: 1.2 });
       const fig = document.createElement("figure"), cv = document.createElement("canvas");
       cv.width = vp.width; cv.height = vp.height;
-      fig.append(cv); fig.insertAdjacentHTML("beforeend", `<figcaption>${label} page ${n}</figcaption>`);
+      const i = pages.length; pages.push({ label, n, page });
+      fig.append(cv); fig.insertAdjacentHTML("beforeend", `<figcaption>${label} page ${n} <button class="ghost small" data-v="${i}">Full view</button></figcaption>`);
+      cv.onclick = () => openViewer(i);
+      fig.querySelector("button").onclick = () => openViewer(i);
       box.append(fig);
       await page.render({ canvasContext: cv.getContext("2d"), viewport: vp }).promise;
     }
@@ -614,6 +635,31 @@ function save(bytes, name) {
   a.download = name; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 5000);
 }
+
+// ---------- full-size preview ----------
+let pages = [], vAt = 0;
+async function openViewer(i) {
+  vAt = (i + pages.length) % pages.length;
+  const { label, n, page } = pages[vAt];
+  $("vTitle").textContent = `${label} page ${n}  (${vAt + 1}/${pages.length})`;
+  const vp = page.getViewport({ scale: 3 });                     // sharp enough to read every figure
+  const cv = document.createElement("canvas"); cv.width = vp.width; cv.height = vp.height;
+  cv.style.width = `${Math.round(page.getViewport({ scale: 1.6 }).width)}px`;   // "100%" size
+  $("vPage").replaceChildren(cv); $("viewer").classList.remove("hidden");
+  await page.render({ canvasContext: cv.getContext("2d"), viewport: vp }).promise;
+}
+const closeViewer = () => $("viewer").classList.add("hidden");
+$("vClose").onclick = closeViewer;
+$("vPrev").onclick = () => openViewer(vAt - 1);
+$("vNext").onclick = () => openViewer(vAt + 1);
+$("vZoom").onclick = () => { const v = $("viewer"); v.classList.toggle("fit"); $("vZoom").textContent = v.classList.contains("fit") ? "Zoom 100%" : "Fit to screen"; };
+$("viewer").onclick = e => { if (e.target.id === "vPage") closeViewer(); };
+document.addEventListener("keydown", e => {
+  if ($("viewer").classList.contains("hidden")) return;
+  if (e.key === "Escape") closeViewer();
+  if (e.key === "ArrowLeft") openViewer(vAt - 1);
+  if (e.key === "ArrowRight") openViewer(vAt + 1);
+});
 
 // ---------- files ----------
 // files are added up (MF and CNTRS may be split over several Excel / PDF files); a file of another voyage than
