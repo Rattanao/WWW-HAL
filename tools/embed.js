@@ -44,6 +44,11 @@ document.write('<script src="auth.js"><\/script><script>HAL_AUTH.guard()<\/scrip
     html.compact tr.bls td { font-size: 12px; }
     /* หัวข้อช่องที่ต้นฉบับเป็นสีดำ (Change Status, MMAN LCH, Revised Temp) ให้เป็นสีส้มเหมือนเครื่องมืออื่น */
     html.embedded label.lb, html.embedded label.head { color: #e2501f !important; }
+    /* ขอบช่องกรอกที่จาง ให้เป็นสีเขียวเข้มหนา */
+    html.embedded input:not([type=file]):not([type=checkbox]):not([type=radio]), html.embedded select, html.embedded textarea {
+      border: 2px solid #1b5e20 !important; }
+    html.embedded input:not([type=file]):not([type=checkbox]):not([type=radio]):focus, html.embedded select:focus, html.embedded textarea:focus {
+      outline: 2px solid rgba(27, 94, 32, .3); outline-offset: 1px; }
   `;
   if (root.classList.contains("embedded")) root.classList.add("compact");
   document.head.appendChild(style);
@@ -66,7 +71,7 @@ document.write('<script src="auth.js"><\/script><script>HAL_AUTH.guard()<\/scrip
       if (/prefers-color-scheme|data-theme="dark"/.test(sel)) return;
       // ปุ่มและหัวตารางเป็นตัวหนังสือบนพื้นสี ไม่เปลี่ยน
       if (st.color && !/button|\bth\b|\.btn|header|footer|\.over/.test(sel) && isBlue(st.color)) st.setProperty("color", ORANGE, "important");
-      if (/dashed/.test(st.borderStyle || st.border) && !/\.over/.test(sel)) st.setProperty("border-color", GREEN, "important");
+      if (/dashed/.test(st.borderStyle || st.border) && !/\.over/.test(sel)) { st.setProperty("border-color", GREEN, "important"); st.setProperty("border-width", "2px", "important"); }
       const px = parseFloat(st.fontSize);
       if (/px$/.test(st.fontSize) && px >= 16 && !/header|footer|\.topbar/.test(sel)) st.setProperty("font-size", Math.round(px * 0.875 * 2) / 2 + "px");
     });
