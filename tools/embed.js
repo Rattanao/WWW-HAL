@@ -42,6 +42,8 @@ document.write('<script src="auth.js"><\/script><script>HAL_AUTH.guard()<\/scrip
     html.compact th { padding: 7px 8px; }
     html.compact td { padding: 5px 8px; }
     html.compact tr.bls td { font-size: 12px; }
+    /* หัวข้อช่องที่ต้นฉบับเป็นสีดำ (Change Status, MMAN LCH, Revised Temp) ให้เป็นสีส้มเหมือนเครื่องมืออื่น */
+    html.embedded label.lb, html.embedded label.head { color: #e2501f !important; }
   `;
   if (root.classList.contains("embedded")) root.classList.add("compact");
   document.head.appendChild(style);
