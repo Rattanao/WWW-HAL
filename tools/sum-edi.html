@@ -17,14 +17,14 @@
     --red: #c00000; --green: #1e7b34; --soc: #fff59d;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: "Sarabun", Tahoma, sans-serif; background: var(--bg); color: var(--text); }
+  body { margin: 0; font-family: "Sarabun", Tahoma, sans-serif; font-size: 14px; background: var(--bg); color: var(--text); }
   header { background: var(--navy); color: #fff; padding: 18px 16px; }
   header .wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
   header .brand { background: #fff; border-radius: 6px; padding: 5px 10px; display: inline-flex; line-height: 0; flex: 0 0 auto; }
   header .brand img { height: 30px; width: auto; display: block; }
-  header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
-  header p { margin: 0; opacity: .8; font-size: 15px; }
-  header .by { margin-left: auto; font-weight: 700; font-size: 15px; text-align: right; line-height: 1.5; align-self: center; }
+  header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+  header p { margin: 0; opacity: .8; font-size: 13px; }
+  header .by { margin-left: auto; font-weight: 700; font-size: 13px; text-align: right; line-height: 1.5; align-self: center; }
   .wrap { max-width: 1180px; margin: 0 auto; }
   main { padding: 20px 16px 40px; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 18px; }
@@ -32,33 +32,33 @@
   .staff { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 14px; }
   @media (max-width: 820px) { .inputs, .staff { grid-template-columns: 1fr; } }
   .inputs > div, .staff > div { min-width: 0; }
-  label.t { display: block; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
-  label.t small { font-weight: 400; color: var(--muted); }
-  input[type=text] { width: 100%; font: inherit; font-size: 16px; padding: 9px; border: 1px solid var(--line); border-radius: 8px; }
-  .drop { border: 2px dashed #9aa8c3; border-radius: 8px; padding: 14px; text-align: center; cursor: pointer; background: #fafbfd; transition: .15s; min-height: 58px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+  label.t { display: block; font-weight: 600; font-size: 14px; color: var(--navy); margin-bottom: 6px; }
+  label.t small { font-weight: 400; font-size: 12px; color: var(--muted); }
+  input[type=text] { width: 100%; font: inherit; font-size: 14px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; }
+  .drop { border: 2px dashed #9aa8c3; border-radius: 8px; padding: 10px 12px; font-size: 13px; text-align: center; cursor: pointer; background: #fafbfd; transition: .15s; min-height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
   .drop.over { background: var(--navy-soft); border-color: var(--navy); }
   .drop b { color: var(--navy); }
   .drop img { max-height: 40px; }
-  button { font: inherit; font-weight: 600; font-size: 16px; border: 0; border-radius: 8px; padding: 12px 20px; cursor: pointer; background: var(--navy); color: #fff; }
+  button { font: inherit; font-weight: 600; font-size: 14px; border: 0; border-radius: 8px; padding: 9px 16px; cursor: pointer; background: var(--navy); color: #fff; }
   button:disabled { opacity: .4; cursor: not-allowed; }
   button.ghost { background: #fff; color: var(--navy); border: 1px solid var(--navy); }
-  button.small { padding: 6px 12px; font-size: 14px; }
+  button.small { padding: 5px 10px; font-size: 13px; }
   .btns { display: grid; grid-template-columns: auto auto; gap: 8px; align-items: stretch; }
   .btns .wide { grid-column: 1 / -1; }
-  .rules { font-size: 14px; color: var(--muted); margin: 12px 0 0; line-height: 1.6; }
+  .rules { font-size: 12.5px; color: var(--muted); margin: 12px 0 0; line-height: 1.6; }
   .rules code { background: var(--navy-soft); color: var(--navy); padding: 1px 6px; border-radius: 4px; }
   .msg { color: var(--red); font-weight: 600; margin-top: 10px; white-space: pre-line; }
   .info { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-bottom: 14px; }
-  .info div { padding: 8px 14px; border-right: 1px solid var(--line); }
+  .info div { padding: 6px 12px; font-size: 13px; border-right: 1px solid var(--line); }
   .info .k { background: var(--navy-soft); color: var(--navy); font-weight: 700; }
   .info .ok { color: var(--green); font-weight: 700; }
   .info .ng { color: var(--red); font-weight: 700; }
   .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 14px 0; }
   .hint { color: #555; font-size: 14px; margin-top: 8px; text-align: right; }
   .hint.stale { color: #b00; font-weight: 600; }
-  select { font: inherit; padding: 9px 10px; border: 1px solid #c7ccd6; border-radius: 8px; width: 100%; background: #fff; }
+  select { font: inherit; font-size: 14px; padding: 7px 10px; border: 1px solid #c7ccd6; border-radius: 8px; width: 100%; background: #fff; }
   .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
-  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
   th { background: var(--navy); color: #fff; padding: 10px 8px; white-space: nowrap; }
   td { padding: 7px 10px; border-top: 1px solid var(--line); white-space: nowrap; text-align: center; }
   td.n { text-align: right; font-variant-numeric: tabular-nums; }
@@ -83,6 +83,14 @@
   .viewer canvas { background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,.4); max-width: none; }
   .viewer.fit canvas { max-width: 100%; height: auto; }
   .hidden { display: none; }
+  .checks { margin: 14px 0; padding: 10px 14px; font-size: 13px; line-height: 1.5; border-radius: 10px; border: 1px solid #f0b4b4; background: #fff5f5; }
+  .checks.pass { border-color: #b7dfc0; background: #f3fbf5; color: #1d6b35; font-weight: 600; }
+  .checks h3 { margin: 0 0 6px; font-size: 14px; color: #b00; }
+  .checks ul { margin: 0; padding-left: 18px; }
+  .checks li { margin: 3px 0; }
+  .checks .lv { display: inline-block; min-width: 34px; padding: 0 5px; margin-right: 6px; border-radius: 5px; color: #fff; font-size: 11px; text-align: center; }
+  .checks .lv.ng { background: #c62828; } .checks .lv.ck { background: #e08a00; }
+  .checks .ref { font-weight: 600; } .checks .note { color: #555; margin-top: 6px; font-size: 12px; }
   footer { text-align: center; color: var(--muted); font-size: 13px; padding-bottom: 24px; }
   footer a { color: var(--navy); }
 </style>
@@ -95,12 +103,12 @@
   <section class="card">
     <div class="inputs">
       <div>
-        <label class="t">MF / MANIFEST + CNTRS files (Excel or PDF) <small>Add them together, several files allowed · CNTRS is optional (used to find SOC containers)</small></label>
+        <label class="t">MF + CNTRS + ATTACHED files <small>Excel / PDF / image · several files allowed · other files = attached sheets</small></label>
         <div class="drop" id="dropMf"><span id="mfText">Drop the file here, or <b>click to choose a file</b></span></div>
-        <input type="file" id="fileMf" accept=".xls,.xlsx,.pdf" multiple class="hidden">
+        <input type="file" id="fileMf" multiple class="hidden">
       </div>
       <div>
-        <label class="t">Signature <small>.png/.jpg image, saved in this browser</small></label>
+        <label class="t">Signature <small>.png / .jpg</small></label>
         <div class="drop" id="dropSig"><span id="sigText">No signature yet <b>click to choose an image</b></span></div>
         <input type="file" id="fileSig" accept="image/png,image/jpeg" class="hidden">
       </div>
@@ -112,12 +120,12 @@
     </div>
     <div id="state" class="hint">Add the MF file (+ CNTRS), then click Process</div>
     <div class="staff">
-      <div><label class="t" for="stName">Prepared by <small>at the end of SUM-EDI · each person can set their own</small></label><input type="text" id="stName" autocomplete="off"></div>
+      <div><label class="t" for="stName">Prepared by <small>at the end of SUM-EDI · editable</small></label><input type="text" id="stName" autocomplete="off"></div>
       <div><label class="t" for="stPos">Position</label><input type="text" id="stPos" autocomplete="off"></div>
       <div><label class="t" for="stTel">Phone</label><input type="text" id="stTel" autocomplete="off"></div>
     </div>
     <div class="staff">
-      <div><label class="t" for="gate">LATKRABANG GATE <small>on the THLKR SUMMARY page</small></label>
+      <div><label class="t" for="gate">LATKRABANG GATE <small>SUMMARY · MF-LKR · CNTRS</small></label>
         <select id="gate"><option value="2">2 — LATKRABANG (ESCO GATE 2)</option><option value="8">8 — LATKRABANG (TIFFA GATE 8)</option></select></div>
     </div>
     <p class="rules">
@@ -127,7 +135,12 @@
       <b>TRANSHIPMENT</b> = CARGO MOVEMENT TRANSHIPMENT · <b>EMPTY</b> = HEUNG A empty containers (4=MTY) · only groups with data are shown<br>
       <b>SOC containers</b> = other owners' containers in CNTRS but not in the MF, grouped by owner (CONSIGNEE) and size, and included in the <b>GRAND TOTAL</b> ·
       Container size from CNTRS (without it, from the code <code>22G0</code> = 20' · <code>45G0</code> = 40')<br>
+      MF in Excel → <b>MF-LCH.pdf / MF-LKR.pdf / …</b> split by DELIVERY, with the SUMMARY page as the cover (red shed note on every page) ·
+      CNTRS in Excel → <b>CNTRS.pdf</b> split by DELIVERY from the SHED NUMBER (0332 = THLKR /GATE n …), with SOC containers separate<br>
       Name / position / phone are remembered in this browser (each person can set their own) ·
+      <b>Rule checks</b> (MF / CNTRS in Excel): SHED (DG = 2826 · LAOS to BKK = 0124 · USED ENGINE to BKK = 0126 · MF SHED matches CNTRS) ·
+      destination country · CARGO MOVEMENT (TRANSHIPMENT = 3 · TRANSIT = 7) · TAX ID = NOTIFY · MF DG and container size match CNTRS · DG containers in CNTRS are in 2826 —
+      anything found is shown in a warning box under the table (the documents are still made)<br>
       Files are processed in your browser only and are never uploaded
     </p>
     <div class="msg" id="msg"></div>
@@ -139,10 +152,10 @@
       <thead><tr><th>DELIVERY</th><th>20'</th><th>40'</th><th>Containers</th><th>B/L</th><th>Weight (KGS)</th><th>Packages</th></tr></thead>
       <tbody id="tbody"></tbody>
     </table></div>
+    <div class="checks" id="checks"></div>
     <div class="toolbar">
-      <button id="download">Download SUM-EDI.pdf + SUMMARY.pdf</button>
-      <button id="dlEdi" class="ghost">SUM-EDI.pdf</button>
-      <button id="dlSum" class="ghost">SUMMARY.pdf</button>
+      <button id="download">Download all</button>
+      <span id="dlFiles" style="display:contents"></span>
     </div>
     <div class="preview" id="preview"></div>
   </section>
@@ -153,7 +166,7 @@
     <div class="page" id="vPage"></div>
   </div>
 </main>
-<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-10-30d</footer>
+<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-10-31e</footer>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -206,7 +219,8 @@ function sheetCells(bytes) {
 
 // text lines of a PDF, words of one line joined left to right. The bigger page-header text is kept on its
 // own line, so a header printed over a container row does not mix with it (same as scripts/sum_mf.py)
-async function pdfLines(bytes) {
+async function pdfLines(bytes) { return (await pdfPages(bytes)).flat(); }
+async function pdfPages(bytes) {
   const pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise, out = [];
   for (let n = 1; n <= pdf.numPages; n++) {
     const sp = (await (await pdf.getPage(n)).getTextContent()).items.filter(i => i.str.trim())
@@ -217,7 +231,7 @@ async function pdfLines(bytes) {
       const r = rows.slice(-4).find(r => Math.abs(r.y - w.y) <= 2 && r.big === w.big);
       if (r) r.w.push(w); else rows.push({ y: w.y, big: w.big, w: [w] });
     }
-    out.push(...rows.map(r => r.w.sort((a, b) => a.x - b.x).map(w => w.t).join(" ")));
+    out.push(rows.map(r => r.w.sort((a, b) => a.x - b.x).map(w => w.t).join(" ")));
   }
   return out;
 }
@@ -555,6 +569,453 @@ async function buildSumEdi(vessel, port, summ, T, soc, staff) {
   return doc.save();
 }
 
+
+// ---------- MF per DELIVERY + CNTRS per DELIVERY (Excel inputs) — same as scripts/split_docs.py ----------
+const RED = PDFLib.rgb(1, .08, .1);
+const pdfText = s => String(s).replace(/\t/g, " ").replace(/[^\x20-\x7E\xA0-\xFF]/g, "?");   // standard fonts: WinAnsi only
+const printDate = () => { const d = new Date(), z = n => String(n).padStart(2, "0");
+  return `${z(d.getDate())}/${z(d.getMonth() + 1)}/${d.getFullYear() + 543} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`; };
+async function stdFonts(doc) {
+  const S = PDFLib.StandardFonts;
+  return { a: await doc.embedFont(S.Helvetica), ab: await doc.embedFont(S.HelveticaBold), t: await doc.embedFont(S.TimesRoman) };
+}
+// x, y = baseline from the top-left (points), like pymupdf
+function pen2(page, F) {
+  const H = page.getHeight(), black = PDFLib.rgb(0, 0, 0);
+  return {
+    t(x, y, s, f = "a", size = 8, { right = false, center = false, color = black } = {}) {
+      s = pdfText(s); const w = F[f].widthOfTextAtSize(s, size);
+      page.drawText(s, { x: right ? x - w : center ? x - w / 2 : x, y: H - y, size, font: F[f], color });
+    },
+    line(x0, y0, x1, y1, dash) {
+      page.drawLine({ start: { x: x0, y: H - y0 }, end: { x: x1, y: H - y1 }, thickness: .5, ...(dash ? { dashArray: dash } : {}) });
+    },
+    rect(x0, y0, x1, y1, grey) {
+      page.drawRectangle({ x: x0, y: H - y1, width: x1 - x0, height: y1 - y0,
+        ...(grey != null ? { color: PDFLib.rgb(grey, grey, grey) } : { borderWidth: .5, borderColor: black }) });
+    },
+    image(ref, x, y, w, h) { page.drawImage(ref, { x, y: H - y - h, width: w, height: h }); },
+  };
+}
+
+// MANIFEST .xls -> vessel, port of loading, port of discharge, {B/L: [rows of 4 texts]} (SHED column left out)
+function readBlocks(bytes) {
+  const { rg, cell } = sheetCells(bytes);
+  const HEAD = ["CARGO MANIFEST", "VESSEL & VOYAGE", "PORT OF LOADING", "BILL OF LANDING NO.", "1) SHIPPER", "3) NOTIFY PARTY"];
+  const blocks = {}; let cur = null, vessel = "", pol = "", pod = "";
+  for (let r = rg.s.r; r <= rg.e.r; r++) {
+    const v = Array.from({ length: 23 }, (_, c) => cell(r, c).replace(/\t/g, " ").trim());
+    const line = v.filter(Boolean).join(" ");
+    if (v[0] === "VESSEL & VOYAGE") vessel ||= v[2];
+    if (v[0] === "PORT OF LOADING") { pol ||= v[2]; pod ||= v[8]; }
+    if (line.includes("PORT TOTAL") || line.includes("GRAND TOTAL")) { cur = null; continue; }
+    if (HEAD.includes(v[0]) || v[10] === "CARGO MANIFEST" || v[0].startsWith("PortOfDischarge")) continue;
+    if (RE_BL.test(v[0])) { cur = v[0]; blocks[cur] = []; }
+    if (!cur) continue;
+    const row = [v[0], v[5] || v[6], v[10], v[16]];
+    if (row.some(Boolean)) blocks[cur].push(row);
+  }
+  return { vessel, pol, pod, blocks };
+}
+
+// one MF-<DELIVERY>.pdf: the SUMMARY page of the row as the cover, then the CARGO MANIFEST pages
+async function buildMfGroup(sumBytes, idx, info, nos, blocks, att = {}) {
+  const doc = await PDFLib.PDFDocument.create(), F = await stdFonts(doc);
+  const [cover] = await doc.copyPages(await PDFLib.PDFDocument.load(sumBytes), [idx]); doc.addPage(cover);
+  const DASH = [1.5, .5, .5, .5], PITCH = 16.2, GAP = 18.4, BOTTOM = 552;
+  let n = 0, p;
+  const newPage = () => {
+    p = pen2(doc.addPage([841, 595]), F); n++;
+    let d = 0;
+    if (n === 1) { p.rect(348.7, 18.0, 518.8, 46.3); p.t(433.7, 36.6, "CARGO MANIFEST", "ab", 13, { center: true }); }
+    else d = -28.5;
+    // red note from the shed, on every page: LKB (ESCO GATE 2) above the port / LAEM CHABANG / BMT
+    if (info.note) p.t(337.8, 67.6 + d, info.note, "a", 8, { color: RED });
+    if (info.podNote) p.t(339.0 + F.a.widthOfTextAtSize(info.pod, 8) + 3, 81.9 + d, info.podNote, "t", 8.5, { color: RED });
+    for (const [x, y, s, f] of [[34.5, 66.2, "VESSEL & VOYAGE", "ab"], [123.2, 66.2, info.vessel, "a"], [440.8, 66.2, "NATIONALITY  OF SHIP", "ab"],
+        [631.3, 67.8, "ARRIVAL DATE", "ab"], [727.9, 67.8, "01/01/1900", "a"], [34.5, 81.9, "PORT OF LOADING", "ab"], [123.2, 81.9, info.pol, "a"],
+        [239.2, 81.9, "PORT OF DISCHARGE", "ab"], [339.0, 81.9, info.pod, "a"], [442.4, 81.9, "NEXT PORT OF CALL", "ab"], [631.3, 81.9, "NAME OF MASTER", "ab"]])
+      p.t(x, y + d, s, f);
+    const top = 89.7 + d, bot = 132.2 + d;
+    for (const y of [top, bot]) p.line(33.0, y, 815.7, y);
+    for (const x of [33.0, 215.7, 382.6, 448.8, 595.2, 708.6, 815.7]) p.line(x, top, x, bot);
+    p.line(708.6, top + 15.8, 815.7, top + 15.8); p.line(759.0, top + 15.8, 759.0, bot);
+    p.t(39.2, 101.4 + d, "BILL OF LANDING NO.");
+    for (const [y, s] of [[109.4, "1) SHIPPER"], [117.2, "2) CONSIGNEE"], [126.7, "3) NOTIFY PARTY"]]) p.t(39.2, y + d, s, "a", 7.3);
+    p.t(299.2, 101.4 + d, "MARKS AND NUMBERS", "a", 8, { center: true }); p.t(299.2, 115.5 + d, "CONTAINER NO.", "a", 8, { center: true });
+    p.t(415.7, 115.5 + d, "NO. OF PKGS", "a", 8, { center: true }); p.t(522.0, 115.5 + d, "DESCRIPTION OF GOODS", "a", 8, { center: true });
+    p.t(599.8, 101.4 + d, "1) GROSS WEIGHT (KGM)"); p.t(599.8, 115.5 + d, "2) MEASUREMENT (MTQ)");
+    p.t(762.2, 101.4 + d, "FREIGHT", "a", 8, { center: true });
+    p.t(733.8, 115.5 + d, "PREPAID", "a", 8, { center: true }); p.t(787.4, 115.5 + d, "COLLECT", "a", 8, { center: true });
+    p.t(38.2, 570.2, `PortOfDischarge: ${info.podc} PlaceDelivery: ${info.place} RecvControlNo:  Print Date  : ${info.date}`);
+    p.t(747.2, 571.8, "Page", "a", 9); p.t(781.8, 571.8, String(n), "a", 9);
+    return 145.2 + d;
+  };
+  const total = (top, lab, grey, pkg, gw, mtq) => {
+    p.rect(33.0, top, 821.2, top + 50.1, grey); p.line(33.0, top + 1.5, 815.2, top + 1.5, DASH);
+    p.t(165.0, top + 11.8, lab, "ab", 8, { right: true });
+    for (const [dy, k, val] of [[11.8, "TOTAL MEASUREMENT:", `${f3(mtq)} MTQ`], [26.1, "TOTAL GROSSWEIGHT:", `${f3(gw)} KGM`], [42.5, "TOTAL PACK:", `${f0(pkg)} PACKAGES`]]) {
+      p.t(276.0, top + dy, k, "a", 8, { right: true }); p.t(279.5, top + dy, val);
+    }
+  };
+  let y = newPage(), pkg = 0, gw = 0, mtq = 0;
+  const ends = [];                                         // [B/L, MF page where it ends]
+  for (const no of nos) {
+    const rows = blocks[no]; let m;
+    if ((m = rows[0][2].match(/^([\d,]+)\s/))) pkg += num(m[1]);
+    for (const r of rows) if ((m = r[3].match(/^([\d,.]+)\s*(KGM|MTQ)/))) { if (m[2] === "KGM") gw += num(m[1]); else mtq += num(m[1]); }
+    if (y + (rows.length - 1) * PITCH > BOTTOM && y > 150) y = newPage();
+    p.line(34.5, y - 10.2, 816.8, y - 10.2, DASH);
+    for (const r of rows) {
+      [35.0, 219.2, 389.4].forEach((x, i) => { if (r[i]) p.t(x, y, r[i], "t"); });
+      if (r[3]) p.t(690.0, y, r[3], "t", 8, { right: true });
+      y += PITCH;
+    }
+    y += GAP - PITCH;
+    ends.push([no, n]);
+  }
+  let last = y - GAP;
+  if (last + 57.5 > BOTTOM + 8) { newPage(); last = 116.7 - 7.4; }
+  gw = Math.round(gw * 1000) / 1000; mtq = Math.round(mtq * 1000) / 1000;
+  total(last + 7.4, "PORT TOTAL:", .878, pkg, gw, mtq);
+  newPage(); total(105.8, "GRAND TOTAL:", .753, pkg, gw, mtq);
+  let nAtt = 0;
+  for (const [no, at] of ends.reverse())                   // last B/L first; the cover is page 0, so MF page n is index n
+    for (const [src, i] of [...(att[no] || [])].reverse()) { const [pg] = await doc.copyPages(src, [i]); doc.insertPage(at + 1, pg); nAtt++; }
+  return { bytes: await doc.save(), nAtt };
+}
+
+// CNTRS .xls -> header, [container rows with their SHED NUMBER]
+function readCntrsRows(bytes) {
+  const { rg, cell } = sheetCells(bytes);
+  const head = { vessel: "", voy: "", arrival: "", pod: "", deliv: "", recv: "" }, rows = [];
+  let shed = "", name = "", cur = null, m;
+  for (let r = rg.s.r; r <= rg.e.r; r++) {
+    const v = Array.from({ length: 31 }, (_, c) => cell(r, c));
+    if (v[0] === "CONTAINER LIST FOR FEEDER" && !head.vessel)
+      Object.assign(head, { vessel: v[7], voy: v[12], arrival: v[17] || "__/__/____", pod: v[24], deliv: v[28] });
+    if (!head.recv && (m = v.join(" ").match(/RecvControlNo:\s*(\S+)/))) head.recv = m[1];
+    if (v[0].startsWith("SHED NUMBER")) {
+      m = (v[2] || v.slice(1).find(Boolean) || "").match(/^\d+/);
+      shed = m ? m[0].padStart(4, "0") : ""; name = v[5]; cur = null; continue;
+    }
+    if (/^[A-Z]{4}\d{7}$/.test(v[0])) {
+      rows.push(cur = { cntr: v[0], type: v[3], size: v[7], cons: [v[9]], gw: num(v[15] || 0), status: v[18], pol: v[20],
+                        remark: v.slice(21, 25).filter(Boolean).join(" "), shed, shedname: name });
+    } else if (cur && !v[0] && v[9] && !v[3] && !v[15]) cur.cons.push(v[9]);     // 2nd consignee line
+    else cur = null;
+  }
+  return { head, rows };
+}
+
+const ONES = ("ZERO ONE TWO THREE FOUR FIVE SIX SEVEN EIGHT NINE TEN ELEVEN TWELVE THIRTEEN FOURTEEN FIFTEEN SIXTEEN " +
+              "SEVENTEEN EIGHTEEN NINETEEN").split(" ");
+const TENS = "- - TWENTY THIRTY FORTY FIFTY SIXTY SEVENTY EIGHTY NINETY".split(" ");
+const words = n => n < 20 ? ONES[n] : n < 100 ? TENS[Math.floor(n / 10)] + (n % 10 ? " " + ONES[n % 10] : "")
+  : `${ONES[Math.floor(n / 100)]} HUNDRED` + (n % 100 ? " " + words(n % 100) : "");
+
+// Thai shed name: the standard PDF fonts have no Thai, so it is drawn as a picture
+async function thaiImage(doc, s, size) {
+  const k = 4, font = `${size * k}px Tahoma, "Leelawadee UI", sans-serif`;
+  const cv = document.createElement("canvas"), ctx = cv.getContext("2d");
+  ctx.font = font; cv.width = Math.ceil(ctx.measureText(s).width) + 4; cv.height = Math.ceil(size * k * 1.5);
+  ctx.font = font; ctx.fillStyle = "#000"; ctx.fillText(s, 0, size * k * 1.1);
+  const img = await doc.embedPng(await (await fetch(cv.toDataURL("image/png"))).arrayBuffer());
+  return { img, w: cv.width / k, h: cv.height / k, base: size * 1.1 };
+}
+
+// CNTRS.pdf: HEUNG A containers per DELIVERY (from the shed) in the SUM-EDI order, then each SOC owner;
+// a new page per SHED NUMBER, items counted again from 1, shed totals, Total Summary, As Agents, Page n / N
+async function buildCntrs(bytes, gate, date) {
+  const { head, rows } = readCntrsRows(bytes);
+  const doc = await PDFLib.PDFDocument.create(), F = await stdFonts(doc), thai = {}, lines = [];
+  const sect = new Map();
+  for (const c of rows) {
+    const d = head.deliv === head.pod ? (SHED_DELIVERY[c.shed] || head.deliv) : head.deliv;
+    const cons = c.cons.join(" "), own = RE_HAL.test(cons) ? "" : socOwner(cons);
+    const key = JSON.stringify([own ? 1 : 0, ORDER.includes(d) ? ORDER.indexOf(d) : 99, d, own]);
+    if (!sect.has(key)) sect.set(key, new Map());
+    const sh = sect.get(key), sk = c.shed + "|" + c.shedname;
+    if (!sh.has(sk)) sh.set(sk, []);
+    sh.get(sk).push(c);
+  }
+  const cmp = (a, b) => { for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1; return 0; };
+  for (const key of [...sect.keys()].sort((a, b) => cmp(JSON.parse(a), JSON.parse(b)))) {
+    const [soc, , d, own] = JSON.parse(key);
+    const sheds = [...sect.get(key).entries()].sort((a, b) => (+a[0].split("|")[0] || 0) - (+b[0].split("|")[0] || 0))
+      .map(([k, cs]) => [k.split("|")[0], k.split("|").slice(1).join("|"), cs]);
+    const note = d === "THLKR" && !soc ? `/GATE ${gate}` : "", pens = [];
+    let p;
+    const page = () => {
+      p = pen2(doc.addPage([841, 595]), F); pens.push(p);
+      p.t(428.1, 33.4, "HEUNG A LINE (THAILAND) CO.,LTD.", "ab", 12, { center: true });
+      p.t(428.1, 63.5, "TEL.02-0596200", "a", 9, { center: true });
+      for (const [x, y, s, f] of [[43.3, 80.4, "CONTAINER LIST FOR FEEDER", "ab"], [181.4, 80.4, head.vessel, "a"], [341.6, 81.0, "VOYAGE", "ab"],
+          [382.2, 81.0, head.voy, "a"], [436.0, 81.0, "ARRIVAL DATE", "ab"], [509.0, 81.0, head.arrival, "a"], [573.1, 78.6, "Port Of Discharge", "ab"],
+          [651.5, 78.6, head.pod, "a"], [693.5, 78.6, "Port Of Delivery", "ab"], [764.9, 78.6, d, "a"]]) p.t(x, y, s, f, 8.5);
+      if (note) p.t(795.8, 80.0, note, "a", 8.5, { color: RED });              // THLKR /GATE n, every page
+      for (const y of [92.4, 111.9]) p.line(33.0, y, 816.0, y);
+      for (const [x, s] of [[39.8, "CONTAINER NO."], [106.0, "ITEM"], [138.8, "TYPE"], [180.2, "SIZE"], [297.4, "CONSIGNEE"],
+          [437.0, "GROSS WEIGHT"], [520.5, "STATUS"], [571.5, "POL"], [615.5, "REMARK"]]) p.t(x, 104.4, s, "ab");
+      p.t(817.6, 571.5, `ConTaxID: ${soc ? "" : "0993000456955"} PortOfDischarge: ${head.pod} PortOfLoading: __/__/____ PlaceDelivery: ` +
+                        `${d} ShedNumber: 1 RecvControlNo: ${head.recv} Print Date  : ${date}`, "a", 8, { right: true });
+    };
+    const totals = (y, cs, summary = false, many = false) => {
+      const zero = summary ? "0" : "-", up = c => c.remark.toUpperCase();
+      const n = { 20: cs.filter(c => c.size.includes("(20')")), 40: cs.filter(c => c.size.includes("(40')")) };
+      [[0, 20], [17.2, 40]].forEach(([dy, k]) => {
+        const cnt = n[k].length;
+        p.t(134.3, y + dy, `Total Container ${k}' :`, "a", 8, { right: true });
+        p.t(181.6, y + dy, cnt ? String(cnt) : "-", "ab", 8, { right: true });
+        if (cnt) p.t(187.4, y + dy, `(${words(cnt)} CONTAINER(S) ONLY)`, "ab");
+        const ts = n[k].filter(c => up(c).includes("TRANSHIP")).length;
+        const ti = n[k].filter(c => up(c).includes("TRANSIT") && !up(c).includes("TRANSHIP")).length;
+        p.t(421.0, y + dy, `Total Transhipment Con. ${k}' :`); p.t(574.9, y + dy, ts ? String(ts) : zero, "ab", 8, { right: true });
+        p.t(600.8, y + dy, `Total Transit Con. ${k}' :`); p.t(730.8, y + dy, ti ? String(ti) : zero, "ab", 8, { right: true });
+      });
+      const other = cs.length - n[20].length - n[40].length;
+      p.t(134.2, y + 34.3, "Total Container Other :", "a", 8, { right: true });
+      p.t(181.6, y + 34.3, other ? String(other) : "-", "ab", 8, { right: true });
+      if (other || (summary && many)) p.t(187.4, y + 34.3, `(${other ? words(other) + " " : ""}CONTAINER(S) ONLY)`, "ab");
+    };
+    let lab = 0;
+    for (const [shed, name, cs] of sheds) {
+      page();
+      p.t(38.0, 123.2, "SHED NUMBER:", "ab"); p.t(125.2, 123.2, shed);
+      if (name) { const t = thai[name] ||= await thaiImage(doc, name, 7.5); p.image(t.img, 148.4, 123.2 - t.base, t.w, t.h); }
+      let y = 137.2;
+      for (const [i, c] of cs.entries()) {
+        if (y > 553.1) { page(); y = 130.5; }
+        p.t(40.3, y, c.cntr); p.t(113.6, y, String(i + 1), "a", 8, { center: true }); p.t(127.2, y, c.type); p.t(171.9, y, c.size);
+        c.cons.slice(0, 2).forEach((l, k) => p.t(215.7, y + 9.2 * k, l));
+        p.t(489.9, y, f3(c.gw), "a", 8, { right: true }); p.t(493.9, y, "KGM");
+        p.t(518.7, y, c.status); p.t(563.0, y, c.pol); p.t(598.4, y, c.remark);
+        y += 19.8;
+      }
+      lab = y - 19.8 + 30.1;
+      if (lab + 34.3 > 556) { page(); lab = 123.1; }
+      totals(lab, cs);
+    }
+    if (lab + 157.4 > 556) { page(); lab = 80; }
+    p.line(34.8, lab + 46.3, 817.8, lab + 46.3);
+    p.t(50.5, lab + 60.1, "Total Summary", "ab");
+    const all = sheds.flatMap(s => s[2]);
+    totals(lab + 74.1, all, true, sheds.length > 1);
+    p.t(452.1, lab + 139.8, "HEUNG A LINE (THAILAND) CO.,LTD.", "ab", 9); p.t(578.2, lab + 157.4, "As Agents");
+    pens.forEach((q, i) => {
+      q.t(747.2, 35.1, "Page", "a", 9); q.t(785.7, 35.1, String(i + 1), "a", 9, { right: true });
+      q.t(789.2, 35.7, "/", "a", 10); q.t(793.2, 35.1, String(pens.length), "a", 9);
+    });
+    lines.push(`${own || "HEUNG A"} ${d}: ${all.length} containers, ${pens.length} pages`);
+  }
+  return { bytes: await doc.save(), lines };
+}
+
+// MF-<DELIVERY>.pdf (one Excel MF) + CNTRS.pdf (an Excel CNTRS)
+async function buildSplit(main, summ, sumBytes, gate, att) {
+  const out = [], date = printDate(), mf = mfFiles(), xlsCn = cnFiles().find(f => !f.lines);
+  if (mf.length === 1 && !mf[0].lines) {
+    const { vessel, pol, pod, blocks } = readBlocks(mf[0].bytes);
+    const rows = summ.filter(x => x.bls && !x.empty);
+    for (const [i, x] of rows.entries()) {
+      const g = x.g, name = g.replace(/^TH(?=[A-Z]{3}$)/, ""), th = /^TH[A-Z]{3}$/.test(g);
+      const info = { vessel, pol, pod, podc: main, date, place: th ? g : main,
+                     note: g === "THLKR" ? `LKB ${gateText(gate)}` : "", podNote: th && g !== main && g !== "THLKR" ? `/ ${name}` : "" };
+      const r = await buildMfGroup(sumBytes, i, info, x.nos.filter(n => blocks[n]), blocks, att);
+      out.push({ name: `MF-${name}.pdf`, bytes: r.bytes, nAtt: r.nAtt });
+    }
+  }
+  if (xlsCn) { const c = await buildCntrs(xlsCn.bytes, gate, date); out.push({ name: "CNTRS.pdf", bytes: c.bytes, lines: c.lines }); }
+  return out;
+}
+
+
+
+// ---------- ATTACHED sheets — same as scripts/attach.py ----------
+// any other file (PDF, Excel, picture, any name): B/L from "BL NO. HASL..." + "VESSEL ..." in the content, page by page
+// for a PDF (a page without BL NO. continues the page before), else from a HASL... number in the file name
+const RE_BLNO = /\bB\s*\/?\s*L\s*NO\.?\s*:?\s*(HASL[A-Z0-9]{10,14})/;
+const RE_VESSEL = /\bVESSEL\b(?:\s*(?:NAME|&\s*VOYAGE))?\s*:?\s*([^\n]+)/;
+const sameVessel = (a, b) => { const n = s => s.toUpperCase().replace(/\bV\.?\s*(?=\d)/g, "").replace(/[^A-Z0-9]/g, ""); return n(a) === n(b); };
+const attFiles = () => files.filter(f => f.kind === "attached");
+
+// Excel ATTACHED sheet -> text lines (the cells of a row joined), every sheet
+function workbookLines(bytes) {
+  const wb = XLSX.read(bytes, { type: "array" }), out = [];
+  for (const n of wb.SheetNames)
+    for (const row of XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, raw: false, defval: "" }))
+      out.push(row.map(x => String(x).trim()).filter(Boolean).join("   "));
+  while (out.length && !out.at(-1)) out.pop();
+  return out;
+}
+
+// one ATTACHED file -> { doc (PDFDocument of its pages) | null, pages: [{page, vessel, bl}] }
+async function readAttached(item) {
+  const low = item.name.toLowerCase(), nameBl = (item.name.match(/HASL[A-Z0-9]{10,14}/i) || [""])[0].toUpperCase();
+  let doc = null, texts = [];
+  try {
+    if (low.endsWith(".pdf")) {
+      doc = await PDFLib.PDFDocument.load(item.bytes, { ignoreEncryption: true });
+      texts = (item.pages || []).map(p => p.join("\n"));
+    } else if (/\.xlsx?$/.test(low)) {
+      const lines = workbookLines(item.bytes);
+      doc = await PDFLib.PDFDocument.create();
+      const F = await stdFonts(doc);
+      for (let i = 0; i < Math.max(lines.length, 1); i += 70) {
+        const p = pen2(doc.addPage([595, 842]), F);
+        lines.slice(i, i + 70).forEach((l, k) => { if (l) p.t(40, 50 + k * 11, l.slice(0, 150), "t", 9); });
+      }
+      texts = [lines.join("\n")];
+    } else if (/\.(png|jpe?g)$/.test(low)) {
+      doc = await PDFLib.PDFDocument.create();
+      const img = low.endsWith(".png") ? await doc.embedPng(item.bytes) : await doc.embedJpg(item.bytes);
+      const k = Math.min(555 / img.width, 802 / img.height), page = doc.addPage([595, 842]);
+      page.drawImage(img, { x: 20, y: 842 - 20 - img.height * k, width: img.width * k, height: img.height * k });
+      texts = [""];
+    }
+  } catch { doc = null; }
+  if (!doc) return { doc: null, pages: [{ page: -1, vessel: "", bl: "" }] };
+  let vessel = "", bl = "", m;
+  const pages = doc.getPages().map((_, i) => {
+    const t = texts[i] || "";
+    if ((m = t.match(RE_BLNO))) bl = m[1];
+    if ((m = t.match(RE_VESSEL)) && m[1].trim()) vessel = m[1].trim();
+    return { page: i, vessel, bl: bl || nameBl };
+  });
+  return { doc, pages };
+}
+
+// every ATTACHED file -> { use: {B/L: [[doc, page]]} to put into the MF, pages: all pages read (for the checks) }
+async function planAttached(vessel, bls) {
+  const use = {}, pages = [];
+  for (const it of attFiles()) {
+    const r = await readAttached(it);
+    for (const p of r.pages) {
+      pages.push({ ...p, file: it.name });
+      if (r.doc && bls[p.bl] && (!p.vessel || sameVessel(p.vessel, vessel))) (use[p.bl] ||= []).push([r.doc, p.page]);
+    }
+  }
+  return { use, pages };
+}
+
+// ATTACHED checks: VESSEL / BL NO. must be the MF's; a B/L whose MF text says ATTACHED but has no sheet (grouped by master)
+function checkAttached(pages, vessel, allBls, mfBls, add, notes) {
+  for (const p of pages) {
+    const where = p.page < 0 ? p.file : `${p.file} page ${p.page + 1}`;
+    if (p.page < 0) { notes.push(`${p.file}: cannot be opened as an attached sheet (not added · use PDF / Excel / PNG / JPG)`); continue; }
+    if (!p.bl) { notes.push(`${where}: no BL NO. in the file or file name (not added)`); continue; }
+    if (!allBls[p.bl]) add("Wrong", where, `BL NO. ${p.bl} is not in the MF (not added)`);
+    if (p.vessel && !sameVessel(p.vessel, vessel)) add("Wrong", where, `VESSEL ${p.vessel} does not match the MF ${vessel} (not added)`);
+  }
+  const have = new Set(pages.filter(p => allBls[p.bl] && (!p.vessel || sameVessel(p.vessel, vessel))).map(p => p.bl)), missing = {};
+  for (const [no, b] of Object.entries(mfBls)) {
+    if (!b.text.includes("ATTACH") || have.has(no)) continue;
+    const m = no.match(/^(HASL[A-Z0-9]*?\d)([A-Z]*)$/);
+    (missing[m ? m[1] : no] ||= []).push(m ? m[2] : "");
+  }
+  for (const [master, sub] of Object.entries(missing)) {
+    const ref = sub.includes("") ? master + (sub.some(Boolean) ? ` (+ ${sub.filter(Boolean).join(", ")})` : "")
+                                 : master + sub[0] + (sub.length > 1 ? ` (+ ${sub.slice(1).join(", ")})` : "");
+    add("Check", ref, "The MF says AS PER ATTACHED but there is no attached sheet (attaching is optional)");
+  }
+}
+
+// ---------- rule checks (warnings only) — same as scripts/checks.py ----------
+const DEST = { LAOS: "LA", LAO: "LA", MYANMAR: "MM", CHINA: "CN", MALAYSIA: "MY", PHILIPPINES: "PH", CAMBODIA: "KH",
+               "MARSHALL ISLAND": "MH", INDIA: "IN" };
+const RE_DG = /\bCLASS\s*[:=]?\s*\d|\bUN\s*#?\s*[:=]?\s*\d{4}\b|\bIMO\b|HAZARD/i;
+const NOT_NAME = new Set(["CO", "LTD", "LIMITED", "COMPANY", "THE", "PUBLIC", "CORP", "CORPORATION", "INC", "HEAD", "OFFICE", "BRANCH", "NO"]);
+const nameWords = s => s.toUpperCase().replace(/[^A-Z0-9 ]/g, " ").split(/\s+/).filter(w => w && !NOT_NAME.has(w) && !/^\d+$/.test(w));
+// every word of the TAX ID name is in the NOTIFY name; the TAX ID field is often cut off (MINBURI, MI)
+function sameName(tax, notify) {
+  let t = nameWords(tax); const n = new Set(nameWords(notify));
+  if (t.length && !n.has(t.at(-1)) && [...n].some(w => w.startsWith(t.at(-1)))) t = t.slice(0, -1);
+  return t.every(w => n.has(w));
+}
+
+// MANIFEST .xls -> {B/L: shed, dest, move, tax, notify, text, cntrs, types, pod}
+function readMfRules(bytes) {
+  const { rg, cell } = sheetCells(bytes);
+  const SKIP = ["VESSEL & VOYAGE", "PORT OF LOADING", "BILL OF LANDING NO.", "1) SHIPPER", "3) NOTIFY PARTY"];
+  const bls = {}; let cur = null, pod = "", m;
+  for (let r = rg.s.r; r <= rg.e.r; r++) {
+    const v = Array.from({ length: 23 }, (_, c) => cell(r, c).replace(/\t/g, " ").trim());
+    const line = v.filter(Boolean).join(" ");
+    if (v[0] === "PORT OF LOADING") pod = v[8];
+    if (line.includes("PORT TOTAL") || line.includes("GRAND TOTAL")) { cur = null; continue; }
+    if (v[0].startsWith("PortOfDischarge") || SKIP.includes(v[0])) continue;
+    if (RE_BL.test(v[0])) { cur = v[0]; bls[cur] = { pod, col0: [], marks: [], desc: [], f15: [], cntrs: [], types: [] }; }
+    if (!cur) continue;
+    const b = bls[cur];
+    for (const [k, c] of [["col0", 0], ["marks", 5], ["marks", 6], ["desc", 10], ["f15", 15]]) if (v[c]) b[k].push(v[c]);
+    b.cntrs.push(...((v[5] + " " + v[6]).match(RE_CN) || []));
+    if ((m = v[10].match(/^(\d{2}[A-Z]\d)X\d+/))) b.types.push(m[1]);
+  }
+  for (const b of Object.values(bls)) {
+    const f = b.f15.join(" | ");
+    b.shed = (f.match(/SHED NO\.\s*(\d+)/) || [, ""])[1];
+    b.dest = (f.match(/2\)[^|]*\(([A-Z]{0,2})\)/) || [, ""])[1];
+    b.move = (f.match(/CARGO MOVEMENT\s*\(([^)]*)\)/) || [, ""])[1];
+    b.tax = (b.f15.join(" ").match(/TAX ID:\s*\((.*)\)/) || [, ""])[1].trim();
+    b.text = [...b.col0.slice(1), ...b.marks, ...b.desc].join(" ").toUpperCase();
+    const notify = []; let on = false;
+    for (let l of b.col0) {
+      if (l.startsWith("N :")) { on = true; l = l.slice(3); } else if (/^[SC] :/.test(l)) on = false;
+      if (on) notify.push(l);
+    }
+    b.notify = notify.join(" ");
+  }
+  return bls;
+}
+
+// -> { found: [{level, ref, msg}], notes: [...] }; level "Wrong" = wrong, "Check" = a person should look.
+// DG outside SHED 2826 is "Wrong" when the job uses 2826, else "Check" (some terminals keep their DG, e.g. 2835)
+function runChecks(port, vessel = "", allBls = {}, attPages = []) {
+  const found = [], notes = [], add = (level, ref, msg) => found.push({ level, ref, msg });
+  const xmf = mfFiles().filter(f => !f.lines), xcn = cnFiles().filter(f => !f.lines);
+  if (xmf.length < mfFiles().length) notes.push("MF in PDF was not rule-checked (only an Excel MF can be checked)");
+  if (xcn.length < cnFiles().length) notes.push("CNTRS in PDF was not rule-checked (only an Excel CNTRS can be checked)");
+  const bls = Object.assign({}, ...xmf.map(f => readMfRules(f.bytes)));
+  const rows = xcn.flatMap(f => readCntrsRows(f.bytes).rows), cnt = Object.fromEntries(rows.map(r => [r.cntr, r]));
+  const dgLevel = sheds => sheds.has("2826") ? "Wrong" : "Check";
+  const mfSheds = new Set(Object.values(bls).map(b => b.shed)), dgByCntr = {};
+  for (const [no, b] of Object.entries(bls)) {
+    const t = b.text, pod = b.pod || port, dg = RE_DG.test(t), tranship = t.includes("TRANSHIP");
+    const country = Object.keys(DEST).find(k => new RegExp(`TRANS(IT|HIP).*\\b${k}\\b|\\b${k}\\b.*TRANS(IT|HIP)`).test(t)) || "";
+    const laos = DEST[country] === "LA";
+    if (dg && pod === "LAEM CHABANG" && b.shed !== "2826") add(dgLevel(mfSheds), no, `DG cargo to LAEM CHABANG must be SHED NO. 2826 but the MF has ${b.shed || "-"}`);
+    if (laos && pod === "BANGKOK" && b.shed !== "0124") add("Wrong", no, `LAOS to BANGKOK must be SHED NO. 0124 but the MF has ${b.shed || "-"}`);
+    if (t.includes("USED ENGINE") && pod === "BANGKOK" && b.shed !== "0126") add("Wrong", no, `USED ENGINE to BANGKOK must be SHED NO. 0126 but the MF has ${b.shed || "-"}`);
+    if (country && b.dest !== DEST[country]) add("Wrong", no, `The B/L says TRANSIT to ${country}: the destination country must be (${DEST[country]}) but the MF has (${b.dest})`);
+    if (tranship && !b.move.startsWith("3")) add("Wrong", no, `Says TRANSHIPMENT: must be CARGO MOVEMENT (3-TRANSHIPMENT) but the MF has (${b.move})`);
+    else if (country && !laos && !tranship && !b.move.startsWith("7")) add("Wrong", no, `TRANSIT to ${country} must be CARGO MOVEMENT (7-TRANSIT) but the MF has (${b.move})`);
+    if (["3", "7", "L"].includes(b.move[0]) && !country && !tranship && !t.includes("TRANSIT"))
+      add("Check", no, `CARGO MOVEMENT (${b.move}) but no TRANSIT / TRANSHIPMENT text in the B/L`);
+    if (b.tax && nameWords(b.tax).length && !sameName(b.tax, b.notify)) add("Check", no, `TAX ID (${b.tax}) does not match NOTIFY (${b.notify})`);
+    for (const c of b.cntrs) {                               // MF against CNTRS, container by container
+      const x = cnt[c]; if (!x) continue;
+      (dgByCntr[c] ||= []).push([no, dg]);
+      if (x.shed && b.shed && x.shed !== b.shed.padStart(4, "0")) add("Wrong", `${no} / ${c}`, `MF SHED NO. ${b.shed} does not match CNTRS SHED NUMBER ${x.shed}`);
+      if (new Set(b.types).size === 1) {
+        const csz = x.size.includes("(20')") ? "20" : x.size.includes("(40')") ? "40" : "";
+        if (csz && (b.types[0][0] === "2") !== (csz === "20")) add("Wrong", `${no} / ${c}`, `MF container size ${b.types[0]} does not match CNTRS ${x.size}`);
+      }
+    }
+  }
+  for (const [c, lst] of Object.entries(dgByCntr)) {         // DG per container: any of its B/L against CNTRS
+    const cdg = RE_DG.test(cnt[c].remark), mdg = lst.some(([, d]) => d);
+    if (cdg !== mdg) add("Check", `${c} (${lst.map(([n]) => n).join(", ")})`,
+                         cdg ? "CNTRS says HAZARDOUS but the MF has no CLASS / UN" : "The MF has CLASS / UN but CNTRS does not say HAZARDOUS");
+  }
+  if (PORTS[port] === "THLCH") {                             // every DG container in CNTRS, SOC too
+    const cnSheds = new Set([...rows.map(r => r.shed), ...mfSheds]);   // the job uses 2826 in MF or CNTRS
+    for (const x of rows) if (RE_DG.test(x.remark) && x.shed !== "2826")
+      add(dgLevel(cnSheds), x.cntr, `CNTRS: DG container (${x.remark.split(/\s+/).join(" ")}) of ${x.cons.join(" ").slice(0, 45)} must be in SHED 2826 but is in SHED ${x.shed || "-"}`);
+  }
+  checkAttached(attPages, vessel, allBls, bls, add, notes);
+  return { found, notes };
+}
+
 // ---------- run / render ----------
 const staffNow = () => ({ name: $("stName").value.trim(), position: $("stPos").value.trim(), tel: $("stTel").value.trim() });
 
@@ -573,9 +1034,12 @@ async function run() {
     const T = { bls: summ.reduce((s, x) => s + x.bls, 0), cntrs: summ.reduce((s, x) => s + x.cntrs, 0),
                 gw: Math.round(summ.reduce((s, x) => s + x.gw, 0) * 1000) / 1000, pkg: summ.reduce((s, x) => s + x.pkg, 0) };
     const vname = vessel.replace(/\s+(\S+)$/, " V.$1");
-    report = { vessel: vname, port, summ, soc, T, gt, nosize, notInCntrs,
-               gate: (PLACE.THLKR = `LATKRABANG ${gateText($("gate").value)}`),
-               edi: await buildSumEdi(vessel, port, summ, T, soc, staffNow()), sum: await buildSummary(vname, port, main, summ.filter(x => !x.empty)) };
+    const gate = $("gate").value;
+    PLACE.THLKR = `LATKRABANG ${gateText(gate)}`;
+    const sum = await buildSummary(vname, port, main, summ.filter(x => !x.empty));
+    const att = await planAttached(vessel, bls);           // ATTACHED sheets: put into MF-<DELIVERY>.pdf + checked
+    report = { vessel: vname, port, summ, soc, T, gt, nosize, notInCntrs, sum, checks: runChecks(port, vessel, bls, att.pages),
+               edi: await buildSumEdi(vessel, port, summ, T, soc, staffNow()), split: await buildSplit(main, summ, sum, gate, att.use) };
     render();
   } catch (err) {
     report = null; $("result").classList.add("hidden");
@@ -607,13 +1071,22 @@ async function render() {
       `<td>${s.cntrs.length}</td><td colspan="3">[SUM-EDI, MANIFEST AS PER ATTACHED]</td></tr>` +
       `<tr class="bls hidden" id="bls${i}"><td colspan="7">${s.cntrs.join(", ")}</td></tr>`).join("") +
     (soc.length ? `<tr class="grand"><td>GRAND TOTAL</td><td></td><td></td><td>${grand}</td><td colspan="3"></td></tr>` : "");
+  const { found, notes } = report.checks, ng = found.filter(x => x.level === "Wrong").length;
+  $("checks").className = found.length ? "checks" : "checks pass";
+  $("checks").innerHTML = (found.length
+      ? `<h3>⚠ Rule check found ${found.length} item(s) (wrong ${ng} · to check ${found.length - ng})</h3><ul>` +
+        found.map(x => `<li><span class="lv ${x.level === "Wrong" ? "ng" : "ck"}">${x.level}</span><span class="ref">${escapeHtml(x.ref)}</span> — ${escapeHtml(x.msg)}</li>`).join("") + "</ul>"
+      : "✓ Rule check passed") +
+    notes.map(n => `<div class="note">${escapeHtml(n)}</div>`).join("");
   const warn = [];
   if (notInCntrs.length) warn.push(`Containers in the MF but not in CNTRS: ${notInCntrs.join(", ")}`);
   if (nosize.length) warn.push(`Containers of unknown size (not counted in 20'/40'): ${nosize.join(", ")}`);
   $("msg").textContent = warn.join("\n");
   $("result").classList.remove("hidden");
+  $("dlFiles").innerHTML = docs().map((d, i) => `<button class="ghost" data-d="${i}">${escapeHtml(d.name)}</button>`).join("");
   const box = $("preview"); box.innerHTML = ""; pages = [];
-  for (const [label, bytes] of [["SUM-EDI", report.edi], ["SUMMARY", report.sum]]) {
+  for (const { name, bytes } of docs()) {
+    const label = name.replace(/\.pdf$/, "");
     const pdf = await pdfjsLib.getDocument({ data: bytes.slice() }).promise;
     for (let n = 1; n <= pdf.numPages; n++) {
       const page = await pdf.getPage(n), vp = page.getViewport({ scale: 1.2 });
@@ -669,15 +1142,16 @@ async function takeFiles(list) {
   for (const f of list) {
     const item = { name: f.name, bytes: new Uint8Array(await f.arrayBuffer()) };
     try {
-      if (/\.pdf$/i.test(f.name)) item.lines = await pdfLines(item.bytes);
-      Object.assign(item, kindOf(item));
+      if (/\.pdf$/i.test(f.name)) { item.pages = await pdfPages(item.bytes); item.lines = item.pages.flat(); }
+      if (/\.(pdf|xlsx?)$/i.test(f.name)) Object.assign(item, kindOf(item)); else item.kind = "other";
     } catch { item.kind = "other"; }
-    if (item.kind === "other") { bad.push(`"${f.name}" is not an MF (CARGO MANIFEST) or CNTRS (CONTAINER LIST) file`); continue; }
+    if (item.kind === "other") Object.assign(item, { kind: "attached", voy: "" });   // any other file = ATTACHED sheet
     files = files.filter(x => x.name !== item.name).concat(item);
     if (item.kind === "mf" && item.voy) files = files.filter(x => !x.voy || x.voy === item.voy);
   }
   const names = fs => fs.map(f => `<b>${escapeHtml(f.name)}</b>`).join(", ");
-  $("mfText").innerHTML = [mfFiles().length && `MF: ${names(mfFiles())}`, cnFiles().length && `CNTRS: ${names(cnFiles())}`]
+  $("mfText").innerHTML = [mfFiles().length && `MF: ${names(mfFiles())}`, cnFiles().length && `CNTRS: ${names(cnFiles())}`,
+                            attFiles().length && `ATTACHED: ${names(attFiles())}`]
     .filter(Boolean).join(" · ") + (files.length ? " (click to add files · Clear files = start over)" : "Drop the file here, or <b>click to choose a file</b>");
   dirty();
   if (bad.length) $("msg").textContent = [bad.join("\n"), $("msg").textContent].filter(Boolean).join("\n");
@@ -747,9 +1221,10 @@ function dirty() {
   st.textContent = report ? "Something changed — click Process to make the documents again" : "Ready — click Process";
 }
 $("tbody").onclick = e => { const tr = e.target.closest("tr.g"); if (tr) $("bl" + tr.dataset.i)?.classList.toggle("hidden"); };
-$("dlEdi").onclick = () => save(report.edi, "SUM-EDI.pdf");
-$("dlSum").onclick = () => save(report.sum, "SUMMARY.pdf");
-$("download").onclick = async () => { save(report.edi, "SUM-EDI.pdf"); await new Promise(r => setTimeout(r, 600)); save(report.sum, "SUMMARY.pdf"); };
+// every document of the last Process: SUM-EDI, SUMMARY, MF-<DELIVERY> …, CNTRS
+const docs = () => report ? [{ name: "SUM-EDI.pdf", bytes: report.edi }, { name: "SUMMARY.pdf", bytes: report.sum }, ...report.split] : [];
+$("dlFiles").onclick = e => { const b = e.target.closest("button[data-d]"); if (b) { const d = docs()[+b.dataset.d]; save(d.bytes, d.name); } };
+$("download").onclick = async () => { for (const d of docs()) { save(d.bytes, d.name); await new Promise(r => setTimeout(r, 600)); } };
 loadStaff(); showSig();
 </script>
 </body>
