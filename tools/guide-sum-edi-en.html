@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SUM-EDI - Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
+<style>
+/* Layout: single reading column like a customs worksheet — header block, numbered procedure, colour legend as a mini CNTRS_EDI sheet, troubleshooting table */
+:root {
+  --bg: #f3f5f8;
+  --paper: #ffffff;
+  --ink: #17212e;
+  --muted: #566577;
+  --line: #d5dce5;
+  --navy: #1f4e78;
+  --navy-ink: #ffffff;
+  --accent: #1f4e78;
+  --red: #fdd7d7;   --red-ink: #8a1414;
+  --org: #ffe0b3;   --org-ink: #7a3e00;
+  --yel: #fff2cc;   --yel-ink: #6b5200;
+  --grn: #c6efce;   --grn-ink: #1d5c2b;
+  --code: #eef2f7;
+  --display: "Anuphan", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --body: "IBM Plex Sans Thai", system-ui, "Leelawadee UI", "Tahoma", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+    --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+    --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2e14; --org-ink: #ffc072;
+    --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+    --code: #0f1824; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f151d; --paper: #172130; --ink: #e6ecf3; --muted: #9aa9bb; --line: #2b3a4d;
+  --navy: #2d6aa3; --navy-ink: #ffffff; --accent: #7fb3e6;
+  --red: #4a1f22; --red-ink: #ffb3b3; --org: #4a2e14; --org-ink: #ffc072;
+  --yel: #443a17; --yel-ink: #ffe38a; --grn: #1d3b25; --grn-ink: #9be3ad;
+  --code: #0f1824; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.7; margin: 0; }
+.wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: clamp(2rem, 6vw, 2.9rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+code { background: var(--code); padding: 1px 6px; border-radius: 4px; }
+
+.head { display: grid; gap: 14px; padding-block: 8px 4px; }
+.tag { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 62ch; font-size: 1.05rem; }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.85rem; }
+.flow span.doc { background: var(--paper); border: 1px solid var(--line); padding: 4px 10px; border-radius: 6px; }
+.flow span.out { background: var(--navy); color: var(--navy-ink); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.flow span.op { color: var(--muted); }
+.cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 8px; font-weight: 500; text-decoration: none; border: 1px solid var(--navy); }
+.btn.primary { background: var(--navy); color: var(--navy-ink); }
+.btn.ghost { color: var(--accent); background: transparent; border-color: var(--line); }
+
+section.panel { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 24px; display: grid; gap: 16px; min-width: 0; }
+.sub { color: var(--muted); font-size: 0.95rem; }
+
+ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: s; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 2.2rem 1fr; gap: 12px; align-items: start; min-width: 0; }
+ol.steps > li::before { content: counter(s); font-family: var(--mono); font-weight: 600; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--navy); color: var(--navy-ink); font-size: 0.95rem; }
+ol.steps li > div { min-width: 0; display: grid; gap: 4px; }
+ol.steps b { font-weight: 700; }
+.note { font-size: 0.9rem; color: var(--muted); }
+.warn { background: var(--yel); color: var(--yel-ink); border-radius: 6px; padding: 2px 8px; font-weight: 500; }
+
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.cmd pre { flex: 1; min-width: 0; margin: 0; background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 0.85rem; line-height: 1.5; }
+.cmd button { font: inherit; font-size: 0.85rem; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.split > div { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.split h3 { margin: 0; font-size: 1rem; font-family: var(--display); }
+
+.sheet-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table.sheet { border-collapse: collapse; font-size: 0.8rem; width: 100%; min-width: 760px; font-variant-numeric: tabular-nums; }
+.sheet th { background: var(--navy); color: var(--navy-ink); font-weight: 600; padding: 7px 9px; text-align: center; white-space: nowrap; }
+.sheet td { padding: 7px 9px; border-top: 1px solid var(--line); white-space: nowrap; text-align: center; }
+.sheet td.l { text-align: left; }
+.r { background: var(--red); color: var(--red-ink); }
+.o { background: var(--org); color: var(--org-ink); }
+.y { background: var(--yel); color: var(--yel-ink); }
+.g { background: var(--grn); color: var(--grn-ink); }
+.caption { font-size: 0.82rem; color: var(--muted); }
+
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.legend div { border-radius: 8px; padding: 10px 12px; display: grid; gap: 2px; }
+.legend b { font-size: 0.95rem; }
+.legend span { font-size: 0.85rem; }
+
+.check-list { margin: 0; padding-left: 1.2rem; display: grid; gap: 4px; }
+
+.trouble-scroll { overflow-x: auto; }
+table.trouble { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+.trouble th { text-align: left; color: var(--muted); font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.trouble td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.trouble td:first-child { font-family: var(--mono); font-size: 0.82rem; width: 38%; }
+
+footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
+@media (max-width: 480px) { section.panel { padding: 18px; } .wrap { padding-inline: 16px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <div class="tag">Manifest summary · SUM-EDI cover</div>
+    <h1>SUM-EDI</h1>
+    <p class="lede">Splits the whole-vessel MF / MANIFEST by DELIVERY (from CNTRS), adds the SOC containers, and makes signed summary documents. Runs in your browser; no file is uploaded</p>
+    <div class="flow" aria-label="How it works">
+      <span class="doc">MF</span><span class="op">+</span><span class="doc">CNTRS</span><span class="op">+</span><span class="doc">ATTACHED</span><span class="op">→</span>
+      <span class="out">SUM-EDI.pdf</span><span class="out">SUMMARY.pdf</span><span class="out">MF-&lt;DELIVERY&gt;.pdf</span><span class="out">CNTRS.pdf</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#sum-edi">Use it online (nothing to install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Sum-edi">Open on GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="files">
+    <h2>What you get</h2>
+    <ul class="check-list">
+      <li><b>SUM-EDI.pdf</b> — A4 cover in English: table by DELIVERY, TOTAL, ***SOC*** and GRAND TOTAL, with the preparer's name</li>
+      <li><b>SUMMARY.pdf</b> — one signed landscape page per DELIVERY / transit country</li>
+      <li><b>MF-&lt;DELIVERY&gt;.pdf</b> — the MF cut per DELIVERY (MF-LCH, MF-LKR, …) with the SUMMARY page as its cover and attached sheets after their B/L</li>
+      <li><b>CNTRS.pdf</b> — the Excel CNTRS reprinted per DELIVERY from the SHED NUMBER, with SOC containers separate</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="rules">
+    <h2>How containers are grouped</h2>
+    <ul class="check-list">
+      <li>DELIVERY from CNTRS (Port Of Delivery and SHED NUMBER): <code>0332</code> = LKR · <code>0110</code> = BMT · <code>0302</code> = SCT · <code>0122</code> = BKK (PAT) · others = LCH</li>
+      <li>MYANMAR / LAOS / MALAYSIA / CHINA / CAMBODIA from CARGO MOVEMENT (7-TRANSIT) · TRANSHIPMENT has its own group · only groups with data are shown</li>
+      <li>Containers in CNTRS but not in the MF: HEUNG A, not empty → counted in their DELIVERY row · HEUNG A empty (4=MTY) → the <b>EMPTY</b> row, counted in TOTAL · other owners → the <b>***SOC***</b> heading under TOTAL, by the first word of the CONSIGNEE and size, then included in the GRAND TOTAL</li>
+      <li>Long text is shrunk to stay inside the A4 page</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="checks">
+    <h2>Rule checks (MF / CNTRS in Excel)</h2>
+    <ul class="check-list">
+      <li>SHED: DG = 2826 · LAOS to BKK = 0124 · USED ENGINE to BKK = 0126 · MF SHED matches CNTRS</li>
+      <li>Destination country and CARGO MOVEMENT (TRANSHIPMENT = 3 · TRANSIT = 7) · TAX ID matches NOTIFY</li>
+      <li>MF DG and container size match CNTRS · DG containers in CNTRS are in SHED 2826</li>
+      <li>Attached sheets: VESSEL and BL NO. match the MF · the MF says AS PER ATTACHED but nothing is attached</li>
+      <li>Results appear in a warning box under the table (Wrong / Check); the documents are still made</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>Troubleshooting</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>No B/L (HASL...) found in the MF file</td><td>The file is not an MF (e.g. a SUMMARY.pdf made by this page) — add the MANIFEST file</td></tr>
+          <tr><td>The MF file has no 1) SHED NO. …</td><td>Add the CNTRS file too, or use an MF exported with the SHED NO. / country / CARGO MOVEMENT column</td></tr>
+          <tr><td>Preview pages appear twice</td><td>Wait until the previews finish before clicking Process again</td></tr>
+          <tr><td>The page still looks old</td><td>Press Ctrl+F5</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>Always check TOTAL / GRAND TOTAL against the MF and CNTRS before sending</p>
+    <p>Code: <a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a></p>
+  </footer>
+</div>
+
+<script src="guide-lang.js"></script>
+</body>
+</html>

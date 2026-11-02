@@ -29,4 +29,9 @@
     bar.appendChild(a);
   });
   document.body.appendChild(bar);
+
+  // คู่มือแบบภาพ (ภาพหน้าจอ + หมายเลขขั้นตอน)
+  var pics = document.createElement("script");
+  pics.src = "guide-pics.js";
+  document.body.appendChild(pics);
 })();

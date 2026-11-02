@@ -25,7 +25,7 @@
     <p class="sub">Nothing to install. Files are processed in the browser of the computer you are using and are not uploaded anywhere</p>
     <ol class="steps">
       <li><div>
-        <p><b>Drag in the DO file (.pdf)</b>; one or more files, which the page joins in order</p>
+        <p><b>Drag in the DO / ATTACHED / ใบเปิดตู้ files (.pdf)</b>; several files in any order. The page merges them per B/L as DO → ATTACHED → ใบเปิดตู้ → คำร้อง</p>
         <p class="note"><code>CHECK DEM.xlsx</code> is optional. Without it, fill in <b>DEM. date</b> and/or <b>Power charge date</b> yourself</p>
       </div></li>
       <li><div>
@@ -63,7 +63,7 @@
     <ol class="steps">
       <li><div>
         <p><b>Put the files in the <code>input</code> folder</b></p>
-        <p class="note">The D/O file whose name starts with <code>DO</code>, e.g. <code>DO-SWSR.pdf</code>, and <code>CHECK DEM.xlsx</code> (from <a href="https://github.com/Rattanao/Check-dem">Check-dem</a>)</p>
+        <p class="note">The D/O file (plus ATTACHED / ใบเปิดตู้ if any) and <code>CHECK DEM.xlsx</code> (from <a href="https://github.com/Rattanao/Check-dem">Check-dem</a>)</p>
       </div></li>
       <li><div>
         <p><b>Double-click <code>run-do.bat</code></b></p>
@@ -74,6 +74,17 @@
         <p class="note">Files in <code>input</code> are not changed. If a result file is open, close it before running again</p>
       </div></li>
     </ol>
+  </section>
+
+  <section class="panel" id="openform">
+    <h2>Check ใบเปิดตู้ / คำร้อง</h2>
+    <p class="sub">Add the ใบเปิดตู้ together with the DO and the page compares them at once. Only the B/Ls that need fixing are shown, mismatched boxes are red, and a warning appears at the top of the page</p>
+    <ul class="check-list">
+      <li>Compares <b>vessel name</b> (ignoring “V.”), <b>arrival date</b> (DO 2026.11.04 = ใบเปิด 4-Nov-26 — if different, it is corrected to the DO automatically), <b>CNTR</b>, <b>CNEE</b>, <b>B/L NO.</b>, <b>STATUS</b></li>
+      <li>STATUS: FCL = CY/CY or CFS/CY · CFS = container opening (เปิดตู้) · LCL = transport (ขนส่ง; Thai text may follow, e.g. <code>LCL (ขนส่งแรงงาน-เรือ)</code>)</li>
+      <li>Edit the values in the red boxes, then click <b>Fix ใบเปิดตู้ with the edited boxes</b> → it checks again and turns green</li>
+      <li><b>Save over the original file</b> (Chrome / Edge) or <b>Download the fixed ใบเปิดตู้</b></li>
+    </ul>
   </section>
 
   <section class="panel" id="rules">
@@ -87,7 +98,8 @@
           <tr class="o"><td>DG</td><td class="mono">UN 3077 / CLASS 9 / CL9</td><td class="thai">SPECIAL CONTAINER · .......DG..........OP..........FR · DEM line</td></tr>
           <tr class="g"><td>REEFER</td><td class="mono">20RF / 40RH / TEMP</td><td class="thai">เริ่มเก็บค่าไฟวันที่ <u>15-OCT-2026</u> · เริ่มเก็บค่า DEM. วันที่. <u>22-OCT-2026</u></td></tr>
           <tr class="r"><td>ISO TANK + DG</td><td class="mono">ISO TANK and UN / CLASS</td><td class="thai">SPECIAL CONTAINER · .......DG..........OP..........FR only</td></tr>
-          <tr class="e"><td>CFS</td><td class="mono">CFS/CFS, CY/CFS</td><td class="thai">No DEM line</td></tr>
+          <tr class="e"><td>CFS SPLIT</td><td class="mono">CFS/CFS + House B/L A, B, C…</td><td class="thai">No DEM line</td></tr>
+          <tr class="b"><td>Single CFS</td><td class="mono">CFS/CFS, not split</td><td class="thai">DEM and everything else added like CY</td></tr>
           <tr class="e"><td>ATTACHED RIDER</td><td class="mono">== ATTACHED RIDER ==</td><td class="thai">Nothing added (page 2 of the B/L)</td></tr>
         </tbody>
       </table>

@@ -193,9 +193,39 @@ const FILES = {
 
   "do.html": [
     ...COMMON,
+    ["ไฟล์ DO / ATTACHED / ใบเปิดตู้ (.pdf) <small>ใส่ได้หลายไฟล์ เรียงให้เอง</small>", "DO / ATTACHED / ใบเปิดตู้ files (.pdf) <small>several files, sorted for you</small>"],
+    ["<b>CFS SPLIT</b> (B/L หลัก + A, B, C…) ไม่เติม DEM · <b>CFS เดี่ยว</b> เติมเหมือน CY ·", "<b>CFS SPLIT</b> (master B/L + A, B, C…) no DEM line · <b>Single CFS</b> filled like CY ·"],
+    ["<b>รวมไฟล์</b>: ทีละ B/L เรียง DO → ATTACHED → ใบเปิดตู้ / คำร้อง ·", "<b>Merge</b>: per B/L, in the order DO → ATTACHED → ใบเปิดตู้ / คำร้อง ·"],
+    ["<b>ตรวจใบเปิดตู้</b>: ชื่อเรือ, CNTR, CNEE, B/L NO., STATUS (FCL = CY, CFS = เปิดตู้, LCL = ขนส่ง)<br>", "<b>ใบเปิดตู้ check</b>: vessel, CNTR, CNEE, B/L NO., STATUS (FCL = CY, CFS = container opening, LCL = transport)<br>"],
+    ["<h2 class=\"ct\">ตรวจใบเปิดตู้ / คำร้อง เทียบกับ DO</h2>", "<h2 class=\"ct\">Check ใบเปิดตู้ / คำร้อง against the DO</h2>"],
+    [">แก้ไขใบเปิดตู้ตามช่องที่แก้<", ">Fix ใบเปิดตู้ with the edited boxes<"],
+    [">บันทึกทับไฟล์เดิม<", ">Save over the original file<"],
+    [">ดาวน์โหลดใบเปิดที่แก้แล้ว<", ">Download the fixed ใบเปิดตู้<"],
+    ["{ FCL: \"FCL (CY)\", CFS: \"CFS = เปิดตู้\", LCL: \"LCL = ขนส่ง\" }", "{ FCL: \"FCL (CY)\", CFS: \"CFS = container opening\", LCL: \"LCL = transport\" }"],
+    ["note: \"ไม่เติม (ตรวจในตารางด้านบน)\"", "note: \"not filled (checked in the table above)\""],
+    ["\"CFS SPLIT · \" : \"CFS เดี่ยว เติมเหมือน CY · \"", "\"CFS SPLIT · \" : \"single CFS, filled like CY · \""],
+    ["[\"vessel\", \"ชื่อเรือ\"], [\"date\", \"วันที่เรือเข้า\"]", "[\"vessel\", \"Vessel\"], [\"date\", \"Arrival date\"]"],
+    ["${x.status} SPLIT ไม่เติม</td>", "${x.status} SPLIT not filled</td>"],
+    ["`แก้วันที่ใบเปิดตู้ / คำร้องตาม DO ให้อัตโนมัติแล้ว ${n} ช่อง`", "`ใบเปิดตู้ / คำร้อง dates corrected to the DO automatically: ${n} box(es)`"],
+    ["(ฟอร์มนี้ไม่มีช่องนี้)", "(this form has no such box)"],
+    ["title=\"ค่าที่จะพิมพ์ทับบนใบเปิดตู้\"", "title=\"Value to print over the ใบเปิดตู้\""],
+    ["<small>แก้บนเว็บไม่ได้ (มีหลายค่าในช่องเดียว) ต้องแก้ในไฟล์ต้นฉบับ</small>", "<small>Cannot be fixed on the web (several values in one box) — fix it in the original file</small>"],
+    ["${ok ? \"ตรง\" : \"ไม่ตรง\"}", "${ok ? \"match\" : \"no match\"}"],
+    ["<th>หัวข้อ</th><th>DO (ต้นฉบับ)</th>", "<th>Item</th><th>DO (source)</th>"],
+    ["<th>ผล</th>", "<th>Result</th>"],
+    ["`<p class=\"msg\">⚠ ต้องแก้ ${blocks.length} B/L (${bad} ช่อง) — แก้ค่าในช่องสีแดง แล้วกด “แก้ไขใบเปิดตู้ตามช่องที่แก้”`", "`<p class=\"msg\">⚠ ${blocks.length} B/L to fix (${bad} box(es)) — edit the red boxes, then click “Fix ใบเปิดตู้ with the edited boxes”`"],
+    ["` · อีก ${okCount} B/L ตรงทุกหัวข้อ (ไม่แสดง)`", "` · ${okCount} more B/L match on every item (not shown)`"],
+    ["`<p class=\"allok\">✓ ใบเปิดตู้ / คำร้อง ตรงกับ DO ทุกหัวข้อ (${all.length} B/L)</p>`", "`<p class=\"allok\">✓ ใบเปิดตู้ / คำร้อง match the DO on every item (${all.length} B/L)</p>`"],
+    ["`⚠ ใบเปิดตู้ / คำร้อง ไม่ตรงกับ DO ${bad} ช่อง — แก้ได้ในตาราง “ตรวจใบเปิดตู้” ด้านล่าง`", "`⚠ ใบเปิดตู้ / คำร้อง do not match the DO in ${bad} box(es) — fix them in the ใบเปิดตู้ check table below`"],
+    ["\"ไม่มีช่องที่เปลี่ยนค่า\"", "\"No box was changed\""],
+    ["\"แก้แล้ว กำลังตรวจใหม่…\"", "\"Fixed, checking again…\""],
+    ["\"แก้แล้ว — บันทึกทับไฟล์เดิม หรือดาวน์โหลดไฟล์ที่แก้แล้ว\"", "\"Fixed — save over the original file or download the fixed file\""],
+    ["\"ไม่ได้รับอนุญาตให้เขียนไฟล์\"", "\"No permission to write the file\""],
+    ["`บันทึกทับ \"${f.name}\" แล้ว`", "`Saved over \"${f.name}\"`"],
+    ["`บันทึกทับ \"${f.name}\" ไม่ได้: ${err.message} — ใช้ปุ่มดาวน์โหลดแทน`", "`Cannot save over \"${f.name}\": ${err.message} — use the download button instead`"],
+    ["\"-แก้ไข.pdf\"", "\"-fixed.pdf\""],
     ['href="guide-do.html"', 'href="guide-do-en.html"'],
     ["เติมวันเริ่มเก็บค่า DEM / ค่าไฟ / SPECIAL CONTAINER ลงในใบ D/O", "Add DEM / power charge start dates and SPECIAL CONTAINER to the D/O"],
-    ["ไฟล์ DO (.pdf) <small>ใส่ได้ 1 ไฟล์ขึ้นไป</small>", "DO file (.pdf) <small>1 or more files</small>"],
     ["ไฟล์ CHECK DEM (.xlsx) <small>ไม่ใส่ก็ได้</small>", "CHECK DEM file (.xlsx) <small>optional</small>"],
     [">DEM. วันที่<", ">DEM. date<"],
     [">ค่าไฟ วันที่<", ">Power charge date<"],
@@ -205,7 +235,6 @@ const FILES = {
     ["<b>ตู้เย็น</b> (", "<b>Reefer</b> ("],
     [") เพิ่มวันเริ่มเก็บค่าไฟ ·", ") adds the power charge start date ·"],
     ["</b> เติมแค่ SPECIAL CONTAINER ·", "</b> only SPECIAL CONTAINER ·"],
-    ["</b> ไม่เติม DEM ·", "</b> no DEM line ·"],
     ["หน้า <b>ATTACHED RIDER</b> ไม่เติม<br>", "<b>ATTACHED RIDER</b> pages: nothing added<br>"],
     ["<b>ปริ้น x2</b>: CY ซ้อนกันทีละ B/L (1,1,2,2) · CFS แยกเป็น 2 ชุดต่อ B/L หลัก (A,B,C,A,B,C)<br>", "<b>Print x2</b>: CY each B/L twice in a row (1,1,2,2) · CFS 2 sets per master B/L (A,B,C,A,B,C)<br>"],
     ["<b>วันที่</b>: ใส่ CHECK DEM หรือเติมเองที่ช่อง DEM. / ค่าไฟ (เติมอย่างใดอย่างหนึ่งหรือทั้งสองอย่าง) แล้วกด <b>ประมวลผล</b>", "<b>Dates</b>: add CHECK DEM or type them in the DEM. / power boxes (either or both), then click <b>Process</b>"],
@@ -221,7 +250,6 @@ const FILES = {
     ['" · ลบตรายางเก่าออกแล้ว"', '" · old stamp removed"'],
     ['"เติมไว้แล้ว"', '"already filled"'],
     ['note: "ไม่เติม"', 'note: "not filled"'],
-    ["${x.status} ไม่เติม</td>", "${x.status} not filled</td>"],
     ['"มีข้อความอยู่แล้ว"', '"text already present"'],
     [">จำนวนหน้า<", ">Pages<"],
     [">ฟอนต์<", ">Font<"],
@@ -359,8 +387,10 @@ FILES["mman-lch.html"] = [
   ...FILES["change-status.html"].filter(p => p !== COMMON).map(([a, b]) => [a, b, "shared"]),
 ];
 
-// SUM-EDI prints its table headings and the cover note in Thai on SUM-EDI.pdf.
-const KEEP_TH = [/เริ่มเก็บค่า/, /document\.fonts\.load/, /await center\(X/, /thaiImage\(doc/];
+// DO reads the Thai ใบเปิดตู้ / คำร้อง forms and types Thai STATUS values onto them.
+const KEEP_TH = [/เปิดตู้คอนเทนเนอร์/, /อารักขาของศุลกากร/, /"CFS \(เปิดตู้\)"/, /เริ่มเก็บค่า/, /document\.fonts\.load/, /await center\(X/, /thaiImage\(doc/];
+// Thai form names kept as-is inside the English text (the forms are only ever called this)
+const TH_TERMS = /ใบเปิดตู้|คำร้อง/g;
 
 let problems = 0;
 for (const [file, pairs] of Object.entries(FILES)) {
@@ -376,7 +406,7 @@ for (const [file, pairs] of Object.entries(FILES)) {
   fs.writeFileSync(p, s);
   // report Thai still showing, ignoring comments and kept strings
   s.split("\n").forEach((line, i) => {
-    const code = line.replace(/\/\/.*$/, "").replace(/\/\*.*?\*\//g, "").replace(/<!--.*?-->/g, "");
+    const code = line.replace(/\/\/.*$/, "").replace(/\/\*.*?\*\//g, "").replace(/<!--.*?-->/g, "").replace(TH_TERMS, "");
     if (/[฀-๿]/.test(code) && !KEEP_TH.some(r => r.test(code)) && !/^\s*(\/\/|\*|\/\*)/.test(line)) {
       console.log(`LEFT ${file}:${i + 1}: ${code.trim().slice(0, 120)}`); problems++;
     }

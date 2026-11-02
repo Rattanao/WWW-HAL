@@ -1,0 +1,118 @@
+// คู่มือแบบภาพ: ใส่ภาพหน้าจอของเครื่องมือ (assets/guide/<tool>.png) พร้อมหมายเลขขั้นตอน ไว้ด้านบนของหน้าคู่มือ
+// โหลดจาก guide-lang.js จึงอยู่รอดเมื่อดึง guide.html ใหม่จาก repo ต้นทาง
+// ภาพถ่ายใหม่ได้ด้วย _test/shot/shot.js (headless Chrome) ซึ่งเขียนตำแหน่งหมายเลข (marks) ให้ด้วย
+// marks: [ขั้นที่, x%, y%, กว้าง%, สูง%] ของช่องในภาพ
+(function () {
+  var m = (location.pathname.split("/").pop() || "").match(/^guide-(.+?)(-en)?\.html$/);
+  if (!m) return;
+  var id = m[1], en = !!m[2];
+
+  var PICS = {
+    "check-cntrs": { w: 982, h: 255, marks: [[1,4.99,26.27,70.71,16.47],[2,77.12,33.33,7.12,14.12],[4,85.26,33.33,9.75,14.12]] },
+    "check-dem": { w: 982, h: 206, marks: [[1,4.99,34.06,45.55,20.44],[2,51.55,32.6,22.4,21.9],[3,74.98,36.98,9.27,17.52],[5,85.26,36.98,9.75,17.52]] },
+    "change-status": { w: 982, h: 643, marks: [[1,4.89,11.66,26.68,4.35],[2,4.89,26.2,26.68,4.35],[3,4.89,40.74,44.6,6.37],[4,4.89,63.59,90.22,5.29],[5,4.89,49.91,44.5,6.06],[7,50.41,49.91,44.7,6.06]] },
+    "mman-lch": { w: 982, h: 643, marks: [[1,4.89,11.66,26.68,4.35],[2,4.89,26.2,26.68,4.35],[3,4.89,40.74,90.22,5.29],[4,4.89,66.55,90.22,6.37],[5,4.89,75.72,44.5,6.06],[7,50.41,75.72,44.7,6.06]] },
+    "temp": { w: 982, h: 481, marks: [[1,3.26,12.74,66.65,9.98],[2,71.33,12.74,13.88,9.98],[4,86.64,12.74,10.1,9.98]] },
+    "sum-edi": { w: 982, h: 569, marks: [[1,4.99,14.94,43.33,7.38],[2,49.34,12.48,21.66,9.84],[3,4.99,32.34,29.33,5.98],[4,4.99,43.94,29.33,6.33],[5,72.02,8.61,22.99,5.98],[7,85.26,15.99,9.75,6.33]] },
+    "do": { w: 982, h: 390, marks: [[1,4.99,17.18,56.03,10.77],[2,62.04,17.18,32.97,10.77],[3,4.99,36.41,27.5,10.77],[4,62.04,36.15,13.24,11.03],[5,76.29,37.95,8.16,9.23],[7,85.26,37.95,9.75,9.23]] }
+  };
+
+  // ขั้นตอน [ไทย, English] — ลำดับตรงกับหมายเลขในภาพ (ขั้นที่ไม่มีหมายเลขในภาพ = ทำหลังกดประมวลผล)
+  var STEPS = {
+    "check-cntrs": [
+      ["ลากไฟล์ <b>MANIFEST</b> และ <b>CNTRS</b> (.xls / .xlsx / .pdf) มาวางพร้อมกัน", "Drop the <b>MANIFEST</b> and <b>CNTRS</b> files (.xls / .xlsx / .pdf) here together"],
+      ["กด <b>Check</b>", "Click <b>Check</b>"],
+      ["ดูผลในตาราง (ช่องที่ไม่ตรงขึ้นสี) แล้วกด <b>Download CNTRS_EDI.xlsx</b>", "Read the results table (mismatches are coloured), then click <b>Download CNTRS_EDI.xlsx</b>"],
+      ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
+    ],
+    "check-dem": [
+      ["ลากไฟล์ <b>Freedays</b> (.xls / .xlsx) มาวาง", "Drop the <b>Freedays</b> file (.xls / .xlsx) here"],
+      ["ใส่วันที่เรือเข้า <b>ATA</b>", "Enter the vessel arrival date <b>ATA</b>"],
+      ["กด <b>Calculate</b>", "Click <b>Calculate</b>"],
+      ["ตรวจวัน DEM. / REC. ในตาราง แล้วกด <b>Download CHECK DEM.xlsx</b> (ใช้ต่อในเครื่องมือ DO)", "Check the DEM. / REC. dates in the table, then click <b>Download CHECK DEM.xlsx</b> (used next in the DO tool)"],
+      ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
+    ],
+    "change-status": [
+      ["เลือกไฟล์ <b>MMAN (.txt)</b>", "Choose the <b>MMAN (.txt)</b> file"],
+      ["เลือกไฟล์ <b>STATUS</b> (.xls / .xlsx / .csv) — คอลัมน์ A–C: B/L No., Status, POL", "Choose the <b>STATUS</b> file (.xls / .xlsx / .csv) — columns A–C: B/L No., Status, POL"],
+      ["<b>SHED NO.</b> ช่องซ้าย = B/L ที่มี Status (0145) · ช่องขวา = B/L ที่เหลือ (0122) · ลบช่องขวาให้ว่าง = ใช้ช่องซ้ายทุก B/L", "<b>SHED NO.</b> left box = B/Ls with a Status (0145) · right box = the rest (0122) · empty right box = left box for every B/L"],
+      ["<b>Start B/L / End B/L</b> (ไม่ใส่ก็ได้) — ตัดเก็บเฉพาะช่วง B/L · ว่างทั้งสองช่อง = ใช้ทั้งไฟล์", "<b>Start B/L / End B/L</b> (optional) — keep only this B/L range · both empty = whole file"],
+      ["กด <b>Change</b>", "Click <b>Change</b>"],
+      ["ตรวจตัวอย่างบรรทัดที่แก้ แล้วกด <b>Download MMAN_EDI.txt</b>", "Check the sample changed lines, then click <b>Download MMAN_EDI.txt</b>"],
+      ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
+    ],
+    "mman-lch": [
+      ["เลือกไฟล์ <b>MMAN (.txt)</b>", "Choose the <b>MMAN (.txt)</b> file"],
+      ["เลือกไฟล์ <b>STATUS</b> (.xls / .xlsx / .csv) — คอลัมน์ A–C: B/L No., Status, POL", "Choose the <b>STATUS</b> file (.xls / .xlsx / .csv) — columns A–C: B/L No., Status, POL"],
+      ["ใส่ <b>Start B/L</b> และ <b>End B/L</b> — ว่างช่องแรก = ตั้งแต่ B/L แรก · ว่างช่องหลัง = ถึงบรรทัดสุดท้าย", "Enter <b>Start B/L</b> and <b>End B/L</b> — start empty = from the first B/L · end empty = to the last line"],
+      ["<b>SHED NO.</b> สำหรับ THLCH ที่ไม่ใช่ DG (ค่าเริ่มต้น 2813) · DG และท่าอื่นใส่ให้เอง", "<b>SHED NO.</b> for THLCH B/Ls that are not DG (default 2813) · DG and other ports are set for you"],
+      ["กด <b>Cut + Change status</b>", "Click <b>Cut + Change status</b>"],
+      ["ตรวจผลและตัวอย่างบรรทัดที่แก้ แล้วกด <b>Download MMAN_LCH.txt</b>", "Check the results and sample lines, then click <b>Download MMAN_LCH.txt</b>"],
+      ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
+    ],
+    "temp": [
+      ["ลากไฟล์ <b>CLIST (.txt)</b> มาวาง", "Drop the <b>CLIST (.txt)</b> file here"],
+      ["กด <b>Fix temperature</b>", "Click <b>Fix temperature</b>"],
+      ["ดูบรรทัดที่เปลี่ยนในตาราง (ภาพนี้เป็นข้อมูลตัวอย่าง) แล้วกด <b>Save Revised temp.txt</b> หรือ <b>Download Excel</b>", "See the changed lines in the table (this picture shows sample data), then click <b>Save Revised temp.txt</b> or <b>Download Excel</b>"],
+      ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
+    ],
+    "sum-edi": [
+      ["ลากไฟล์ <b>MF</b> + <b>CNTRS</b> (+ เอกสารแนบ ATTACHED) มาวางพร้อมกัน — Excel / PDF / รูป", "Drop the <b>MF</b> + <b>CNTRS</b> files (+ ATTACHED sheets) here together — Excel / PDF / images"],
+      ["เลือกรูป<b>ลายเซ็น</b> (.png / .jpg) ครั้งเดียว เบราว์เซอร์จำไว้", "Choose your <b>signature</b> image (.png / .jpg) once; the browser remembers it"],
+      ["ใส่ <b>ชื่อผู้จัดทำ / ตำแหน่ง / เบอร์โทร</b> ท้าย SUM-EDI (จำไว้ในเบราว์เซอร์)", "Fill in <b>Prepared by / Position / Phone</b> for the end of SUM-EDI (remembered in this browser)"],
+      ["เลือก <b>LATKRABANG GATE</b> (2 หรือ 8) สำหรับหน้า THLKR", "Choose the <b>LATKRABANG GATE</b> (2 or 8) for the THLKR pages"],
+      ["กด <b>Process</b>", "Click <b>Process</b>"],
+      ["ตรวจตารางและกล่องแจ้งเตือน ดูภาพเอกสารด้วย <b>Full view</b> แล้วกด <b>Download all</b> (SUM-EDI.pdf, SUMMARY.pdf, MF-….pdf, CNTRS.pdf)", "Check the table and the warning box, view pages with <b>Full view</b>, then click <b>Download all</b> (SUM-EDI.pdf, SUMMARY.pdf, MF-….pdf, CNTRS.pdf)"],
+      ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
+    ],
+    "do": [
+      ["ลากไฟล์ <b>DO / ATTACHED / ใบเปิดตู้</b> (.pdf) มาวาง ลำดับไหนก็ได้", "Drop the <b>DO / ATTACHED / ใบเปิดตู้</b> files (.pdf) here, in any order"],
+      ["ลากไฟล์ <b>CHECK DEM.xlsx</b> (จาก Check DEM) มาวาง — ไม่ใส่ก็ได้", "Drop <b>CHECK DEM.xlsx</b> (from Check DEM) here — optional"],
+      ["ไม่มี CHECK DEM: ใส่ <b>DEM. date</b> และ/หรือ <b>Power charge date</b> เอง", "Without CHECK DEM: fill in <b>DEM. date</b> and/or <b>Power charge date</b> yourself"],
+      ["<b>Font size</b> ขนาดตัวอักษรที่พิมพ์ลง D/O", "<b>Font size</b> of the text printed on the D/O"],
+      ["กด <b>Process</b>", "Click <b>Process</b>"],
+      ["ตรวจตาราง (ช่องวันที่สีแดง = ยังไม่มีวันที่) · ใบเปิดตู้ที่ไม่ตรงแก้ได้ในตาราง · กด <b>Download DO-DEM.pdf (x1 + x2)</b> หรือ <b>Print x2</b>", "Check the table (red date cell = no date yet) · fix a mismatched ใบเปิดตู้ in its table · click <b>Download DO-DEM.pdf (x1 + x2)</b> or <b>Print x2</b>"],
+      ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
+    ]
+  };
+
+  var pic = PICS[id], steps = STEPS[id];
+  if (!pic || !steps) return;
+  var L = en ? 1 : 0;
+
+  var css = document.createElement("style");
+  css.textContent =
+    ".pics{--o:#e2501f}" +
+    ".pics .shot{position:relative;margin:14px 0 18px;border:1px solid #d5dae3;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.06)}" +
+    ".pics .shot img{display:block;width:100%;height:auto}" +
+    ".pics .mk{position:absolute;border:2.5px solid var(--o);border-radius:6px;pointer-events:none}" +
+    ".pics .mk b{position:absolute;left:-13px;top:-13px;width:26px;height:26px;border-radius:50%;background:var(--o);color:#fff;font:700 14px/26px system-ui,sans-serif;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.25)}" +
+    ".pics ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}" +
+    ".pics li{display:flex;gap:10px;align-items:flex-start;line-height:1.55}" +
+    ".pics li i{flex:0 0 26px;height:26px;border-radius:50%;background:var(--o);color:#fff;font:700 14px/26px system-ui,sans-serif;font-style:normal;text-align:center}" +
+    ".pics li.after i{background:#fff;color:var(--o);border:2px solid var(--o);line-height:22px;box-sizing:border-box}" +
+    "@media (max-width:640px){.pics .mk b{width:20px;height:20px;font-size:12px;line-height:20px;left:-10px;top:-10px}}";
+  document.head.appendChild(css);
+
+  var marked = {};
+  pic.marks.forEach(function (k) { marked[k[0]] = true; });
+  var sec = document.createElement("section");
+  sec.className = "panel pics";
+  sec.id = "pictures";
+  sec.innerHTML =
+    "<h2>" + (en ? "Picture guide" : "คู่มือแบบภาพ") + "</h2>" +
+    "<p class=\"sub\">" + (en ? "Follow the numbers on the picture. A number in an outlined circle is done after processing (it appears under the form)."
+                              : "ทำตามหมายเลขในภาพ หมายเลขวงกลมเส้นขอบ = ทำหลังกดประมวลผล (ปุ่มจะขึ้นใต้ฟอร์ม)") + "</p>" +
+    "<div class=\"shot\"><img src=\"assets/guide/" + id + ".png\" width=\"" + pic.w + "\" height=\"" + pic.h + "\" alt=\"" +
+      (en ? "Screen of the tool with numbered steps" : "หน้าจอเครื่องมือพร้อมหมายเลขขั้นตอน") + "\" loading=\"lazy\">" +
+      pic.marks.map(function (k) {
+        return "<span class=\"mk\" style=\"left:" + k[1] + "%;top:" + k[2] + "%;width:" + k[3] + "%;height:" + k[4] + "%\"><b>" + k[0] + "</b></span>";
+      }).join("") + "</div>" +
+    "<ol>" + steps.map(function (s, i) {
+      return "<li" + (marked[i + 1] ? "" : " class=\"after\"") + "><i>" + (i + 1) + "</i><span>" + s[L] + "</span></li>";
+    }).join("") + "</ol>";
+
+  var first = document.querySelector("section.panel, main section, section");
+  if (first) first.parentNode.insertBefore(sec, first);
+  else document.body.appendChild(sec);
+})();
