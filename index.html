@@ -33,10 +33,7 @@ button { font: inherit; color: inherit; }
 .burger:hover { background: #eef1f8; }
 .burger svg { width: 22px; height: 22px; stroke: var(--blue-dark); }
 .brand { display: flex; align-items: center; gap: 8px; line-height: 1; user-select: none; }
-.brand svg { width: 46px; height: 46px; flex: none; }
-.brand .name { display: grid; gap: 4px; }
-.brand .name b { color: var(--blue); font-size: 22px; font-weight: 700; letter-spacing: -.3px; white-space: nowrap; }
-.brand .name small { color: #222; font-size: 12px; letter-spacing: 3px; white-space: nowrap; }
+.brand .logo { height: 50px; width: auto; display: block; }
 .top-right { margin-left: auto; align-self: stretch; display: flex; align-items: center; gap: 14px; background: var(--blue); padding: 0 26px; }
 .pill { color: #fff; padding: 6px 0; font-weight: 600; font-size: 13px; white-space: nowrap; }
 .who { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; border-left: 1px solid rgba(255,255,255,.35); padding-left: 14px; }
@@ -95,7 +92,8 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
   .side { position: fixed; top: var(--top-h); bottom: var(--foot-h); left: 0; z-index: 10; box-shadow: 2px 0 10px rgba(0,0,0,.18); }
   .main { padding: 16px; }
   .crumb { font-size: 20px; margin-bottom: 14px; }
-  .top-right, .brand .name small { display: none; }
+  .top-right { display: none; }
+  .brand .logo { height: 40px; }
   :root { --foot-h: 58px; }
   .foot { font-size: 13.5px; white-space: normal; line-height: 1.3; }
 }
@@ -107,23 +105,7 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
   <button class="burger" id="burger" aria-label="Open / close menu">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
   </button>
-  <div class="brand" aria-label="Heung A Line">
-    <svg viewBox="0 0 48 48" aria-hidden="true">
-      <g id="halLogo">
-      <defs><clipPath id="lc"><circle cx="24" cy="24" r="22"/></clipPath></defs>
-      <circle cx="24" cy="24" r="22" fill="#e2501f"/>
-      <g clip-path="url(#lc)">
-        <rect x="0" y="29" width="48" height="20" fill="#fff"/>
-        <rect x="0" y="31" width="48" height="3.2" fill="#1f3f94"/>
-        <rect x="0" y="36.4" width="48" height="3.2" fill="#1f3f94"/>
-        <rect x="0" y="41.8" width="48" height="3.2" fill="#1f3f94"/>
-      </g>
-      <circle cx="24" cy="24" r="22" fill="none" stroke="#1f3f94" stroke-width="1.5"/>
-      <text x="24" y="24.5" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="15" fill="#f6c443">HAL</text>
-      </g>
-    </svg>
-    <div class="name"><b>HEUNG A LINE</b><small>興亞 LINE 株式會社</small></div>
-  </div>
+  <div class="brand"><img class="logo" src="tools/assets/hal-logo-hd.png" alt="Heung A Line Co., Ltd."></div>
   <div class="top-right">
     <span class="pill">Processed in your browser · No files are uploaded</span>
     <span class="who" id="who" hidden><span id="whoName"></span><button id="signOut" type="button">Sign out</button></span>
@@ -150,7 +132,7 @@ body.side-closed .side { margin-left: calc(var(--side-w) * -1); }
 
 <div class="login" id="login" hidden>
   <form id="loginForm" autocomplete="on">
-    <div class="brand"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#halLogo"/></svg><div class="name"><b>HEUNG A LINE</b><small>EDI Tools</small></div></div>
+    <div class="brand"><img class="logo" src="tools/assets/hal-logo-hd.png" alt="Heung A Line Co., Ltd."></div>
     <h2>Sign in</h2>
     <label for="uid">User ID</label>
     <input id="uid" name="username" autocomplete="username" autocapitalize="characters" spellcheck="false" required>

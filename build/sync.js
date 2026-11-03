@@ -20,6 +20,8 @@ const SOURCES = [
   { id: "do",            repo: "DO",                 guide: true },
 ];
 
+// the repos' hal-logo.png is blurry: point every logo at the sharp tools/assets/hal-logo-hd.png (kept in this repo)
+const sharpLogo = h => h.split('src="assets/hal-logo.png"').join('src="assets/hal-logo-hd.png"');
 const raw = (repo, file) => `https://raw.githubusercontent.com/Rattanao/${repo}/HEAD/${file}`;
 async function get(repo, file, binary) {
   const r = await fetch(raw(repo, file) + "?t=" + Date.now(), { cache: "no-store" });
@@ -48,7 +50,7 @@ async function assets(repo, text) {
   for (const t of SOURCES) {
     const page = await get(t.repo, "index.html");
     if (!page) { console.log(`SKIP ${t.id}: cannot read ${t.repo}/index.html`); continue; }
-    let html = page.replace("</head>", '<script src="embed.js"></script>\n</head>');
+    let html = sharpLogo(page).replace("</head>", '<script src="embed.js"></script>\n</head>');
     if (t.guide) html = html.split('href="guide.html"').join(`href="guide-${t.id}.html"`);
     put(`${t.id}.html`, html);   // translated again below, so git only sees real upstream changes
     console.log(`copied ${t.repo} -> ${t.id}.html`);
@@ -60,7 +62,7 @@ async function assets(repo, text) {
     if (t.guide) {
       const g = await get(t.repo, "guide.html");
       if (!g) { console.log(`  no guide.html in ${t.repo}`); continue; }
-      const gh = g.replace(/href="(\.\/|index\.html)"/g, `href="../#${t.id}"`)
+      const gh = sharpLogo(g).replace(/href="(\.\/|index\.html)"/g, `href="../#${t.id}"`)
                   .replace("</body>", '<script src="guide-lang.js"></script>\n</body>');
       if (put(`guide-${t.id}.html`, gh)) console.log(`  GUIDE CHANGED: guide-${t.id}.html — update build/guides-en/${t.id}.body and tools/guide-${t.id}-en.html`);
       await assets(t.repo, g);
