@@ -191,6 +191,44 @@ const FILES = {
     ["<th>ท่า</th>", "<th>Port</th>"],
   ],
 
+  "cut-bl.html": [
+    ...COMMON,
+    ["<h1>CUT BL — ตัด B/L → ชื่อไฟล์_PORTAL.txt</h1>", "<h1>CUT BL — cut B/Ls → filename_PORTAL.txt</h1>"],
+    ["<label class=\"lb\" for=\"startBl\">เริ่มตัด B/L</label>", "<label class=\"lb\" for=\"startBl\">Cut from B/L</label>"],
+    ["placeholder=\"ว่าง = ตั้งแต่ H02 แรก\"", "placeholder=\"empty = from the first H02\""],
+    ["<label class=\"lb\" for=\"endBl\">ถึง B/L</label>", "<label class=\"lb\" for=\"endBl\">To B/L</label>"],
+    ["placeholder=\"ว่าง = ถึงบรรทัดสุดท้าย\"", "placeholder=\"empty = to the last line\""],
+    [">ตัด B/L</button>", ">Cut B/L</button>"],
+    ["<label class=\"lb\" for=\"keepBl\">หรือ เก็บเฉพาะ B/L</label>", "<label class=\"lb\" for=\"keepBl\">Or keep only these B/Ls</label>"],
+    ["(คั่นด้วย , หรือขึ้นบรรทัดใหม่)\"", "(separated by , or new lines)\""],
+    ["<b>แบบที่ 1 ตัดช่วง</b>: ลบตั้งแต่บรรทัด H02 ของ B/L เริ่มตัด จนถึงบรรทัดสุดท้าย (H03 … H10) ของ B/L สุดท้าย (รวม sub-B/L …A, …B) ออก เหลือเฉพาะส่วนที่ไม่ได้ตัด · เว้นว่างช่องเริ่มตัด = ตั้งแต่ H02 แรก · เว้นว่างช่องถึง = ถึงบรรทัดสุดท้าย · <b>แบบที่ 2 เก็บเฉพาะ B/L</b>: ใส่ B/L ที่ต้องการเก็บ 1 ตัวหรือหลายตัว คั่นด้วย , หรือขึ้นบรรทัดใหม่ (เช่น HASLJ01260800588,HASLK02261000346) รวม sub-B/L ของแต่ละตัว B/L อื่นตัดทิ้งทั้งหมด · ใช้ได้ทีละแบบ · เว้นว่างทุกช่อง = ไม่ตัด · <b>ทุก B/L ที่เหลือ</b>: H05 = ชื่อเดียวกับ H06 เว้นวรรค 1 เคาะเท่านั้น (H06 คงเดิม) ยกเว้น B/L TRANSIT / TRANSHIPMENT (รวม INTRANSIT) ห้ามแก้ H05 / H06 · H07 หน่วยหีบห่อ PG → PX · บรรทัดหัวไฟล์ HOU / H01 เก็บไว้เสมอ (ไม่มีแล้วโปรแกรม ECS ขึ้น invalid MMAN Text File) · พิมพ์ HASLC… หรือ H02HASLC… ก็ได้ · ชื่อไฟล์ที่ได้ = ชื่อไฟล์ต้นฉบับก่อน \"__\" ตามด้วย _PORTAL เช่น KMGY_2608S_PORTAL.txt · ประมวลผลในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์", "<b>Mode 1, cut a range</b>: deletes from the H02 line of the start B/L to the last line (H03 … H10) of the end B/L (including sub-B/Ls …A, …B), keeping the rest · start empty = from the first H02 · end empty = to the last line · <b>Mode 2, keep only these B/Ls</b>: enter one or more B/Ls to keep, separated by , or new lines (e.g. HASLJ01260800588,HASLK02261000346), with their sub-B/Ls; every other B/L is cut · one mode at a time · all boxes empty = no cut · <b>Every B/L left</b>: H05 = the same name as H06, single-spaced only (H06 unchanged), except TRANSIT / TRANSHIPMENT B/Ls (including INTRANSIT), whose H05 / H06 are never changed · H07 package unit PG → PX · the HOU / H01 header lines are always kept (without them the ECS program says invalid MMAN Text File) · type HASLC… or H02HASLC… · output file name = the source file name before \"__\" plus _PORTAL, e.g. KMGY_2608S_PORTAL.txt · processed in your browser, no file upload"],
+    ["<h2>ผลการตัด B/L</h2>", "<h2>Cut results</h2>"],
+    [">ดาวน์โหลด</button>", ">Download</button>"],
+    ["\"ไม่พบ B/L เริ่มต้น \" + from + \" (บรรทัด H02) ในไฟล์\" : \"ไม่พบบรรทัด H02 ในไฟล์\"", "\"Start B/L \" + from + \" (H02 line) not found in the file\" : \"No H02 line in the file\""],
+    ["\"ไม่พบ B/L \" + to + \" ในไฟล์หลัง B/L เริ่มต้น \" + (from || \"(H02 แรก)\")", "\"B/L \" + to + \" not found after the start B/L \" + (from || \"(first H02)\")"],
+    ["\"ไม่พบบรรทัด H02 ในไฟล์\"", "\"No H02 line in the file\""],
+    ["\"ไม่พบ B/L ในไฟล์: \"", "\"B/Ls not found in the file: \""],
+    ["\"ใช้ได้ทีละแบบ: ใส่ช่อง เริ่มตัด / ถึง B/L หรือช่อง เก็บเฉพาะ B/L อย่างใดอย่างหนึ่ง\"", "\"One mode at a time: fill in Cut from / To B/L or Keep only these B/Ls, not both\""],
+    ["\"B/L ที่ตัดออก\"", "\"B/Ls cut\""],
+    ["\"B/L ที่เหลือ\"", "\"B/Ls left\""],
+    ["\"H05 ที่แก้\"", "\"H05 changed\""],
+    ["\"บรรทัดที่ตัดออก\"", "\"Lines cut\""],
+    ["\"บรรทัดที่เหลือ\"", "\"Lines left\""],
+    ["\"ขนาดไฟล์ (ไบต์)\"", "\"File size (bytes)\""],
+    ["\"ไม่ได้ตัด (เว้นว่างทุกช่อง) แก้ H05 / H07 อย่างเดียว\"", "\"Not cut (all boxes empty), H05 / H07 fixed only\""],
+    ["`เก็บเฉพาะ B/L ${esc(left.map(b => b.bl).join(\", \"))} · ตัด B/L อื่นออก ${gone.length} ตัว`", "`Kept only B/L ${esc(left.map(b => b.bl).join(\", \"))} · cut ${gone.length} other B/L(s)`"],
+    ["`ตัดบรรทัด ${r.firstLine}–${r.lastLine} ออก (B/L ${esc(gone[0].bl)} ถึง ${esc(gone[gone.length - 1].bl)})`", "`Cut lines ${r.firstLine}–${r.lastLine} (B/L ${esc(gone[0].bl)} to ${esc(gone[gone.length - 1].bl)})`"],
+    ["${what} · เหลือ ${r.kept} จาก ${r.total} บรรทัด รวมหัวไฟล์ HOU / H01 · ไฟล์ ${esc(outName)}", "${what} · ${r.kept} of ${r.total} lines left, including the HOU / H01 header · file ${esc(outName)}"],
+    ["H05 = ชื่อจาก H06 (เว้นวรรค 1 เคาะ): แก้ ${fx.rep.h05.length} B/L", "H05 = name from H06 (single-spaced): changed ${fx.rep.h05.length} B/L"],
+    [" · ตรงอยู่แล้ว ${fx.rep.same} B/L · TRANSIT / TRANSHIPMENT (H05 / H06 คงเดิม): ", " · already correct ${fx.rep.same} B/L · TRANSIT / TRANSHIPMENT (H05 / H06 kept): "],
+    [": \"ไม่มี\"} · H07 PG → PX: ", ": \"none\"} · H07 PG → PX: "],
+    [": \"ไม่มี\"}</div>`", ": \"none\"}</div>`"],
+    ["H05 ไม่มี H06 (คงเดิม ตรวจสอบ): ", "H05 with no H06 (kept, please check): "],
+    ["ไม่เหลือ B/L ในไฟล์ (เหลือเฉพาะหัวไฟล์)", "No B/L left in the file (header only)"],
+    ["<th>บรรทัดในไฟล์ต้นฉบับ</th><th>ผล</th>", "<th>Line in the source file</th><th>Result</th>"],
+    ["\"ตัดออก\" : \"<b>เหลือ</b>\"", "\"cut\" : \"<b>kept</b>\""],
+    ["\"ดาวน์โหลด \" + outName", "\"Download \" + outName"],
+  ],
   "do.html": [
     ...COMMON,
     ["ไฟล์ DO / ATTACHED / ใบเปิดตู้ (.pdf) <small>ใส่ได้หลายไฟล์ เรียงให้เอง</small>", "DO / ATTACHED / ใบเปิดตู้ files (.pdf) <small>several files, sorted for you</small>"],
@@ -362,31 +400,6 @@ const FILES = {
 };
 
 // Thai that must stay: DO prints it on the D/O and uses it to detect filled pages.
-// MMAN LCH (repo 5-mman-vnsgn) shares most text with Change Status: its own pairs
-// first, then the Change Status pairs (marked shared, so they never report MISS).
-FILES["mman-lch.html"] = [
-  ...COMMON,
-  ...[
-    ["<title>MMAN LCH — ตัด + Change Status</title>", "<title>MMAN LCH — Cut + Change Status</title>"],
-    ["<h1>MMAN LCH — ตัด B/L + Change Status → MMAN_LCH.txt</h1>", "<h1>MMAN LCH — Cut B/Ls + Change Status → MMAN_LCH.txt</h1>"],
-    [">ตัด + Change status<", ">Cut + Change status<"],
-    ["เริ่มต้นเก็บ B/L … ถึง B/L: เก็บบรรทัด PSKV ไว้ แล้วเก็บเฉพาะตั้งแต่ B/L เริ่มต้นจนถึง B/L สุดท้ายที่กำหนด (รวม sub-B/L …A, …B และบรรทัดตู้ของ B/L นั้น) ที่เหลือตัดออก · เว้นว่างช่องเริ่มต้น = ตั้งแต่ B/L แรก · เว้นว่างช่องถึง = ถึงบรรทัดสุดท้าย · เว้นว่างทั้งสองช่อง = ไม่ตัด · SHED NO.: ใช้กับ THLCH ที่ไม่ใช่ DG (THLCH DG = 2826 · BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113) · ประมวลผลในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์", "Start B/L … End B/L: keeps the PSKV line, then keeps only the B/Ls from the start B/L to the end B/L (including sub-B/Ls …A, …B and their container lines); the rest is cut · Start empty = from the first B/L · End empty = to the last line · Both empty = no cut · SHED NO.: used for THLCH B/Ls that are not DG (THLCH DG = 2826 · BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113) · Processed in your browser, no file upload"],
-    ["<h2>ผลการตัดและเปลี่ยน Status</h2>", "<h2>Cut and Status change results</h2>"],
-    [">ดาวน์โหลด MMAN_LCH.txt<", ">Download MMAN_LCH.txt<"],
-    ["<b>ขั้นที่ 1 ตัด</b> — เก็บบรรทัดแรก (PSKV) เสมอ เก็บตั้งแต่ \"เริ่มต้นเก็บ B/L\" จนถึง \"ถึง B/L\" (รวม sub-B/L และบรรทัดตู้ของ B/L สุดท้าย) บรรทัดก่อนและหลังช่วงนี้ตัดออกทั้งหมด", "<b>Step 1 Cut</b> — always keeps the first line (PSKV), keeps from \"Start B/L\" to \"End B/L\" (including the sub-B/Ls and container lines of the last B/L); every line before and after this range is cut"],
-    ["<b>ขั้นที่ 2 Change status</b> (กับ B/L ที่เหลือ)", "<b>Step 2 Change status</b> (on the B/Ls kept)"],
-    ["col 41-45 = ท่าเรือของ B/L ส่วนใหญ่ในไฟล์ (เช่น THBKK, THLCH)", "col 41-45 = the port most B/Ls in the file have (e.g. THBKK, THLCH)"],
-    ["col 46-50 = ท่าเรือตามต้นฉบับ (THLCH, THLKR, …) คงเดิม ห้ามแก้", "col 46-50 = original port (THLCH, THLKR, …), kept unchanged"],
-    ["col 51-54 = Shed ตามท่าต้นฉบับ: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THLCH ที่เป็น DG (มี UN/CLASS) 2826 · THBKK ที่ไป LAOS 0124 · ที่เหลือตามช่อง SHED NO.", "col 51-54 = Shed by original port: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THLCH DG (with UN/CLASS) 2826 · THBKK to LAOS 0124 · the rest from the SHED NO. box"],
-    ["B/L ในคอลัมน์ A ครอบคลุม sub-B/L ด้วย (…462A, …462B) · หลังตัดแล้ว ความยาวบรรทัดและการขึ้นบรรทัด (CRLF) คงเดิมทุกไบต์", "A B/L in column A also covers its sub-B/Ls (…462A, …462B) · After cutting, line lengths and line breaks (CRLF) stay byte-for-byte the same"],
-    ["\"B/L ที่มี Status\"", "\"B/Ls with a Status\""],
-    ["`ตัดออก ${rep.cut.removed} บรรทัด (${rep.cut.total} → ${rep.cut.kept} บรรทัด) · ` : \"ไม่ได้ตัด (ไม่ได้ระบุ B/L) · \"", "`Cut ${rep.cut.removed} lines (${rep.cut.total} → ${rep.cut.kept} lines) · ` : \"Not cut (no B/L given) · \""],
-    ["${cutTxt}ขนาดไฟล์ ${outBytes.length.toLocaleString()} ไบต์ · ", "${cutTxt}File size ${outBytes.length.toLocaleString()} bytes · "],
-    [" · ชื่อตาม col 1672: แก้ ${rep.names.changed.length} B/L", " · Names per col 1672: changed ${rep.names.changed.length} B/L"],
-  ],
-  ...FILES["change-status.html"].filter(p => p !== COMMON).map(([a, b]) => [a, b, "shared"]),
-];
-
 // DO reads the Thai ใบเปิดตู้ / คำร้อง forms and types Thai STATUS values onto them.
 const KEEP_TH = [/เปิดตู้คอนเทนเนอร์/, /อารักขาของศุลกากร/, /"CFS \(เปิดตู้\)"/, /เริ่มเก็บค่า/, /document\.fonts\.load/, /await center\(X/, /thaiImage\(doc/];
 // Thai form names kept as-is inside the English text (the forms are only ever called this)

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MMAN LCH - Guide</title>
+<title>CUT BL - Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
 <style>
@@ -118,35 +118,35 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
 
 <div class="wrap">
   <header class="head">
-    <div class="tag">EDI file editing · MMAN</div>
-    <h1>MMAN LCH</h1>
-    <p class="lede">Keeps only the B/L range you need, then applies Change Status from the list, in one step, giving MMAN_LCH.txt. Runs in your browser; no file is uploaded</p>
+    <div class="tag">EDI file editing · HMAN</div>
+    <h1>CUT BL</h1>
+    <p class="lede">Cuts a range of B/Ls out of an HMAN file (.txt), or keeps only the B/Ls you list, then fixes H05 / H07 on every B/L left, giving <code>filename_PORTAL.txt</code>. Runs in your browser; no file is uploaded</p>
     <div class="flow" aria-label="How it works">
-      <span class="doc">MMAN_*.txt</span><span class="op">+</span><span class="doc">STATUS .xls</span><span class="op">→</span><span class="out">MMAN_LCH.txt</span>
+      <span class="doc">KMGY_2608S__THLCH_HMAN95.txt</span><span class="op">→</span><span class="out">KMGY_2608S_PORTAL.txt</span>
     </div>
     <div class="cta">
-      <a class="btn primary" href="../#mman-lch">Use it online (nothing to install)</a>
-      <a class="btn ghost" href="https://github.com/Rattanao/5-mman-vnsgn">Open on GitHub</a>
+      <a class="btn primary" href="../#cut-bl">Use it online (nothing to install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/CUT-BL">Open on GitHub</a>
     </div>
   </header>
 
-  <section class="panel" id="cut">
-    <h2>Step 1 Cut</h2>
+  <section class="panel" id="modes">
+    <h2>Two modes (one at a time)</h2>
     <ul class="check-list">
-      <li>Always keeps the first line (PSKV), then keeps from <b>Start B/L</b> to <b>End B/L</b> (including sub-B/Ls …A, …B and the container lines of the last B/L); lines before and after are cut</li>
-      <li>Start empty = from the first B/L · End empty = to the last line · both empty = no cut</li>
-      <li>After cutting, line lengths and line breaks (CRLF) stay byte-for-byte the same</li>
+      <li><b>Mode 1, cut a range</b> — fill in <b>Cut from B/L</b> and <b>To B/L</b>: deletes from the H02 line of the first B/L to the last line (H03 … H10) of the last B/L, including sub-B/Ls …A, …B · first box empty = from the first H02 · second box empty = to the last line</li>
+      <li><b>Mode 2, keep only some B/Ls</b> — list the B/Ls to keep in <b>Or keep only these B/Ls</b>, separated by , or new lines, e.g. <code>HASLJ01260800588,HASLK02261000346</code> (with their sub-B/Ls); every other B/L is cut</li>
+      <li>All boxes empty = no cut, H05 / H07 fixed only · type <code>HASLC…</code> or <code>H02HASLC…</code></li>
     </ul>
   </section>
 
-  <section class="panel" id="status">
-    <h2>Step 2 Change status (on the B/Ls kept)</h2>
+  <section class="panel" id="fix">
+    <h2>What is fixed on every B/L left</h2>
     <ul class="check-list">
-      <li>col 36-40 = POL (column C) · col 41-45 = the port most B/Ls in the file have · col 46-50 = original port, unchanged</li>
-      <li>col 51-54 = Shed by original port: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THLCH DG 2826 · THBKK to LAOS 0124 · the rest from the SHED NO. box</li>
-      <li>col 844-845 = first 2 letters of the POL in place of TH · container lines = Status from column B (e.g. 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N)</li>
-      <li>PG → PX on every B/L · letter O before the description (col 3804) → 5 only for B/Ls with Status 9&nbsp;&nbsp;N</li>
-      <li>Consignee / notify names = the notify name at col 1672, single-spaced · except TRANSIT/TRANSHIPMENT, which are kept and get the destination country at col 1670</li>
+      <li><b>H05</b> (consignee) = the same name as <b>H06</b> (notify), single-spaced only · H06 unchanged</li>
+      <li>Except <b>TRANSIT / TRANSHIPMENT</b> B/Ls (including INTRANSIT): H05 / H06 are never changed</li>
+      <li><b>H07</b> package unit PG → PX</li>
+      <li>The <b>HOU / H01</b> header lines are always kept (without them the ECS program says invalid MMAN Text File)</li>
+      <li>Output file name = the source file name before <code>__</code> plus <code>_PORTAL</code></li>
     </ul>
   </section>
 
@@ -156,17 +156,17 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
       <table class="trouble">
         <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
         <tbody>
-          <tr><td>Start B/L … not found</td><td>Check the B/L number exists in the MMAN file and is typed in full</td></tr>
-          <tr><td>B/L not in the list</td><td>That B/L is not in the STATUS file, so it was not changed — add it to the list if needed</td></tr>
-          <tr><td>Unusual column positions</td><td>The MMAN file may not be the standard layout; check before use</td></tr>
+          <tr><td>Start B/L … not found in the file</td><td>Check the B/L number exists in the HMAN file and is typed in full</td></tr>
+          <tr><td>One mode at a time</td><td>Fill in Cut from / To B/L or Keep only, not both</td></tr>
+          <tr><td>H05 with no H06</td><td>That B/L has no H06 line, so H05 was kept — check the file</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
   <footer>
-    <p>Always check the sample changed lines before sending the file</p>
-    <p>Code: <a href="https://github.com/Rattanao/5-mman-vnsgn">github.com/Rattanao/5-mman-vnsgn</a></p>
+    <p>Always check the table of cut / kept B/Ls before sending the file</p>
+    <p>Code: <a href="https://github.com/Rattanao/CUT-BL">github.com/Rattanao/CUT-BL</a></p>
   </footer>
 </div>
 

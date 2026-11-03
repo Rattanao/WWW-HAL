@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MMAN LCH - คู่มือ</title>
+<title>CUT BL - คู่มือ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
 <style>
@@ -118,35 +118,35 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
 
 <div class="wrap">
   <header class="head">
-    <div class="tag">เครื่องมือแก้ไฟล์ EDI · MMAN</div>
-    <h1>MMAN LCH</h1>
-    <p class="lede">ตัดเก็บเฉพาะช่วง B/L ที่ต้องการ แล้ว Change Status ตามรายการในขั้นตอนเดียว ได้ไฟล์ MMAN_LCH.txt ทำงานในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์</p>
+    <div class="tag">เครื่องมือแก้ไฟล์ EDI · HMAN</div>
+    <h1>CUT BL</h1>
+    <p class="lede">ตัด B/L ออกจากไฟล์ HMAN (.txt) เป็นช่วง หรือเก็บเฉพาะ B/L ที่ต้องการ แล้วแก้ H05 / H07 ให้ทุก B/L ที่เหลือ ได้ไฟล์ <code>ชื่อไฟล์_PORTAL.txt</code> ทำงานในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์</p>
     <div class="flow" aria-label="ขั้นตอนการทำงาน">
-      <span class="doc">MMAN_*.txt</span><span class="op">+</span><span class="doc">STATUS .xls</span><span class="op">→</span><span class="out">MMAN_LCH.txt</span>
+      <span class="doc">KMGY_2608S__THLCH_HMAN95.txt</span><span class="op">→</span><span class="out">KMGY_2608S_PORTAL.txt</span>
     </div>
     <div class="cta">
-      <a class="btn primary" href="../#mman-lch">ใช้งานออนไลน์ (ไม่ต้องติดตั้ง)</a>
-      <a class="btn ghost" href="https://github.com/Rattanao/5-mman-vnsgn">เปิดหน้า GitHub</a>
+      <a class="btn primary" href="../#cut-bl">ใช้งานออนไลน์ (ไม่ต้องติดตั้ง)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/CUT-BL">เปิดหน้า GitHub</a>
     </div>
   </header>
 
-  <section class="panel" id="cut">
-    <h2>ขั้นที่ 1 ตัด</h2>
+  <section class="panel" id="modes">
+    <h2>2 แบบ (ใช้ได้ทีละแบบ)</h2>
     <ul class="check-list">
-      <li>เก็บบรรทัดแรก (PSKV) เสมอ แล้วเก็บตั้งแต่ <b>Start B/L</b> ถึง <b>End B/L</b> (รวม sub-B/L …A, …B และบรรทัดตู้ของ B/L สุดท้าย) บรรทัดก่อนและหลังช่วงนี้ตัดออก</li>
-      <li>ว่างช่อง Start = ตั้งแต่ B/L แรก · ว่างช่อง End = ถึงบรรทัดสุดท้าย · ว่างทั้งสองช่อง = ไม่ตัด</li>
-      <li>หลังตัด ความยาวบรรทัดและการขึ้นบรรทัด (CRLF) คงเดิมทุกไบต์</li>
+      <li><b>แบบที่ 1 ตัดช่วง</b> — ใส่ <b>Cut from B/L</b> และ <b>To B/L</b>: ลบตั้งแต่บรรทัด H02 ของ B/L แรก จนถึงบรรทัดสุดท้าย (H03 … H10) ของ B/L สุดท้าย รวม sub-B/L …A, …B · ว่างช่องแรก = ตั้งแต่ H02 แรก · ว่างช่องหลัง = ถึงบรรทัดสุดท้าย</li>
+      <li><b>แบบที่ 2 เก็บเฉพาะ B/L</b> — ใส่ B/L ที่ต้องการเก็บในช่อง <b>Or keep only these B/Ls</b> คั่นด้วย , หรือขึ้นบรรทัดใหม่ เช่น <code>HASLJ01260800588,HASLK02261000346</code> (รวม sub-B/L) B/L อื่นตัดทิ้งทั้งหมด</li>
+      <li>ว่างทุกช่อง = ไม่ตัด แก้ H05 / H07 อย่างเดียว · พิมพ์ <code>HASLC…</code> หรือ <code>H02HASLC…</code> ก็ได้</li>
     </ul>
   </section>
 
-  <section class="panel" id="status">
-    <h2>ขั้นที่ 2 Change status (กับ B/L ที่เหลือ)</h2>
+  <section class="panel" id="fix">
+    <h2>สิ่งที่แก้ในทุก B/L ที่เหลือ</h2>
     <ul class="check-list">
-      <li>col 36-40 = POL (คอลัมน์ C) · col 41-45 = ท่าเรือของ B/L ส่วนใหญ่ในไฟล์ · col 46-50 = ท่าเรือตามต้นฉบับ คงเดิม</li>
-      <li>col 51-54 = Shed ตามท่าต้นฉบับ: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THLCH DG 2826 · THBKK ที่ไป LAOS 0124 · ที่เหลือตามช่อง SHED NO.</li>
-      <li>col 844-845 = อักษร 2 ตัวแรกของ POL แทน TH · บรรทัดตู้ = Status จากคอลัมน์ B (เช่น 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N)</li>
-      <li>PG → PX ทุก B/L · ตัวอักษร O หน้า description (col 3804) → 5 เฉพาะ B/L ที่ Status 9&nbsp;&nbsp;N</li>
-      <li>ชื่อ consignee / notify = ตามชื่อ notify ที่ col 1672 เว้นวรรค 1 เคาะ · ยกเว้น TRANSIT/TRANSHIPMENT คงเดิม และใส่ประเทศปลายทางที่ col 1670</li>
+      <li><b>H05</b> (consignee) = ชื่อเดียวกับ <b>H06</b> (notify) เว้นวรรค 1 เคาะเท่านั้น · H06 คงเดิม</li>
+      <li>ยกเว้น B/L <b>TRANSIT / TRANSHIPMENT</b> (รวม INTRANSIT) ห้ามแก้ H05 / H06</li>
+      <li><b>H07</b> หน่วยหีบห่อ PG → PX</li>
+      <li>บรรทัดหัวไฟล์ <b>HOU / H01</b> เก็บไว้เสมอ (ถ้าไม่มี โปรแกรม ECS จะขึ้น invalid MMAN Text File)</li>
+      <li>ชื่อไฟล์ที่ได้ = ชื่อไฟล์ต้นฉบับก่อน <code>__</code> ตามด้วย <code>_PORTAL</code></li>
     </ul>
   </section>
 
@@ -156,17 +156,17 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
       <table class="trouble">
         <thead><tr><th>ข้อความ / อาการ</th><th>วิธีแก้</th></tr></thead>
         <tbody>
-          <tr><td>Start B/L … not found</td><td>ตรวจเลข B/L ว่ามีในไฟล์ MMAN และพิมพ์ครบ</td></tr>
-          <tr><td>B/L not in the list</td><td>B/L นั้นไม่มีในไฟล์ STATUS จึงไม่ได้แก้ — เพิ่มในรายการถ้าต้องแก้</td></tr>
-          <tr><td>Unusual column positions</td><td>ไฟล์ MMAN อาจไม่ใช่รูปแบบมาตรฐาน ตรวจก่อนใช้</td></tr>
+          <tr><td>Start B/L … not found in the file</td><td>ตรวจเลข B/L ว่ามีในไฟล์ HMAN และพิมพ์ครบ</td></tr>
+          <tr><td>One mode at a time</td><td>ใส่ช่อง Cut from / To B/L หรือช่อง Keep only อย่างใดอย่างหนึ่ง</td></tr>
+          <tr><td>H05 with no H06</td><td>B/L นั้นไม่มีบรรทัด H06 จึงคง H05 เดิม — ตรวจในไฟล์</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
   <footer>
-    <p>ตรวจตัวอย่างบรรทัดที่แก้ก่อนส่งไฟล์ทุกครั้ง</p>
-    <p>ดูโค้ดที่ <a href="https://github.com/Rattanao/5-mman-vnsgn">github.com/Rattanao/5-mman-vnsgn</a></p>
+    <p>ตรวจตาราง B/L ที่ตัด / ที่เหลือ ก่อนส่งไฟล์ทุกครั้ง</p>
+    <p>ดูโค้ดที่ <a href="https://github.com/Rattanao/CUT-BL">github.com/Rattanao/CUT-BL</a></p>
   </footer>
 </div>
 
