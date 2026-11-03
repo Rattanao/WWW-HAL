@@ -263,6 +263,10 @@ const FILES = {
     ["`บันทึกทับ \"${f.name}\" ไม่ได้: ${err.message} — ใช้ปุ่มดาวน์โหลดแทน`", "`Cannot save over \"${f.name}\": ${err.message} — use the download button instead`"],
     ["\"-แก้ไข.pdf\"", "\"-fixed.pdf\""],
     ['href="guide-do.html"', 'href="guide-do-en.html"'],
+    ['>คู่มือ</a></div></nav>', '>Guide</a></div></nav>'],   // ① CHECK DEM → ② DO step bar
+    ["(จากหน้า CHECK DEM ${when} น.", "(from the CHECK DEM page, ${when}"],
+    ["ได้ CHECK DEM ใหม่จากขั้นที่ 1 — ประมวลผลใหม่แล้ว", "New CHECK DEM received from step 1 — processed again"],
+    ["ได้ CHECK DEM จากขั้นที่ 1 แล้ว — ใส่ไฟล์ DO / ATTACHED / ใบเปิดตู้ ต่อได้เลย", "CHECK DEM received from step 1 — now add the DO / ATTACHED / ใบเปิดตู้ files"],
     ["เติมวันเริ่มเก็บค่า DEM / ค่าไฟ / SPECIAL CONTAINER ลงในใบ D/O", "Add DEM / power charge start dates and SPECIAL CONTAINER to the D/O"],
     ["ไฟล์ CHECK DEM (.xlsx) <small>ไม่ใส่ก็ได้</small>", "CHECK DEM file (.xlsx) <small>optional</small>"],
     [">DEM. วันที่<", ">DEM. date<"],
@@ -398,6 +402,17 @@ const FILES = {
     ['"บันทึกลายเซ็นในเบราว์เซอร์นี้ไม่ได้"', '"Cannot save the signature in this browser"'],
   ],
 };
+
+// DO's own step ① CHECK DEM page (DO repo checkdem.html): the Check-dem page plus a hand-off to DO
+FILES["do-checkdem.html"] = [
+  ...FILES["check-dem.html"].filter(([from]) => !from.includes("guide-check-dem")),
+  ['href="guide-do.html"', 'href="guide-do-en.html"'],
+    ['>คู่มือ</a></div></nav>', '>Guide</a></div></nav>'],   // ① CHECK DEM → ② DO step bar
+  ['>คู่มือ</a> · CHECK DEM จาก <a', '>Guide</a> · CHECK DEM from <a'],
+  ['<button id="toDo">ใช้กับ DO ต่อ →</button>', '<button id="toDo">Continue to DO →</button>'],
+  ["✓ ส่ง CHECK DEM (${report.data.length} B/L) ไปหน้า ② DO แล้ว — เปิดหน้า DO ได้เลย", "✓ CHECK DEM (${report.data.length} B/L) sent to ② DO — you can open the DO page now"],
+  ["ส่งต่อไม่ได้ในเบราว์เซอร์นี้ — Download CHECK DEM.xlsx แล้วใส่ในหน้า DO แทน", "Cannot pass it on in this browser — download CHECK DEM.xlsx and add it on the DO page instead"],
+];
 
 // Thai that must stay: DO prints it on the D/O and uses it to detect filled pages.
 // DO reads the Thai ใบเปิดตู้ / คำร้อง forms and types Thai STATUS values onto them.

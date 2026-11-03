@@ -137,13 +137,15 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
     <h1>DO</h1>
     <p class="lede">Adds the demurrage start date, the power charge start date and SPECIAL CONTAINER to the bottom of every page of a Cargo Delivery Order in one go. Dates come from CHECK DEM or are typed in, and you get files ready to print in 2 sets.</p>
     <div class="flow" aria-label="Workflow">
+      <span class="doc">Freedays.xls + ATA</span><span class="op">→ ① CHECK DEM →</span>
       <span class="doc">DO.pdf</span><span class="op">+</span>
-      <span class="doc">CHECK DEM.xlsx</span><span class="op">→</span>
+      <span class="doc">CHECK DEM.xlsx</span><span class="op">→ ② DO →</span>
       <span class="out">DO-DEM.pdf</span><span class="op">+</span>
       <span class="out">DO-DEM-PRINT x 2.pdf</span>
     </div>
     <div class="cta">
-      <a class="btn primary" href="../#do">Use online (no install)</a>
+      <a class="btn primary" href="do-checkdem.html">① CHECK DEM online</a>
+      <a class="btn primary" href="../#do">② DO online</a>
       <a class="btn ghost" href="https://github.com/Rattanao/DO/archive/refs/heads/main.zip">Download the program (ZIP)</a>
       <a class="btn ghost" href="https://github.com/Rattanao/DO">Open on GitHub</a>
     </div>
@@ -154,7 +156,11 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
     <p class="sub">Nothing to install. Files are processed in the browser of the computer you are using and are not uploaded anywhere</p>
     <ol class="steps">
       <li><div>
-        <p><b>Drag in the DO / ATTACHED / ใบเปิดตู้ files (.pdf)</b>; several files in any order. The page merges them per B/L as DO → ATTACHED → ใบเปิดตู้ → คำร้อง</p>
+        <p><b>① CHECK DEM</b> (step bar at the top of the page): drag in the Freedays file (.xls / .xlsx), enter the ATA date and click <b>Calculate</b></p>
+        <p class="note">When it is done, the result is sent to the ② DO page by itself, with no download and re-upload. Click <b>Continue to DO →</b> to go to the DO page (a DO page already open in another tab picks it up and processes again by itself)</p>
+      </div></li>
+      <li><div>
+        <p><b>② DO: drag in the DO / ATTACHED / ใบเปิดตู้ files (.pdf)</b>; several files in any order. The page merges them per B/L as DO → ATTACHED → ใบเปิดตู้ → คำร้อง</p>
         <p class="note"><code>CHECK DEM.xlsx</code> is optional. Without it, fill in <b>DEM. date</b> and/or <b>Power charge date</b> yourself</p>
       </div></li>
       <li><div>

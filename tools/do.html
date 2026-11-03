@@ -75,6 +75,11 @@
   .hidden { display: none; }
   footer { text-align: center; color: var(--muted); font-size: 13px; padding-bottom: 24px; }
   footer a { color: var(--navy); }
+  .stepnav { background: #fff; border-bottom: 1px solid var(--line); }
+  .stepnav .wrap { display: flex; gap: 6px; align-items: center; padding: 8px 16px; flex-wrap: wrap; }
+  .stepnav a { text-decoration: none; color: var(--navy); font-weight: 600; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); }
+  .stepnav a.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .stepnav span { color: var(--muted); }
   h2.ct { margin: 0 0 12px; font-size: 19px; color: var(--navy); }
   .chk { margin-bottom: 14px; }
   .chk h3 { margin: 0 0 6px; font-size: 16px; }
@@ -90,6 +95,8 @@
 </head>
 <body>
 <header><div class="wrap"><span class="brand"><img src="assets/hal-logo-hd.png" alt="Heung A Line"></span><h1>DO</h1><p>Add DEM / power charge start dates and SPECIAL CONTAINER to the D/O</p><span class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.</span></div></header>
+
+<nav class="stepnav"><div class="wrap"><a href="do-checkdem.html">① CHECK DEM</a><span>→</span><a href="do.html" class="on">② DO</a><span style="margin-left:auto"></span><a href="guide-do-en.html">Guide</a></div></nav>
 
 <main class="wrap">
   <section class="card">
@@ -165,7 +172,7 @@
     <div class="preview hidden" id="preview"><p id="previewText"></p><canvas id="canvas"></canvas></div>
   </section>
 </main>
-<footer><a href="guide-do-en.html">Guide / Download program</a> · <a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a> · Version 2026-11-02d</footer>
+<footer><a href="guide-do-en.html">Guide / Download program</a> · <a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a> · Version 2026-11-03b</footer>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -879,7 +886,21 @@ $("chips").onclick = e => {
 };
 $("tbody").onclick = e => { const tr = e.target.closest("tr"); if (tr && e.target.tagName !== "INPUT") preview(+tr.dataset.p); };
 // new job = empty form: the browser must not bring back dates from the last visit (reload / back button)
-addEventListener("pageshow", () => { clearAll(); $("size").value = "15.5"; });
+// step 1 → step 2: the CHECK DEM page sends every finished result here by itself (localStorage "doCheckDem").
+// Taken once (then removed); results older than 12 hours are ignored. If DO files are already in, they are redone.
+async function takeCheckDem() {
+  let got = null;
+  try { got = JSON.parse(localStorage.getItem("doCheckDem") || "null"); localStorage.removeItem("doCheckDem"); } catch { }
+  if (!got || !got.b64 || Date.now() - (got.at || 0) > 12 * 3600e3) return;
+  xlsFile = { name: got.name, bytes: Uint8Array.from(atob(got.b64), c => c.charCodeAt(0)) };
+  const when = new Date(got.at).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" });
+  $("xlsText").innerHTML = `<b>${escapeHtml(got.name)}</b> (from the CHECK DEM page, ${when}${got.bls ? ` · ${got.bls} B/L` : ""})`;
+  update();
+  if (pdfFiles.length) { await run(true); $("msg").textContent = ["New CHECK DEM received from step 1 — processed again", $("msg").textContent].filter(Boolean).join(" · "); }
+  else $("msg").textContent = "CHECK DEM received from step 1 — now add the DO / ATTACHED / ใบเปิดตู้ files";
+}
+addEventListener("pageshow", () => { clearAll(); $("size").value = "15.5"; takeCheckDem(); });
+addEventListener("storage", e => { if (e.key === "doCheckDem" && e.newValue) takeCheckDem(); });   // DO page already open in another tab
 </script>
 </body>
 </html>
