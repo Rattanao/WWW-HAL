@@ -236,7 +236,7 @@ function render() {
 }
 
 // ---------- export (same layout as check_dem.py) ----------
-async function download() {
+async function buildXlsx() {
   const { ata, data, colors, header, name } = report;
   const FONT = "Tahoma";
   const wb = new ExcelJS.Workbook();
@@ -326,7 +326,11 @@ async function download() {
   ws.autoFilter = { from: { row: hr, column: 1 }, to: { row: hr + data.length, column: ncol } };
   ws.pageSetup.printTitlesRow = `${hr}:${hr}`;
 
-  const buf = await wb.xlsx.writeBuffer();
+  return wb.xlsx.writeBuffer();
+}
+
+async function download() {
+  const buf = await buildXlsx();
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
   a.download = OUTPUT_NAME;
@@ -350,5 +354,6 @@ $("chips").onclick = e => {
   hidden.has(k) ? hidden.delete(k) : hidden.add(k); render();
 };
 </script>
+<script src="do-handoff.js" data-step="0"></script>
 </body>
 </html>

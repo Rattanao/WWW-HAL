@@ -32,7 +32,7 @@
       ["ลากไฟล์ <b>Freedays</b> (.xls / .xlsx) มาวาง", "Drop the <b>Freedays</b> file (.xls / .xlsx) here"],
       ["ใส่วันที่เรือเข้า <b>ATA</b>", "Enter the vessel arrival date <b>ATA</b>"],
       ["กด <b>Calculate</b>", "Click <b>Calculate</b>"],
-      ["ตรวจวัน DEM. / REC. ในตาราง แล้วกด <b>Download CHECK DEM.xlsx</b> (ใช้ต่อในเครื่องมือ DO)", "Check the DEM. / REC. dates in the table, then click <b>Download CHECK DEM.xlsx</b> (used next in the DO tool)"],
+      ["ตรวจวัน DEM. / REC. ในตาราง ผลถูกส่งไปหน้า DO ให้เอง กด <b>Go to DO →</b> เพื่อทำ DO ต่อ (หรือกด <b>Download CHECK DEM.xlsx</b> เก็บไว้)", "Check the DEM. / REC. dates in the table. The result is sent to DO by itself: click <b>Go to DO →</b> to carry on in DO (or <b>Download CHECK DEM.xlsx</b> to keep a copy)"],
       ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
     ],
     "change-status": [

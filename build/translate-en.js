@@ -310,6 +310,9 @@ const FILES = {
   ],
 };
 
+// DO's step ① page is built from the Check-dem page (build/sync.js doHandoff)
+FILES["do-checkdem.html"] = FILES["check-dem.html"];
+
 // Thai that must stay: DO prints it on the D/O and uses it to detect filled pages.
 // DO reads the Thai ใบเปิดตู้ / คำร้อง forms and types Thai STATUS values onto them.
 const KEEP_TH = [/เปิดตู้คอนเทนเนอร์/, /อารักขาของศุลกากร/, /"CFS \(เปิดตู้\)"/, /เริ่มเก็บค่า/, /document\.fonts\.load/, /await center\(X/, /thaiImage\(doc/];
