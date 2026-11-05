@@ -3,23 +3,10 @@
 //  2. ปุ่ม "ลบไฟล์" ข้างปุ่มประมวลผล สำหรับเครื่องมือที่ยังไม่มี
 //  3. ตรวจการเข้าสู่ระบบ (auth.js) เมื่อเว็บถูกล็อค
 
-// เมนู Check DEM เปิดหน้า ① CHECK DEM ของ DO (do-checkdem.html): เมื่อกด "② DO" / "Go to DO →" ให้ไปแท็บ DO ของเว็บรวม
-// แทนการเปิด DO ซ้ำในแท็บ Check DEM (หยุดหน้านี้ก่อนสคริปต์ DO รับผล CHECK DEM ไป แล้วแท็บ DO รับแทน)
-const HAL_AWAY = (function () {
-  const me = window.frameElement;
-  if (!me || me.dataset.id !== "check-dem" || !/\/do\.html$/.test(location.pathname)) return false;
-  window.stop();
-  const top = window.top, f = top.document.querySelector('iframe[data-id="do"]');
-  try { if (f && !/\/do\.html$/.test(f.contentWindow.location.pathname)) f.contentWindow.location.href = "do.html"; } catch (e) { }
-  top.location.hash = "do";
-  location.replace("do-checkdem.html");
-  return true;
-})();
-
 // โหลดแบบ synchronous ระหว่างอ่าน <head> เพื่อให้ตรวจก่อนหน้าเครื่องมือแสดง
-if (!HAL_AWAY) document.write('<script src="auth.js"><\/script><script>HAL_AUTH.guard()<\/script>');
+document.write('<script src="auth.js"><\/script><script>HAL_AUTH.guard()<\/script>');
 
-if (!HAL_AWAY) (function () {
+(function () {
   const root = document.documentElement;
   if (window.self !== window.top) {
     root.classList.add("embedded");

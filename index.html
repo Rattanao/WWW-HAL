@@ -157,7 +157,6 @@ const ICON = {
 const GROUPS = [
   { name: "Document checks", tools: [
     { id: "check-cntrs", title: "Check CNTRS", desc: "Compare MANIFEST with CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK", src: "tools/check-cntrs.html", guide: "tools/guide-check-cntrs-en.html", icon: "check" },
-    { id: "check-dem",   title: "Check DEM",   desc: "Find the DEM start date and the REC. date from Freedays + ATA", src: "tools/do-checkdem.html", guide: "tools/guide-do.html", icon: "clock" }
   ]},
   { name: "EDI file editing", tools: [
     { id: "change-status", title: "Change Status", desc: "MMAN × STATUS → MMAN_EDI.txt · can cut a B/L range (start–end)", src: "tools/change-status.html", guide: "tools/guide-change-status-en.html", icon: "swap" },
@@ -187,7 +186,8 @@ document.querySelectorAll(".group-head").forEach(b =>
 
 // เปิดเครื่องมือตาม hash; iframe ถูกสร้างครั้งเดียวแล้วซ่อน/แสดง เพื่อให้งานที่ทำค้างไว้ไม่หาย
 function show() {
-  const t = TOOLS.find(t => t.id === location.hash.slice(1)) || TOOLS[0];
+  const id = { "check-dem": "do" }[location.hash.slice(1)] || location.hash.slice(1);   // Check DEM is DO step ① since 2026-11-05
+  const t = TOOLS.find(t => t.id === id) || TOOLS[0];
   $("crumb").innerHTML = `${t.group} › ${t.title}${t.guide ? `<a class="guide" href="${t.guide}" target="_blank" rel="noopener">Guide</a>` : ""}<small>${t.desc}</small>`;
   document.title = t.title + " · EDI Tools";
   document.querySelectorAll(".item").forEach(a => a.classList.toggle("active", a.dataset.id === t.id));

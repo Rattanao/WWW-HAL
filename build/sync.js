@@ -9,8 +9,8 @@
 // Thai guide is reported as "GUIDE CHANGED" so the English one can be updated.
 // pages: more pages of the same repo (repo file -> tools/ file); links between them, and "./" back to the
 // main page, are rewritten so they stay inside tools/.
-// Check-dem is not synced: since 2026-11-05 that repo only redirects to DO's checkdem.html, so the Check DEM
-// menu item opens tools/do-checkdem.html (embed.js sends its "② DO" to the DO tab).
+// Check-dem is not synced: since 2026-11-05 that repo only redirects to DO's checkdem.html (DO step ①);
+// the Check DEM menu item was removed at the user's request (#check-dem opens DO).
 // To remove a tool, delete it here and from GROUPS in index.html; to add one, add both.
 const fs = require("fs"), path = require("path");
 const ROOT = path.join(__dirname, ".."), TOOLS = path.join(ROOT, "tools");
