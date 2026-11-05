@@ -12,7 +12,6 @@
 
   var PICS = {
     "check-cntrs": { w: 982, h: 255, marks: [[1,4.99,26.27,70.71,16.47],[2,77.12,33.33,7.12,14.12],[4,85.26,33.33,9.75,14.12]] },
-    "check-dem": { w: 982, h: 206, marks: [[1,4.99,34.06,45.55,20.44],[2,51.55,32.6,22.4,21.9],[3,74.98,36.98,9.27,17.52],[5,85.26,36.98,9.75,17.52]] },
     "change-status": { w: 982, h: 643, marks: [[1,4.89,11.66,26.68,4.35],[2,4.89,26.2,26.68,4.35],[3,4.89,40.74,44.6,6.37],[4,4.89,63.59,90.22,5.29],[5,4.89,49.91,44.5,6.06],[7,50.41,49.91,44.7,6.06]] },
     "cut-bl": { w: 982, h: 670, marks: [[1,4.89,11.19,26.68,4.18],[2,4.89,25.13,90.22,5.07],[3,4.89,58.4,90.22,9.96],[4,4.89,45.27,44.5,5.82],[6,50.41,45.27,44.7,5.82]] },
     "bayplan": { w: 982, h: 595, marks: [[1,4.89,12.78,90.22,7.06],[2,4.89,32.95,90.22,7.06],[3,22.91,42.7,22.81,5.72],[4,4.89,74.68,8.59,6.22],[5,85.32,74.51,9.79,6.56]] },
@@ -26,13 +25,6 @@
       ["ลากไฟล์ <b>MANIFEST</b> และ <b>CNTRS</b> (.xls / .xlsx / .pdf) มาวางพร้อมกัน", "Drop the <b>MANIFEST</b> and <b>CNTRS</b> files (.xls / .xlsx / .pdf) here together"],
       ["กด <b>Check</b>", "Click <b>Check</b>"],
       ["ดูผลในตาราง (ช่องที่ไม่ตรงขึ้นสี) แล้วกด <b>Download CNTRS_EDI.xlsx</b>", "Read the results table (mismatches are coloured), then click <b>Download CNTRS_EDI.xlsx</b>"],
-      ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
-    ],
-    "check-dem": [
-      ["ลากไฟล์ <b>Freedays</b> (.xls / .xlsx) มาวาง", "Drop the <b>Freedays</b> file (.xls / .xlsx) here"],
-      ["ใส่วันที่เรือเข้า <b>ATA</b>", "Enter the vessel arrival date <b>ATA</b>"],
-      ["กด <b>Calculate</b>", "Click <b>Calculate</b>"],
-      ["ตรวจวัน DEM. / REC. ในตาราง ผลถูกส่งไปหน้า DO ให้เอง กด <b>Go to DO →</b> เพื่อทำ DO ต่อ (หรือกด <b>Download CHECK DEM.xlsx</b> เก็บไว้)", "Check the DEM. / REC. dates in the table. The result is sent to DO by itself: click <b>Go to DO →</b> to carry on in DO (or <b>Download CHECK DEM.xlsx</b> to keep a copy)"],
       ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
     ],
     "change-status": [

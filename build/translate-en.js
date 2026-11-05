@@ -24,24 +24,6 @@ const COMMON = [
 ];
 
 const FILES = {
-  "check-dem.html": [
-    ...COMMON,
-    ['href="guide-check-dem.html"', 'href="guide-check-dem-en.html"'],
-    ["หาวันเริ่มเก็บค่า DEM และวัน REC. จาก Freedays + ATA", "Find the DEM start date and the REC. date from Freedays + ATA"],
-    ["ไฟล์ Freedays (.xls / .xlsx)", "Freedays file (.xls / .xlsx)"],
-    [">คำนวณ<", ">Calculate<"],
-    ["<b>TOTAL</b> = เลขตัวหน้า + เลขตัวหน้าหลัง Add", "<b>TOTAL</b> = first number + first number after Add"],
-    ["ATA + 3 วัน เฉพาะแถวที่มี", "ATA + 3 days, only on rows with"],
-    ['placeholder="ค้นหา B/L No. / Consignee / Freedays"', 'placeholder="Search B/L No. / Consignee / Freedays"'],
-    ["ดาวน์โหลด CHECK DEM.xlsx", "Download CHECK DEM.xlsx"],
-    ["ไม่พบหัวข้อ Freedays ในไฟล์", "No Freedays heading found in the file"],
-    [">จำนวน B/L<", ">B/L count<"],
-    ['"จำนวน B/L"', '"B/L count"'],
-    ['["ต้นฉบับ", name', '["Source", name'],
-    [">มี TOS<", ">With TOS<"],
-    [">อ่านไม่ได้<", ">Unreadable<"],
-  ],
-
   "bayplan.html": [
     ...COMMON,
     ["<h1>BAYPLAN — เก็บตู้ HUL (LCH / BKK)</h1>", "<h1>BAYPLAN — keep HUL containers (LCH / BKK)</h1>"],

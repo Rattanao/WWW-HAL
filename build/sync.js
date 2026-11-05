@@ -9,13 +9,14 @@
 // Thai guide is reported as "GUIDE CHANGED" so the English one can be updated.
 // pages: more pages of the same repo (repo file -> tools/ file); links between them, and "./" back to the
 // main page, are rewritten so they stay inside tools/.
+// Check-dem is not synced: since 2026-11-05 that repo only redirects to DO's checkdem.html, so the Check DEM
+// menu item opens tools/do-checkdem.html (embed.js sends its "② DO" to the DO tab).
 // To remove a tool, delete it here and from GROUPS in index.html; to add one, add both.
 const fs = require("fs"), path = require("path");
 const ROOT = path.join(__dirname, ".."), TOOLS = path.join(ROOT, "tools");
 
 const SOURCES = [
   { id: "check-cntrs",   repo: "Check-cntrs",        guide: true, extra: ["core.js"] },
-  { id: "check-dem",     repo: "Check-dem",          guide: true, doHandoff: true },   // sends its result to DO, see doHandoff
   { id: "change-status", repo: "Change-status-mman", guide: true },
   { id: "cut-bl",        repo: "CUT-BL" },            // guide written for the combined site
   { id: "bayplan",       repo: "Bayplan" },          // guide written for the combined site
@@ -31,20 +32,6 @@ function pageLinks(t, h) {
   if (!map) return h;
   for (const [from, to] of Object.entries(map)) h = h.split(`href="${from}"`).join(`href="${to}"`);
   return h.split('href="./"').join(`href="${t.id}.html"`).split('location.href = "./"').join(`location.href = "${t.id}.html"`);
-}
-// doHandoff: the Check DEM tool sends its result to DO like DO's own step ① page (tools/do-handoff.js).
-// download() is split so the workbook can be built without saving it.
-function addDoHandoff(page) {
-  const edits = [
-    ["async function download() {", "async function buildXlsx() {"],
-    ["  const buf = await wb.xlsx.writeBuffer();", "  return wb.xlsx.writeBuffer();\n}\n\nasync function download() {\n  const buf = await buildXlsx();"],
-    ["</body>", '<script src="do-handoff.js"></script>\n</body>'],
-  ];
-  for (const [from, to] of edits) {
-    if (!page.includes(from)) { console.log(`  DO HAND-OFF: "${from.trim()}" not found in Check-dem — CHECK DEM no longer sends to DO, update build/sync.js`); return page; }
-    page = page.replace(from, to);
-  }
-  return page;
 }
 const raw = (repo, file) => `https://raw.githubusercontent.com/Rattanao/${repo}/HEAD/${file}`;
 async function get(repo, file, binary) {
@@ -76,9 +63,8 @@ async function assets(repo, text) {
     if (!page) { console.log(`SKIP ${t.id}: cannot read ${t.repo}/index.html`); continue; }
     const pages = [["index.html", `${t.id}.html`], ...Object.entries(t.pages || {})];
     for (const [from, to] of pages) {
-      let src = from === "index.html" ? page : await get(t.repo, from);
+      const src = from === "index.html" ? page : await get(t.repo, from);
       if (!src) { console.log(`  cannot read ${t.repo}/${from}`); continue; }
-      if (t.doHandoff) src = addDoHandoff(src);
       let html = pageLinks(t, sharpLogo(src)).replace("</head>", '<script src="embed.js"></script>\n</head>');
       if (t.guide) html = html.split('href="guide.html"').join(`href="guide-${t.id}.html"`);
       put(to, html);   // translated again below, so git only sees real upstream changes
