@@ -17,8 +17,8 @@ const SOURCES = [
   { id: "check-cntrs",   repo: "Check-cntrs",        guide: true, extra: ["core.js"] },
   { id: "check-dem",     repo: "Check-dem",          guide: true },
   { id: "change-status", repo: "Change-status-mman", guide: true },
-  { id: "temp",          repo: "TEMP." },             // guide written for the combined site
   { id: "cut-bl",        repo: "CUT-BL" },            // guide written for the combined site
+  { id: "bayplan",       repo: "Bayplan" },          // guide written for the combined site
   { id: "sum-edi",       repo: "Sum-edi" },           // guide written for the combined site
   { id: "do",            repo: "DO",                 guide: true, bilingual: true, pages: { "checkdem.html": "do-checkdem.html" } },   // ① CHECK DEM → ② DO; page + guide already in English / TH-EN
 ];

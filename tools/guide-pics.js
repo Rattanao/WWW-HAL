@@ -15,7 +15,7 @@
     "check-dem": { w: 982, h: 206, marks: [[1,4.99,34.06,45.55,20.44],[2,51.55,32.6,22.4,21.9],[3,74.98,36.98,9.27,17.52],[5,85.26,36.98,9.75,17.52]] },
     "change-status": { w: 982, h: 643, marks: [[1,4.89,11.66,26.68,4.35],[2,4.89,26.2,26.68,4.35],[3,4.89,40.74,44.6,6.37],[4,4.89,63.59,90.22,5.29],[5,4.89,49.91,44.5,6.06],[7,50.41,49.91,44.7,6.06]] },
     "cut-bl": { w: 982, h: 670, marks: [[1,4.89,11.19,26.68,4.18],[2,4.89,25.13,90.22,5.07],[3,4.89,58.4,90.22,9.96],[4,4.89,45.27,44.5,5.82],[6,50.41,45.27,44.7,5.82]] },
-    "temp": { w: 982, h: 481, marks: [[1,3.26,12.74,66.65,9.98],[2,71.33,12.74,13.88,9.98],[4,86.64,12.74,10.1,9.98]] },
+    "bayplan": { w: 982, h: 595, marks: [[1,4.89,12.78,90.22,7.06],[2,4.89,32.95,90.22,7.06],[3,22.91,42.7,22.81,5.72],[4,4.89,74.68,8.59,6.22],[5,85.32,74.51,9.79,6.56]] },
     "sum-edi": { w: 982, h: 569, marks: [[1,4.99,14.94,43.33,7.38],[2,49.34,12.48,21.66,9.84],[3,4.99,32.34,29.33,5.98],[4,4.99,43.94,29.33,6.33],[5,72.02,8.61,22.99,5.98],[7,85.26,15.99,9.75,6.33]] },
     "do": { w: 982, h: 439, marks: [[1,4.99,26.42,56.03,9.57],[2,62.04,26.42,32.97,9.57],[3,4.99,43.51,27.5,9.57],[4,62.04,43.28,13.24,9.79],[5,76.29,44.87,8.16,8.2],[7,85.26,44.87,9.75,8.2]] }
   };
@@ -52,10 +52,11 @@
       ["ตรวจตาราง B/L ที่ตัด / ที่เหลือ แล้วกด <b>Download …_PORTAL.txt</b>", "Check the table of cut / kept B/Ls, then click <b>Download …_PORTAL.txt</b>"],
       ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
     ],
-    "temp": [
-      ["ลากไฟล์ <b>CLIST (.txt)</b> มาวาง", "Drop the <b>CLIST (.txt)</b> file here"],
-      ["กด <b>Fix temperature</b>", "Click <b>Fix temperature</b>"],
-      ["ดูบรรทัดที่เปลี่ยนในตาราง (ภาพนี้เป็นข้อมูลตัวอย่าง) แล้วกด <b>Save Revised temp.txt</b> หรือ <b>Download Excel</b>", "See the changed lines in the table (this picture shows sample data), then click <b>Save Revised temp.txt</b> or <b>Download Excel</b>"],
+    "bayplan": [
+      ["ลากไฟล์ Bayplan (.asc) มาวาง หรือคลิกเพื่อเลือกไฟล์", "Drop the Bayplan file (.asc) here, or click to choose it"],
+      ["ติ๊กท่าที่จะเก็บ (LCH / BKK) — ตัวเลขข้างท่า = จำนวนตู้ HUL ของท่านั้น", "Tick the ports to keep (LCH / BKK) — the number next to a port = its HUL containers"],
+      ["<b>Agents changed to HUL</b> ปกติ HAL,HAC,HAS,HUL ไม่ต้องแก้", "<b>Agents changed to HUL</b>: normally HAL,HAC,HAS,HUL, no need to change"],
+      ["ตรวจตัวเลขและส่วนไฮไลต์ แล้วกด <b>Save file</b> (ได้ไฟล์ …_HUL_BKK-LCH.asc ในโฟลเดอร์ Downloads) หรือ <b>Copy text</b>", "Check the numbers and the highlights, then click <b>Save file</b> (…_HUL_BKK-LCH.asc in your Downloads folder) or <b>Copy text</b>"],
       ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
     ],
     "sum-edi": [

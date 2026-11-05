@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Revised Temp - Guide</title>
+<title>Bayplan HUL - คู่มือ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
 <style>
@@ -118,110 +118,50 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
 
 <div class="wrap">
   <header class="head">
-    <div class="tag">EDI file tool · Reefer CLIST</div>
-    <h1>Revised Temp</h1>
-    <p class="lede">Fixes reefer temperatures in a CLIST file (.txt) by removing the last digit before C, then saves it as Revised temp.txt with an Excel report.</p>
-    <div class="flow" aria-label="Workflow">
-      <span class="doc">CLIST*.txt</span><span class="op">→</span>
-      <span class="out">Revised temp.txt</span><span class="op">+</span>
-      <span class="out">Revised temp.xlsx</span>
+    <div class="tag">เครื่องมือแก้ไฟล์ EDI · Bayplan</div>
+    <h1>Bayplan HUL</h1>
+    <p class="lede">เก็บเฉพาะตู้ HUL จากไฟล์ Bayplan (.asc) ของท่าที่เลือก (LCH / BKK) เปลี่ยน agent HAL / HAC / HAS เป็น HUL และลด TEMP ของตู้ RF ทำงานในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์</p>
+    <div class="flow" aria-label="ขั้นตอนการทำงาน">
+      <span class="doc">KHS1_2612S_KRUSN_SWIC.asc</span><span class="op">→</span><span class="out">KHS1_2612S_KRUSN_SWIC_HUL_BKK-LCH.asc</span>
     </div>
     <div class="cta">
-      <a class="btn primary" href="../#temp">Use online (no install)</a>
-      <a class="btn ghost" href="https://github.com/Rattanao/TEMP./archive/refs/heads/main.zip">Download the program (ZIP)</a>
-      <a class="btn ghost" href="https://github.com/Rattanao/TEMP.">Open on GitHub</a>
+      <a class="btn primary" href="../#bayplan">ใช้งานออนไลน์ (ไม่ต้องติดตั้ง)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/Bayplan">เปิดหน้า GitHub</a>
     </div>
   </header>
 
-  <section class="panel" id="use">
-    <h2>Use on the web</h2>
-    <ol class="steps">
-      <li><div><p><b>Drag the CLIST file</b> into the dashed box, or click to choose it</p></div></li>
-      <li><div><p><b>Click Fix temperature</b></p></div></li>
-      <li><div>
-        <p><b>Check the results table</b> (line, container no., Size/Type, old and new value)</p>
-        <p class="note">Click "Not changed: … lines" to see containers that were left as they are, with the reason</p>
-      </div></li>
-      <li><div>
-        <p><b>Click Save Revised temp.txt</b>, and for the report click <b>Download Excel</b>. Files are saved to your Downloads folder</p>
-        <p class="note">The file is read and changed in the browser only · Click <b>Clear files</b> to start a new job</p>
-      </div></li>
-    </ol>
-  </section>
-
-  <section class="panel" id="rule">
-    <h2>Rules</h2>
-    <div class="sheet-scroll">
-      <table class="sheet" style="min-width:420px">
-        <thead><tr><th>Old</th><th>New</th><th class="l">Note</th></tr></thead>
-        <tbody>
-          <tr><td class="mono">S-20C</td><td class="mono g">S-2C</td><td class="l">Last digit before C removed</td></tr>
-          <tr><td class="mono">S-180C</td><td class="mono g">S-18C</td><td class="l"></td></tr>
-          <tr><td class="mono">S50C</td><td class="mono g">S5C</td><td class="l"></td></tr>
-          <tr><td class="mono">S0C</td><td class="mono y">S0C</td><td class="l">Not changed: only one digit</td></tr>
-          <tr><td class="mono">S</td><td class="mono y">S</td><td class="l">Not changed: no digits</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <section class="panel" id="what">
+    <h2>สิ่งที่โปรแกรมทำ</h2>
     <ul class="check-list">
-      <li>The temperature field is at character 145 of each line (right after Size/Type, e.g. <code>45R1  8  Q</code>)</li>
-      <li>The removed character is replaced with a space, so every line keeps its length and the following columns stay in place</li>
-      <li>Nothing else in the file is changed, including line endings (CRLF)</li>
+      <li><b>เก็บ</b> ตู้ที่ agent เป็น HAL / HAC / HAS / HUL (แก้รายชื่อได้ในช่อง <b>Agents changed to HUL</b>) และท่าปลายทางเป็นท่าที่ติ๊กไว้ (LCH, BKK หรือทั้งสอง)</li>
+      <li><b>ตัดทิ้ง</b> ตู้ agent อื่นทั้งหมด (SKR, KMD, EMC …) และตู้ของท่าอื่น (SGN …)</li>
+      <li>agent ของตู้ที่เก็บเปลี่ยนเป็น <b>HUL</b></li>
+      <li>ตู้ <b>RF</b> ลด TEMP 1 ตำแหน่ง เช่น <code>-250C</code> → <code>-25C</code></li>
+      <li>บรรทัดหัวไฟล์ และทุกบรรทัดตั้งแต่ <code>***Refer to the following remark.</code> (remark, IMDG, VGM) คงเดิม</li>
+      <li>ชื่อไฟล์ที่ได้ = ชื่อไฟล์ต้นฉบับ + <code>_HUL_</code> + ท่าที่เลือก เช่น <code>_HUL_BKK-LCH.asc</code> บันทึกลงโฟลเดอร์ Downloads</li>
     </ul>
   </section>
 
-  <section class="panel" id="read">
-    <h2>The Revised temp.xlsx report</h2>
-    <p class="sub">Formatted to print on A4 portrait, with 2 sheets</p>
-    <div class="legend">
-      <div class="g"><b>Changes</b><span>Report header, old values (struck through) and new values (green), with a count per temperature</span></div>
-      <div class="y"><b>Not changed</b><span>Containers whose temperature is S0C or S, with the reason</span></div>
-    </div>
-  </section>
-
-  <section class="panel" id="python">
-    <h2>Use the desktop program (Python)</h2>
-    <p class="sub">Needs Python 3.8 or later. The result is saved as Revised temp.txt in the same folder as the source file</p>
-    <div class="cmd">
-      <pre id="cmd">python revised_temp.py "CLISTHLCH_xxxx.txt"</pre>
-      <button type="button" data-target="cmd">Copy</button>
-    </div>
-  </section>
-
   <section class="panel" id="help">
-    <h2>Troubleshooting</h2>
+    <h2>ถ้าเจอปัญหา</h2>
     <div class="trouble-scroll">
       <table class="trouble">
-        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <thead><tr><th>ข้อความ / อาการ</th><th>วิธีแก้</th></tr></thead>
         <tbody>
-          <tr><td>No lines were changed</td><td>Check it is a CLIST file with reefer containers and the temperature is at position 145</td></tr>
-          <tr><td>Some containers were not changed</td><td>See the "Not changed" list: S0C and S need no change under the rules</td></tr>
+          <tr><td>ตัวเลขข้าง LCH / BKK เป็น 0</td><td>ไฟล์ไม่มีตู้ HUL ของท่านั้น หรือ agent ในไฟล์ไม่อยู่ในช่อง Agents — เพิ่มรหัส agent แล้วตรวจใหม่</td></tr>
+          <tr><td>Kept (HUL) เป็น 0</td><td>ยังไม่ได้ติ๊กท่า หรือเลือกไฟล์ผิด (ต้องเป็นไฟล์ Bayplan .asc)</td></tr>
+          <tr><td>Copy text ไม่ได้</td><td>เลือกข้อความในกรอบแล้วกด Ctrl+C หรือใช้ปุ่ม Save file แทน</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
   <footer>
-    <p>Before sending the file, always check the old/new values table</p>
-    <p>Source code: <a href="https://github.com/Rattanao/TEMP.">github.com/Rattanao/TEMP.</a></p>
+    <p>ส่วนที่ไฮไลต์ในกรอบผลลัพธ์ = ส่วนที่ถูกแก้ (agent / TEMP) ตรวจก่อนส่งไฟล์ทุกครั้ง</p>
+    <p>ดูโค้ดที่ <a href="https://github.com/Rattanao/Bayplan">github.com/Rattanao/Bayplan</a></p>
   </footer>
 </div>
 
-<script>
-document.querySelectorAll('button[data-target]').forEach(function (btn) {
-  btn.addEventListener('click', function () {
-    var el = document.getElementById(btn.dataset.target);
-    var text = el.textContent;
-    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
-    var fallback = function () {
-      var r = document.createRange(); r.selectNodeContents(el);
-      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-      btn.textContent = 'Press Ctrl+C';
-    };
-    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
-  });
-});
-</script>
 <script src="guide-lang.js"></script>
 </body>
 </html>

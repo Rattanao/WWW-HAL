@@ -25,6 +25,7 @@ document.write('<script src="auth.js"><\/script><script>HAL_AUTH.guard()<\/scrip
     button.x-clear:hover { background: #eef2fb !important; }
 
     /* ตัวหนังสือเล็กลง ให้ดูไม่รก (ทุกเครื่องมือในเว็บรวม) */
+    [hidden] { display: none !important; }   /* e.g. Bayplan .job { display: flex } would show an empty "Job file" */
     .stepnav a.on { color: #fff !important; }   /* DO ① CHECK DEM → ② DO step bar: current step stays white on navy */
     html.compact body { font-size: 14px; }
     html.compact .card { padding: 14px 16px; }
