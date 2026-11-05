@@ -15,12 +15,12 @@ const ROOT = path.join(__dirname, ".."), TOOLS = path.join(ROOT, "tools");
 
 const SOURCES = [
   { id: "check-cntrs",   repo: "Check-cntrs",        guide: true, extra: ["core.js"] },
-  { id: "check-dem",     repo: "Check-dem",          guide: true, doHandoff: true },   // + DO's step ① page, see doHandoff
+  { id: "check-dem",     repo: "Check-dem",          guide: true, doHandoff: true },   // sends its result to DO, see doHandoff
   { id: "change-status", repo: "Change-status-mman", guide: true },
   { id: "cut-bl",        repo: "CUT-BL" },            // guide written for the combined site
   { id: "bayplan",       repo: "Bayplan" },          // guide written for the combined site
   { id: "sum-edi",       repo: "Sum-edi" },           // guide written for the combined site
-  { id: "do",            repo: "DO",                 guide: true, bilingual: true, links: { "checkdem.html": "do-checkdem.html" } },   // page + guide already in English / TH-EN
+  { id: "do",            repo: "DO",                 guide: true, bilingual: true, pages: { "checkdem.html": "do-checkdem.html" } },   // ① CHECK DEM → ② DO; page + guide already in English / TH-EN
 ];
 
 // the repos' hal-logo.png is blurry: point every logo at the sharp tools/assets/hal-logo-hd.png (kept in this repo)
@@ -32,15 +32,13 @@ function pageLinks(t, h) {
   for (const [from, to] of Object.entries(map)) h = h.split(`href="${from}"`).join(`href="${to}"`);
   return h.split('href="./"').join(`href="${t.id}.html"`).split('location.href = "./"').join(`location.href = "${t.id}.html"`);
 }
-// doHandoff: CHECK DEM -> DO. The DO repo keeps its own copy of CHECK DEM (checkdem.html) that falls behind
-// the Check-dem repo, so DO's step ① page (tools/do-checkdem.html) is built from the latest Check-dem page,
-// and the Check DEM tool sends its result to DO too (tools/do-handoff.js). download() is split so the
-// workbook can be built without saving it.
-function addDoHandoff(page, step) {
+// doHandoff: the Check DEM tool sends its result to DO like DO's own step ① page (tools/do-handoff.js).
+// download() is split so the workbook can be built without saving it.
+function addDoHandoff(page) {
   const edits = [
     ["async function download() {", "async function buildXlsx() {"],
     ["  const buf = await wb.xlsx.writeBuffer();", "  return wb.xlsx.writeBuffer();\n}\n\nasync function download() {\n  const buf = await buildXlsx();"],
-    ["</body>", `<script src="do-handoff.js" data-step="${step ? 1 : 0}"></script>\n</body>`],
+    ["</body>", '<script src="do-handoff.js"></script>\n</body>'],
   ];
   for (const [from, to] of edits) {
     if (!page.includes(from)) { console.log(`  DO HAND-OFF: "${from.trim()}" not found in Check-dem — CHECK DEM no longer sends to DO, update build/sync.js`); return page; }
@@ -77,11 +75,10 @@ async function assets(repo, text) {
     const page = await get(t.repo, "index.html");
     if (!page) { console.log(`SKIP ${t.id}: cannot read ${t.repo}/index.html`); continue; }
     const pages = [["index.html", `${t.id}.html`], ...Object.entries(t.pages || {})];
-    if (t.doHandoff) pages.push(["index.html", "do-checkdem.html"]);
     for (const [from, to] of pages) {
       let src = from === "index.html" ? page : await get(t.repo, from);
       if (!src) { console.log(`  cannot read ${t.repo}/${from}`); continue; }
-      if (t.doHandoff) src = addDoHandoff(src, to === "do-checkdem.html");
+      if (t.doHandoff) src = addDoHandoff(src);
       let html = pageLinks(t, sharpLogo(src)).replace("</head>", '<script src="embed.js"></script>\n</head>');
       if (t.guide) html = html.split('href="guide.html"').join(`href="guide-${t.id}.html"`);
       put(to, html);   // translated again below, so git only sees real upstream changes

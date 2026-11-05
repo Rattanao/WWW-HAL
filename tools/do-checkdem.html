@@ -37,6 +37,7 @@
   button { font: inherit; font-weight: 600; font-size: 16px; border: 0; border-radius: 8px; padding: 12px 20px; cursor: pointer; background: var(--navy); color: #fff; }
   button:disabled { opacity: .4; cursor: not-allowed; }
   button.ghost { background: #fff; color: var(--navy); border: 1px solid var(--navy); }
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
   .rules { font-size: 14px; color: var(--muted); margin: 12px 0 0; line-height: 1.6; }
   .rules code { background: var(--navy-soft); color: var(--navy); padding: 1px 6px; border-radius: 4px; }
   .msg { color: var(--red); font-weight: 600; margin-top: 10px; }
@@ -64,32 +65,39 @@
   .hidden { display: none; }
   footer { text-align: center; color: var(--muted); font-size: 13px; padding-bottom: 24px; }
   footer a { color: var(--navy); }
+  .stepnav { background: #fff; border-bottom: 1px solid var(--line); }
+  .stepnav .wrap { display: flex; gap: 6px; align-items: center; padding: 8px 16px; flex-wrap: wrap; }
+  .stepnav a { text-decoration: none; color: var(--navy); font-weight: 600; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); }
+  .stepnav a.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .stepnav span { color: var(--muted); }
 </style>
 <script src="embed.js"></script>
 </head>
 <body>
-<header><div class="wrap"><div class="brand"><img class="logo" src="assets/hal-logo-hd.png" alt="Heung A Line"><h1>CHECK DEM</h1></div><p>Find the DEM start date and the REC. date from Freedays + ATA</p>
+<header><div class="wrap"><div class="brand"><img class="logo" src="assets/hal-logo-hd.png" alt="Heung A Line"><h1>CHECK DEM</h1></div><p>DEM start date and REC. date from Freedays + ATA</p>
   <div class="credit">Project by Ms. Rattana Mudlae<br>Position Import DOC.</div></div></header>
+<nav class="stepnav"><div class="wrap"><a href="do-checkdem.html" class="on">① CHECK DEM</a><span>→</span><a href="do.html">② DO</a><span style="margin-left:auto"></span><a href="guide-do.html">Guide</a></div></nav>
 
 <main class="wrap">
   <section class="card">
     <div class="inputs">
       <div>
         <label class="t">Freedays file (.xls / .xlsx)</label>
-        <div class="drop" id="drop"><span id="dropText">Drop the file here, or <b>click to choose a file</b></span></div>
+        <div class="drop" id="drop"><span id="dropText">Drop a file here or <b>click to choose</b></span></div>
         <input type="file" id="file" accept=".xls,.xlsx" class="hidden">
       </div>
       <div>
         <label class="t" for="ata">ATA</label>
         <input type="date" id="ata">
       </div>
-      <button id="run" disabled>Calculate</button>
+      <div class="btns"><button id="run" disabled>Calculate</button><button id="clearDem" class="ghost" disabled>Clear files</button></div>
     </div>
     <p class="rules">
       <b>TOTAL</b> = first number + first number after Add (<code>7/5 Add 7/9</code> = 14) ·
       <b>DEM.</b> = ATA + TOTAL ·
-      <b>REC.</b> = ATA + 3 days, only on rows with <code>TOS</code><br>
-      Files are processed in your browser only and are never uploaded
+      <b>REC.</b> = ATA + 3 days, only on rows with <code>TOS</code> or a reefer TPSZ<br>
+      The result goes to step ② DO by itself once calculated.<br>
+      Files are processed in your browser only — nothing is uploaded.
     </p>
     <div class="msg" id="msg"></div>
   </section>
@@ -100,11 +108,12 @@
     <div class="toolbar">
       <input type="search" id="search" placeholder="Search B/L No. / Consignee / Freedays">
       <button id="download">Download CHECK DEM.xlsx</button>
+      <button id="toDo">Go to DO →</button>
     </div>
     <div class="tbl"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
   </section>
 </main>
-<footer><a href="guide-check-dem-en.html">Guide</a> · <a href="https://github.com/Rattanao/Check-dem">github.com/Rattanao/Check-dem</a></footer>
+<footer><a href="guide-do.html">Guide</a> · CHECK DEM from <a href="https://github.com/Rattanao/Check-dem">github.com/Rattanao/Check-dem</a> · <a href="https://github.com/Rattanao/DO">github.com/Rattanao/DO</a></footer>
 
 <script>
 const TOS_EXTRA_DAYS = 3;
@@ -148,8 +157,9 @@ function palette(keys) {
 }
 
 // ---------- read file ----------
-function loadFile(file) {
+function loadFile(file, restoring) {
   $("msg").textContent = "";
+  return new Promise(done => {
   const reader = new FileReader();
   reader.onload = e => {
     try {
@@ -158,7 +168,7 @@ function loadFile(file) {
       const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, defval: "" });
       // header row = first row that has a Freedays heading (not necessarily row 1)
       const hRow = aoa.slice(0, 30).findIndex(r => r.some(h => FREEDAYS.test(String(h))));
-      if (hRow < 0) throw new Error("No Freedays heading found in the file");
+      if (hRow < 0) throw new Error("No Freedays heading in the file");
       const head = aoa[hRow].map(h => String(h).trim());
       const cFree = head.findIndex(h => FREEDAYS.test(h));
       const fields = FIELDS.map(([name, re]) => [name, head.findIndex(h => re.test(h))]).filter(f => f[1] >= 0);
@@ -166,17 +176,20 @@ function loadFile(file) {
       const rows = aoa.slice(hRow + 1).filter(r => r.some(v => String(v).trim() !== ""))
         .map(r => [r[cFree], ...fields.map(f => r[f[1]])].map(v => String(v ?? "").trim()));
       src = { name: file.name, header, rows };
-      $("dropText").innerHTML = `<b>${escapeHtml(file.name)}</b> · ${rows.length} B/L (click to change file)`;
+      if (!restoring) saveState({ name: file.name, b64: toB64(new Uint8Array(e.target.result)), ata: $("ata").value, done: false });
+      $("dropText").innerHTML = `<b>${escapeHtml(file.name)}</b> · ${rows.length} B/L (click to change)`;
       update();
     } catch (err) {
       src = null; $("msg").textContent = "Cannot read the file: " + err.message; update();
     }
+    done();
   };
   reader.readAsArrayBuffer(file);
+  });
 }
 const escapeHtml = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
-function update() { $("run").disabled = !(src && $("ata").value); }
+function update() { $("run").disabled = !(src && $("ata").value); $("clearDem").disabled = !(src || report || $("ata").value); }
 
 // ---------- compute ----------
 function compute() {
@@ -207,14 +220,14 @@ function render() {
   $("info").innerHTML =
     `<div class="k">Source</div><div>${escapeHtml(name)}</div>` +
     `<div class="k">ATA</div><div class="ata">${dmy(ata)}</div>` +
-    `<div class="k">B/L count</div><div>${data.length}</div>` +
-    `<div class="k">With TOS</div><div>${data.filter(x => x.rec).length}</div>` +
+    `<div class="k">B/Ls</div><div>${data.length}</div>` +
+    `<div class="k">With REC.</div><div>${data.filter(x => x.rec).length}</div>` +
     (bad ? `<div class="k" style="color:var(--red)">Unreadable</div><div style="color:var(--red);font-weight:700">${bad}</div>` : "");
 
   const counts = {};
   data.forEach(x => { if (x.dem) counts[ymd(x.dem)] = (counts[ymd(x.dem)] || 0) + 1; });
   $("chips").innerHTML = Object.keys(counts).sort().map(k =>
-    `<span class="chip ${hidden.has(k) ? "off" : ""}" data-k="${k}" style="background:#${colors[k]}" title="Click to hide/show">DEM ${k.split("-").reverse().join("/")}<small>${counts[k]} B/L</small></span>`).join("");
+    `<span class="chip ${hidden.has(k) ? "off" : ""}" data-k="${k}" style="background:#${colors[k]}" title="Click to hide / show">DEM ${k.split("-").reverse().join("/")}<small>${counts[k]} B/L</small></span>`).join("");
 
   $("thead").innerHTML = "<tr>" + header.map(h => `<th>${escapeHtml(h)}</th>`).join("") + "</tr>";
   const q = $("search").value.trim().toLowerCase();
@@ -258,12 +271,12 @@ async function buildXlsx() {
   t.fill = fill(NAVY); t.alignment = center; ws.getRow(1).height = 30;
 
   // info row: count at the left | source under Freedays-DEM. | ATA in the last two columns
-  const info = [["B/L count", data.length, 1], ["Source", name, 4 + report.off], ["ATA", new Date(ata), ncol - 1]];
+  const info = [["B/Ls", data.length, 1], ["Source", name, 4 + report.off], ["ATA", new Date(ata), ncol - 1]];
   for (let col = 1; col <= ncol; col++) ws.getCell(2, col).border = box;
   info.forEach(([k, v, col]) => {
     const a = ws.getCell(2, col), b = ws.getCell(2, col + 1);
     a.value = k; a.font = { name: FONT, bold: true }; a.fill = fill("BDD7EE"); a.alignment = center;
-    b.value = v; b.font = { name: FONT, bold: k !== "B/L count", size: k === "ATA" ? 12 : 10 };
+    b.value = v; b.font = { name: FONT, bold: k !== "B/Ls", size: k === "ATA" ? 12 : 10 };
     b.fill = fill("DDEBF7"); b.alignment = center;
     if (k === "ATA") b.numFmt = "DD/MM/YYYY";
   });
@@ -338,6 +351,36 @@ async function download() {
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 
+
+// ---------- keep the page as it was (file, ATA, result) until "Clear files" ----------
+// stored in this browser (localStorage "checkDemState"), so going to ② DO and back finds everything still here
+const STATE_KEY = "checkDemState";
+function toB64(bytes) { let s = ""; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000)); return btoa(s); }
+function readState() { try { return JSON.parse(localStorage.getItem(STATE_KEY) || "null"); } catch { return null; } }
+function saveState(part) {
+  const st = { ...(readState() || {}), ...part };
+  try { localStorage.setItem(STATE_KEY, JSON.stringify(st)); } catch { }
+}
+async function restoreState() {
+  const st = readState();
+  if (!st) { update(); return; }
+  if (st.ata) $("ata").value = st.ata;
+  if (st.b64) await loadFile(new File([Uint8Array.from(atob(st.b64), c => c.charCodeAt(0))], st.name), true);
+  update();
+  if (st.done && src && $("ata").value) {   // show the result again; it was already sent to ② DO when it was calculated
+    compute();
+    $("msg").innerHTML = `<span style="color:#006100">Kept from before (${report.data.length} B/L) — press <b>Clear files</b> to start a new job</span>`;
+  }
+}
+function clearDem() {
+  try { localStorage.removeItem(STATE_KEY); } catch { }
+  src = null; report = null; hidden.clear();
+  $("file").value = ""; $("ata").value = ""; $("search").value = ""; $("msg").textContent = "";
+  $("dropText").innerHTML = "Drop a file here or <b>click to choose</b>";
+  $("result").classList.add("hidden");
+  update();
+}
+
 // ---------- events ----------
 const drop = $("drop");
 drop.onclick = () => $("file").click();
@@ -345,15 +388,31 @@ $("file").onchange = e => e.target.files[0] && loadFile(e.target.files[0]);
 drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
 drop.ondragleave = () => drop.classList.remove("over");
 drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); e.dataTransfer.files[0] && loadFile(e.dataTransfer.files[0]); };
-$("ata").oninput = update;
-$("run").onclick = compute;
+$("ata").oninput = () => { update(); saveState({ ata: $("ata").value }); };
 $("search").oninput = render;
 $("download").onclick = download;
+// hand-off to step 2: every finished CHECK DEM is sent to the DO page by itself (localStorage "doCheckDem",
+// read by the DO page when it opens, or at once by a DO page already open in another tab); no download / upload
+async function sendToDo() {
+  const buf = new Uint8Array(await buildXlsx());
+  let b64 = ""; for (let i = 0; i < buf.length; i += 0x8000) b64 += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+  try {
+    localStorage.setItem("doCheckDem", JSON.stringify({ name: OUTPUT_NAME, b64: btoa(b64), at: Date.now(), bls: report.data.length }));
+    $("msg").innerHTML = `<span style="color:#006100">✓ CHECK DEM (${report.data.length} B/L) sent to ② DO — open the DO page</span>`;
+    return true;
+  } catch {
+    $("msg").textContent = "This browser cannot pass it on — download CHECK DEM.xlsx and drop it on the DO page";
+    return false;
+  }
+}
+$("run").onclick = async () => { compute(); saveState({ done: true }); await sendToDo(); };
+$("clearDem").onclick = clearDem;
+restoreState();
+$("toDo").onclick = async () => { if (await sendToDo()) location.href = "do.html"; };
 $("chips").onclick = e => {
   const k = e.target.closest(".chip")?.dataset.k; if (!k) return;
   hidden.has(k) ? hidden.delete(k) : hidden.add(k); render();
 };
 </script>
-<script src="do-handoff.js" data-step="1"></script>
 </body>
 </html>
