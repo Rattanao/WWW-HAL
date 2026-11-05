@@ -6,6 +6,9 @@
   var m = (location.pathname.split("/").pop() || "").match(/^guide-(.+?)(-en)?\.html$/);
   if (!m) return;
   var id = m[1], en = !!m[2];
+  // 2-language page (own .langs switch, html[data-lang] hides .th / .en): write both languages
+  var both = !!document.querySelector(".langs [data-lang]");
+  function t(th, eng) { return both ? "<span class=\"th\">" + th + "</span><span class=\"en\">" + eng + "</span>" : en ? eng : th; }
 
   var PICS = {
     "check-cntrs": { w: 982, h: 255, marks: [[1,4.99,26.27,70.71,16.47],[2,77.12,33.33,7.12,14.12],[4,85.26,33.33,9.75,14.12]] },
@@ -77,7 +80,6 @@
 
   var pic = PICS[id], steps = STEPS[id];
   if (!pic || !steps) return;
-  var L = en ? 1 : 0;
 
   var css = document.createElement("style");
   css.textContent =
@@ -99,16 +101,16 @@
   sec.className = "panel pics";
   sec.id = "pictures";
   sec.innerHTML =
-    "<h2>" + (en ? "Picture guide" : "คู่มือแบบภาพ") + "</h2>" +
-    "<p class=\"sub\">" + (en ? "Follow the numbers on the picture. A number in an outlined circle is done after processing (it appears under the form)."
-                              : "ทำตามหมายเลขในภาพ หมายเลขวงกลมเส้นขอบ = ทำหลังกดประมวลผล (ปุ่มจะขึ้นใต้ฟอร์ม)") + "</p>" +
+    "<h2>" + t("คู่มือแบบภาพ", "Picture guide") + "</h2>" +
+    "<p class=\"sub\">" + t("ทำตามหมายเลขในภาพ หมายเลขวงกลมเส้นขอบ = ทำหลังกดประมวลผล (ปุ่มจะขึ้นใต้ฟอร์ม)",
+                                 "Follow the numbers on the picture. A number in an outlined circle is done after processing (it appears under the form).") + "</p>" +
     "<div class=\"shot\"><img src=\"assets/guide/" + id + ".png\" width=\"" + pic.w + "\" height=\"" + pic.h + "\" alt=\"" +
-      (en ? "Screen of the tool with numbered steps" : "หน้าจอเครื่องมือพร้อมหมายเลขขั้นตอน") + "\" loading=\"lazy\">" +
+      (en || both ? "Screen of the tool with numbered steps" : "หน้าจอเครื่องมือพร้อมหมายเลขขั้นตอน") + "\" loading=\"lazy\">" +
       pic.marks.map(function (k) {
         return "<span class=\"mk\" style=\"left:" + k[1] + "%;top:" + k[2] + "%;width:" + k[3] + "%;height:" + k[4] + "%\"><b>" + k[0] + "</b></span>";
       }).join("") + "</div>" +
     "<ol>" + steps.map(function (s, i) {
-      return "<li" + (marked[i + 1] ? "" : " class=\"after\"") + "><i>" + (i + 1) + "</i><span>" + s[L] + "</span></li>";
+      return "<li" + (marked[i + 1] ? "" : " class=\"after\"") + "><i>" + (i + 1) + "</i><span>" + t(s[0], s[1]) + "</span></li>";
     }).join("") + "</ol>";
 
   var first = document.querySelector("section.panel, main section, section");

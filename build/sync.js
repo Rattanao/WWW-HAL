@@ -4,6 +4,7 @@
 // For each tool: index.html -> tools/<id>.html with <script src="embed.js"> before </head>,
 // files it references under assets/ -> tools/assets/, extra files as-is, and (guide: true)
 // the repo's guide.html -> tools/guide-<id>.html with links back to the combined site.
+// bilingual: the repo's guide.html is Thai + English in one page (own switch), no -en copy needed.
 // English guides (build/guides-en, tools/guide-*-en.html) are hand-translated: a changed
 // Thai guide is reported as "GUIDE CHANGED" so the English one can be updated.
 // pages: more pages of the same repo (repo file -> tools/ file); links between them, and "./" back to the
@@ -19,7 +20,7 @@ const SOURCES = [
   { id: "temp",          repo: "TEMP." },             // guide written for the combined site
   { id: "cut-bl",        repo: "CUT-BL" },            // guide written for the combined site
   { id: "sum-edi",       repo: "Sum-edi" },           // guide written for the combined site
-  { id: "do",            repo: "DO",                 guide: true, pages: { "checkdem.html": "do-checkdem.html" } },   // ① CHECK DEM → ② DO
+  { id: "do",            repo: "DO",                 guide: true, bilingual: true, pages: { "checkdem.html": "do-checkdem.html" } },   // ① CHECK DEM → ② DO; page + guide already in English / TH-EN
 ];
 
 // the repos' hal-logo.png is blurry: point every logo at the sharp tools/assets/hal-logo-hd.png (kept in this repo)
@@ -76,7 +77,7 @@ async function assets(repo, text) {
       if (!g) { console.log(`  no guide.html in ${t.repo}`); continue; }
       const gh = pageLinks(t, sharpLogo(g).replace(/href="(\.\/|index\.html)"/g, `href="../#${t.id}"`))
                   .replace("</body>", '<script src="guide-lang.js"></script>\n</body>');
-      if (put(`guide-${t.id}.html`, gh)) console.log(`  GUIDE CHANGED: guide-${t.id}.html — update build/guides-en/${t.id}.body and tools/guide-${t.id}-en.html`);
+      if (put(`guide-${t.id}.html`, gh) && !t.bilingual) console.log(`  GUIDE CHANGED: guide-${t.id}.html — update build/guides-en/${t.id}.body and tools/guide-${t.id}-en.html`);
       await assets(t.repo, g);
     }
   }

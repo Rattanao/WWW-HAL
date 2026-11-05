@@ -6,6 +6,9 @@
   if (!m) return;
   var id = m[1], isEn = !!m[2];
 
+  // คู่มือที่ repo ต้นทางทำเป็น 2 ภาษาในหน้าเดียว (มีปุ่ม .langs ของตัวเอง เช่น DO): ไม่ต้องใส่ปุ่มสลับของเรา ใส่แค่คู่มือแบบภาพ
+  var own = document.querySelector(".langs [data-lang]");
+
   var thUrl = "guide-" + id + ".html", enUrl = "guide-" + id + "-en.html";
 
   var css = document.createElement("style");
@@ -28,7 +31,7 @@
     if (o[3]) a.setAttribute("aria-current", "page");
     bar.appendChild(a);
   });
-  document.body.appendChild(bar);
+  if (!own) document.body.appendChild(bar);
 
   // คู่มือแบบภาพ (ภาพหน้าจอ + หมายเลขขั้นตอน)
   var pics = document.createElement("script");
