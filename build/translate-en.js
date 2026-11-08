@@ -270,7 +270,7 @@ const FILES = {
     ["<th>ตู้</th>", "<th>Containers</th>"],
     ["<th>น้ำหนัก (KGS)</th>", "<th>Weight (KGS)</th>"],
     ["<th>หีบห่อ</th>", "<th>Packages</th>"],
-    ['"โหลดหัวจดหมาย assets/letterhead.jpg ไม่ได้ — เปิดหน้านี้ผ่าน https://rattanao.github.io/Sum-edi/"', '"Cannot load the letterhead assets/letterhead.jpg — open this page from the website"'],
+    ['"โหลดหัวจดหมาย assets/letterhead.png ไม่ได้ — เปิดหน้านี้ผ่าน https://rattanao.github.io/Sum-edi/"', '"Cannot load the letterhead assets/letterhead.png — open this page from the website"'],
     ['"ไม่พบ B/L (HASL...) ในไฟล์ MF"', '"No B/L (HASL...) found in the MF file"'],
     ['"ทำไม่สำเร็จ: "', '"Failed: "'],
     ['"ไม่ได้ใส่ (ไม่ตรวจตู้ SOC)"', '"not added (SOC containers not checked)"'],
