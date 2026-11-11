@@ -159,7 +159,7 @@ const GROUPS = [
     { id: "check-cntrs", title: "Check CNTRS", desc: "Compare MANIFEST with CNTRS: SHED · STATUS · TEMP · VENT · DG · REMARK", src: "tools/check-cntrs.html", guide: "tools/guide-check-cntrs-en.html", icon: "check" },
   ]},
   { name: "EDI file editing", tools: [
-    { id: "change-status", title: "Change Status", desc: "MMAN × STATUS → MMAN_EDI.txt · can cut a B/L range (start–end)", src: "tools/change-status.html", guide: "tools/guide-change-status-en.html", icon: "swap" },
+    { id: "mman-vn",       title: "MMAN (Cut + Change Status)", desc: "MMAN × STATUS → MMAN_LCH / BKK / UCT.txt · optional B/L range cut + Change Status", src: "tools/mman-vn.html", guide: "tools/guide-mman-vn-en.html", icon: "swap" },
     { id: "cut-bl",        title: "CUT BL(PORTAL)",     desc: "HMAN: cut a B/L range or keep only some B/Ls · H05 = H06 · PG → PX → _PORTAL.txt", src: "tools/cut-bl.html", guide: "tools/guide-cut-bl-en.html", icon: "cut" },
     { id: "bayplan",       title: "Bayplan HUL",        desc: "Bayplan (.asc): keep HUL containers for LCH / BKK · HAL / HAC / HAS → HUL · RF TEMP -250C → -25C", src: "tools/bayplan.html", guide: "tools/guide-bayplan-en.html", icon: "ship" }
   ]},
@@ -186,7 +186,7 @@ document.querySelectorAll(".group-head").forEach(b =>
 
 // เปิดเครื่องมือตาม hash; iframe ถูกสร้างครั้งเดียวแล้วซ่อน/แสดง เพื่อให้งานที่ทำค้างไว้ไม่หาย
 function show() {
-  const id = { "check-dem": "do" }[location.hash.slice(1)] || location.hash.slice(1);   // Check DEM is DO step ① since 2026-11-05
+  const id = { "check-dem": "do", "change-status": "mman-vn" }[location.hash.slice(1)] || location.hash.slice(1);   // old links: Check DEM is DO step ① (2026-11-05), Change Status -> MMAN (2026-11-11)
   const t = TOOLS.find(t => t.id === id) || TOOLS[0];
   $("crumb").innerHTML = `${t.group} › ${t.title}${t.guide ? `<a class="guide" href="${t.guide}" target="_blank" rel="noopener">Guide</a>` : ""}<small>${t.desc}</small>`;
   document.title = t.title + " · EDI Tools";

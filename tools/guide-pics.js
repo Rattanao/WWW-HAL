@@ -12,7 +12,7 @@
 
   var PICS = {
     "check-cntrs": { w: 982, h: 255, marks: [[1,4.99,26.27,70.71,16.47],[2,77.12,33.33,7.12,14.12],[4,85.26,33.33,9.75,14.12]] },
-    "change-status": { w: 982, h: 643, marks: [[1,4.89,11.66,26.68,4.35],[2,4.89,26.2,26.68,4.35],[3,4.89,40.74,44.6,6.37],[4,4.89,63.59,90.22,5.29],[5,4.89,49.91,44.5,6.06],[7,50.41,49.91,44.7,6.06]] },
+    "mman-vn": { w: 982, h: 795, marks: [[1,4.89,9.43,26.68,3.52],[2,4.89,21.19,26.68,3.52],[3,4.89,32.94,90.22,4.27],[4,4.89,53.81,90.22,4.53],[5,4.89,71.92,44.5,4.9],[7,50.41,71.92,44.7,4.9]] },
     "cut-bl": { w: 982, h: 670, marks: [[1,4.89,11.19,26.68,4.18],[2,4.89,25.13,90.22,5.07],[3,4.89,58.4,90.22,9.96],[4,4.89,45.27,44.5,5.82],[6,50.41,45.27,44.7,5.82]] },
     "bayplan": { w: 982, h: 595, marks: [[1,4.89,12.78,90.22,7.06],[2,4.89,32.95,90.22,7.06],[3,22.91,42.7,22.81,5.72],[4,4.89,74.68,8.59,6.22],[5,85.32,74.51,9.79,6.56]] },
     "sum-edi": { w: 982, h: 569, marks: [[1,4.99,14.94,43.33,7.38],[2,49.34,12.48,21.66,9.84],[3,4.99,32.34,29.33,5.98],[4,4.99,43.94,29.33,6.33],[5,72.02,8.61,22.99,5.98],[7,85.26,15.99,9.75,6.33]] },
@@ -27,13 +27,13 @@
       ["ดูผลในตาราง (ช่องที่ไม่ตรงขึ้นสี) แล้วกด <b>Download CNTRS_EDI.xlsx</b>", "Read the results table (mismatches are coloured), then click <b>Download CNTRS_EDI.xlsx</b>"],
       ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
     ],
-    "change-status": [
+    "mman-vn": [
       ["เลือกไฟล์ <b>MMAN (.txt)</b>", "Choose the <b>MMAN (.txt)</b> file"],
       ["เลือกไฟล์ <b>STATUS</b> (.xls / .xlsx / .csv) — คอลัมน์ A–C: B/L No., Status, POL", "Choose the <b>STATUS</b> file (.xls / .xlsx / .csv) — columns A–C: B/L No., Status, POL"],
-      ["<b>SHED NO.</b> ช่องซ้าย = B/L ที่มี Status (0145) · ช่องขวา = B/L ที่เหลือ (0122) · ลบช่องขวาให้ว่าง = ใช้ช่องซ้ายทุก B/L", "<b>SHED NO.</b> left box = B/Ls with a Status (0145) · right box = the rest (0122) · empty right box = left box for every B/L"],
-      ["<b>Start B/L / End B/L</b> (ไม่ใส่ก็ได้) — ตัดเก็บเฉพาะช่วง B/L · ว่างทั้งสองช่อง = ใช้ทั้งไฟล์", "<b>Start B/L / End B/L</b> (optional) — keep only this B/L range · both empty = whole file"],
-      ["กด <b>Change</b>", "Click <b>Change</b>"],
-      ["ตรวจตัวอย่างบรรทัดที่แก้ แล้วกด <b>Download MMAN_EDI.txt</b>", "Check the sample changed lines, then click <b>Download MMAN_EDI.txt</b>"],
+      ["<b>Keep from B/L / To B/L</b> (ไม่ใส่ก็ได้) — ตัดเก็บเฉพาะช่วง B/L · ว่างทั้งสองช่อง = ไม่ตัด", "<b>Keep from B/L / To B/L</b> (optional) — keep only this B/L range · both empty = no cut"],
+      ["เลือก <b>POD</b> (THLCH / THBKK / THUCT) แล้วตรวจ <b>SHED NO.</b> ช่องซ้าย = B/L ที่มี Status · ช่องขวา = B/L อื่น", "Choose the <b>POD</b> (THLCH / THBKK / THUCT), then check <b>SHED NO.</b>: left = B/Ls with a Status · right = other B/Ls"],
+      ["กด <b>Cut + Change status</b>", "Click <b>Cut + Change status</b>"],
+      ["ตรวจสรุปผลและข้อความเตือน แล้วกด <b>Download MMAN_&lt;POD&gt;.txt</b>", "Check the summary and warnings, then click <b>Download MMAN_&lt;POD&gt;.txt</b>"],
       ["กด <b>Clear files</b> เพื่อเริ่มงานใหม่", "Click <b>Clear files</b> to start a new job"]
     ],
     "cut-bl": [

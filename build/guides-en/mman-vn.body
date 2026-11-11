@@ -1,0 +1,229 @@
+<body>
+
+<div class="wrap">
+  <header class="head">
+    <span class="logo-badge"><img src="assets/hal-logo-hd.png" alt="Heung A Line"></span>
+    <div class="tag">MMAN EDI file tool · import customs declaration</div>
+    <h1>MMAN — Cut B/Ls + Change Status</h1>
+    <p class="lede">Cuts an MMAN file down to the B/Ls you want (or no cut), then fills in POL, SHED NO., country code, consignee / notify names and changes the container STATUS from the job's B/L list. You get a file named by the POD (MMAN_LCH.txt / MMAN_BKK.txt / MMAN_UCT.txt) with every line the same length as before, ready to send</p>
+    <div class="flow" aria-label="How it works">
+      <span class="doc">MMAN_*.txt</span><span class="op">+</span>
+      <span class="doc">SUR.xls</span><span class="op">→</span>
+      <span class="out">MMAN_&lt;POD&gt;.txt</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="../#mman-vn">Use online (no install)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/5-mman-vnsgn/archive/refs/heads/main.zip">Download the program (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/5-mman-vnsgn">Open on GitHub</a>
+    </div>
+  </header>
+
+  <section class="panel" id="online">
+    <h2>Use online</h2>
+    <p class="sub">Fastest, nothing to install. Files are processed in your browser only and are never uploaded to a server</p>
+    <ol class="steps">
+      <li><div><p><b>Open the <a href="../#mman-vn">online page</a></b> and choose the MMAN file (.txt)</p></div></li>
+      <li><div><p><b>Choose the STATUS list</b> (.xls / .xlsx / .csv)</p></div></li>
+      <li><div>
+        <p><b>Keep from B/L … To B/L</b> (if you want to cut the file)</p>
+        <p class="note">Keeps the PSKV line, then only the B/Ls in this range (with sub-B/Ls …A, …B and container lines); the rest is cut · first box empty = from the first B/L · second box empty = to the last line · both empty = no cut</p>
+      </div></li>
+      <li><div>
+        <p><b>Choose the POD</b>, then check <b>SHED NO.</b>: left box = B/Ls with a Status, right box = other B/Ls</p>
+        <p class="note">Choosing the POD fills in the SHED: <b>THLCH</b> <code>2813</code> for every B/L (right box empty) · <b>THBKK</b> <code>0145</code> / <code>0122</code> · <b>THUCT</b> every B/L becomes THUCTTHUCT with SHED <code>0113</code> · you can edit the numbers · right box empty = the left box for every B/L</p>
+      </div></li>
+      <li><div>
+        <p><b>Click Cut + Change status</b>, check the summary, then click <b>Download</b> (file named by the POD, e.g. MMAN_BKK.txt)</p>
+        <p class="note">If the page still looks old, press <code>Ctrl + F5</code></p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="install">
+    <h2>First-time install (program on your computer)</h2>
+    <p class="sub">Once per computer, Windows · skip this if you only use the online page</p>
+    <ol class="steps">
+      <li><div>
+        <p><b>Install Python 3</b> from <a href="https://www.python.org/downloads/">python.org/downloads</a></p>
+        <p class="note">On the installer's first screen <span class="warn">tick ☑ Add python.exe to PATH</span> before clicking Install Now</p>
+      </div></li>
+      <li><div>
+        <p><b>Download the program</b> with the “Download the program (ZIP)” button above</p>
+        <p class="note">Right-click the ZIP → Extract All, and keep the folder anywhere, e.g. Documents</p>
+      </div></li>
+      <li><div>
+        <p><b>The first run needs internet</b></p>
+        <p class="note">The program installs the libraries it needs (pandas, xlrd, openpyxl) by itself</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="use">
+    <h2>Every time</h2>
+    <ol class="steps">
+      <li><div>
+        <p><b>Put the files in the <code>input</code> folder</b></p>
+        <p class="note">Delete the old job's files first, then put in one MMAN file (.txt) and one STATUS list (.xls/.xlsx/.csv). The result goes to the output folder</p>
+      </div></li>
+      <li><div>
+        <p><b>Double-click <code>run-mman.bat</code></b></p>
+      </div></li>
+      <li><div>
+        <p><b>Answer the questions in the black window</b>; press Enter to skip any of them</p>
+        <p class="note">Keep from B/L / To B/L (Enter on both = no cut) · POD <code>THLCH</code> / <code>THBKK</code> / <code>THUCT</code> (Enter = THLCH) · SHED NO. for B/Ls with a Status and for other B/Ls (Enter = the POD's values: THLCH 2813 · THBKK 0145 / 0122) · type <code>=</code> for other B/Ls = same as the first box</p>
+      </div></li>
+      <li><div>
+        <p><b>Open the result <code>output\MMAN_LCH.txt</code></b> (or MMAN_BKK.txt / MMAN_UCT.txt by POD)</p>
+        <p class="note">The black window sums up the B/Ls, the Status changes and PG→PX. Read any <code>WARNING</code> line before using the file</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <section class="panel" id="list">
+    <h2>STATUS list (Excel)</h2>
+    <p class="sub">Only columns A–C are used, with the headings on the first row; columns D–F do not matter. The program finds the columns by heading, so both forms work</p>
+    <div class="split">
+      <div>
+        <h3>SUR form</h3>
+        <div class="sheet-scroll">
+          <table class="sheet">
+            <thead><tr><th class="col">A</th><th class="col">B</th><th class="col">C</th></tr>
+              <tr><th>POL</th><th>Status</th><th>B/L No.</th></tr></thead>
+            <tbody>
+              <tr><td>CNSHA</td><td class="y">7  N</td><td>HASLC…909702</td></tr>
+              <tr><td>CNSHA</td><td></td><td>HASLC…909850</td></tr>
+              <tr><td>KRPTK</td><td></td><td>HASLK…804417</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3>KMBK form</h3>
+        <div class="sheet-scroll">
+          <table class="sheet">
+            <thead><tr><th class="col">A</th><th class="col">B</th><th class="col">C</th></tr>
+              <tr><th>B/L No.</th><th>Status</th><th>POL</th></tr></thead>
+            <tbody>
+              <tr><td>HASLK…700462</td><td class="y">9  N</td><td>KRPUS</td></tr>
+              <tr><td>HASLK…805808</td><td></td><td>KRPUS</td></tr>
+              <tr><td>HASLK…807609</td><td></td><td>KRKAN</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Examples only; B/L numbers shortened</p>
+    <ul class="check-list">
+      <li><b>B/L No.</b>: the master B/L number; it covers its sub-B/Ls too (…462A, …462B)</li>
+      <li><b>Status</b>, e.g. <code>9  N</code>, <code>7  N</code>, with any number of spaces (<code>7 N</code>, <code>7N</code>); the program puts it in the right place · empty = Status unchanged</li>
+      <li><b>POL</b>: 5 letters, e.g. <code>KRPUS</code>, <code>CNSHA</code></li>
+    </ul>
+  </section>
+
+  <section class="panel" id="changes">
+    <h2>What changes in the MMAN file</h2>
+    <p class="sub">Only the given positions change; the file size and line breaks stay byte for byte</p>
+    <div class="line-scroll">
+<pre class="mline"><span class="lab">before</span>HASLK01260700462                             THBKK    GOLDWAY…   TH   …   O ACRYLONITRILE…
+<span class="lab">after</span>HASLK01260700462                   <mark class="b">KRPUS</mark><mark class="g">THBKK</mark>THBKK<mark class="o">0145</mark>GOLDWAY…   <mark class="b">KR</mark>   …   O ACRYLONITRILE…
+<span class="lab">before</span>SKHU9545854      8  N   1        Y
+<span class="lab">after</span>SKHU9545854      <mark class="y">9</mark>  N   1        Y</pre>
+    </div>
+    <div class="trouble-scroll">
+      <table class="rules">
+        <thead><tr><th>#</th><th>Position</th><th>Value written</th></tr></thead>
+        <tbody>
+          <tr><td><span class="chip b">1</span></td><td class="pos">col 36–40</td><td>POL from the list, e.g. KRPUS</td></tr>
+          <tr><td><span class="chip g">2</span></td><td class="pos">col 41–45</td><td>The port most B/Ls in the file have (THBKK or THLCH), e.g. CNTAO<b>THLCH</b>THLKR0332</td></tr>
+          <tr><td><span class="chip">3</span></td><td class="pos">col 46–50</td><td>The original port (THBKK, THLCH, THLKR, …), not changed</td></tr>
+          <tr><td><span class="chip g">POD</span></td><td class="pos">col 41–50</td><td>POD <b>THUCT</b> (the file comes as THBKK) = every B/L becomes <b>THUCTTHUCT</b> with SHED 0113 · THLCH / THBKK = as in 2–3 (fixed)</td></tr>
+          <tr><td><span class="chip o">4</span></td><td class="pos">col 51–54</td><td>SHED NO. fixed by original port: <b>BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · LCH DG (with UN/CLASS) 2826 · BKK to LAOS 0124</b> · other BKK and LCH from the SHED NO. boxes (left = B/Ls with a Status, right = other B/Ls · POD values: THLCH <code>2813</code> · THBKK <code>0145</code> / <code>0122</code> · right box empty = the left box)</td></tr>
+          <tr><td><span class="chip b">5</span></td><td class="pos">col 844–845</td><td>First 2 letters of the POL in place of TH (KR, CN)</td></tr>
+          <tr><td><span class="chip y">6</span></td><td class="pos">container lines</td><td>Status from the list, e.g. 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N</td></tr>
+          <tr><td><span class="chip r">PX</span></td><td class="pos">package unit</td><td>PG → PX on every B/L</td></tr>
+          <tr><td><span class="chip b">5</span></td><td class="pos">col 3804</td><td>The O before the description → <b>5 only on B/Ls with Status 9&nbsp;&nbsp;N</b> · other B/Ls keep O · except TRANSIT/TRANSHIPMENT, which use 7 / 3 / L</td></tr>
+          <tr><td><span class="chip g">N</span></td><td class="pos">col 881 · 974 · 1765</td><td>Consignee and notify names = the notify name at <b>col 1672 (TH + name), always single-spaced</b>, on every B/L (BKK and LCH) · the address after the name stays · except TRANSIT/TRANSHIPMENT, never changed</td></tr>
+          <tr><td><span class="chip y">T</span></td><td class="pos">col 1670 · 3804</td><td><b>TRANSIT/TRANSHIPMENT</b>: the TH before the notify name = destination country (LA, MM, KH, CN, PG, MY) · the letter before the description: TRANSIT = 7, TRANSIT to LAOS = per CARGO MOVEMENT (L / 7), TRANSHIPMENT = 3</td></tr>
+          <tr><td><span class="chip">−</span></td><td class="pos">col 1742 · 1416 · 2207</td><td>Every B/L except TRANSIT/TRANSHIPMENT: clears the notify tax ID and the consignee / notify addresses (the consignee tax ID and branch code stay)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="split">
+      <div>
+        <h3>Always unchanged</h3>
+        <ul class="check-list">
+          <li>The <code>O</code> before the description (except TRANSIT/TRANSHIPMENT)</li>
+          <li>Names on TRANSIT/TRANSHIPMENT B/Ls</li>
+          <li>The Status of B/Ls whose Status cell is empty</li>
+          <li>B/Ls not in the list (you get a warning)</li>
+          <li>The source file in input is never changed</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Summary to check every time</h3>
+        <ul class="check-list">
+          <li>The number of B/Ls changed matches the list</li>
+          <li>The number of B/Ls per SHED</li>
+          <li>The Status changes and the number of container lines</li>
+          <li>The B/Ls changed PG → PX</li>
+          <li>The number of lines cut and the B/L range kept</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="claude">
+    <h2>With Claude Code</h2>
+    <p class="sub">For people who already use Claude Code: install the skill once, then ask for mman vn / Change status</p>
+    <div class="cmd">
+      <pre id="clone">git clone https://github.com/Rattanao/5-mman-vnsgn.git %TEMP%\mmanvn &amp;&amp; xcopy /E /I /Y %TEMP%\mmanvn\skill\mman-vn %USERPROFILE%\.claude\skills\mman-vn &amp;&amp; xcopy /I /Y %TEMP%\mmanvn\*.py %USERPROFILE%\.claude\skills\mman-vn\scripts</pre>
+      <button type="button" data-target="clone">Copy</button>
+    </div>
+    <p class="note">Restart Claude Code, open the job folder that has input, and type e.g. “ทำ mman vn เริ่มต้นเก็บ BL HASLS21260801066 ถึง BL HASLS21260801762 POD THBKK” or “Change status” (no cut)</p>
+  </section>
+
+  <section class="panel" id="help">
+    <h2>Troubleshooting</h2>
+    <div class="trouble-scroll">
+      <table class="trouble">
+        <thead><tr><th>Message / symptom</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>Python was not found</td><td>Reinstall Python and tick Add python.exe to PATH</td></tr>
+          <tr><td>ERROR: need exactly 1 MMAN_*.txt / list file</td><td>input must hold one MMAN file and one STATUS list; delete the old job's files</td></tr>
+          <tr><td>ERROR: no B/L in the MMAN file matches the list</td><td>The STATUS list is not for this vessel; check you used the matching files</td></tr>
+          <tr><td>WARNING B/L NOT in list</td><td>B/Ls in the MMAN file that are not in the list are not changed; add them to the list and run again</td></tr>
+          <tr><td>ERROR: unrecognised Status</td><td>A Status must be 1 digit + 1 letter, e.g. 9  N</td></tr>
+          <tr><td>PermissionError: [Errno 13]</td><td>Close the result file (MMAN_LCH.txt etc.) if it is open, then run again</td></tr>
+          <tr><td>ERROR: start B/L … / end B/L … not found</td><td>The B/L number typed is not in the MMAN file; check it again</td></tr>
+          <tr><td>Start B/L … / B/L … not found in the MMAN file</td><td>Type the B/L exactly as in the MMAN file (the master B/L, no A, B at the end); “To B/L” must come after the start B/L</td></tr>
+          <tr><td>The page still looks old</td><td>Press Ctrl + F5</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p class="credit">Project by <b>Ms. Rattana Mudlae</b> · Position Import DOC.</p>
+    <p>Always check the summary before sending the file, especially WARNING lines</p>
+    <p>Updating the program: download the ZIP again and extract it over the old folder · code: <a href="https://github.com/Rattanao/5-mman-vnsgn">github.com/Rattanao/5-mman-vnsgn</a></p>
+  </footer>
+</div>
+
+<script>
+document.querySelectorAll('button[data-target]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var el = document.getElementById(btn.dataset.target);
+    var text = el.textContent;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(el);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Press Ctrl+C';
+    };
+    try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+  });
+});
+</script>
+<script src="guide-lang.js"></script>
+</body>
+</html>

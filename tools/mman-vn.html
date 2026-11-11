@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Change Status MMAN</title>
+<title>MMAN — Cut + Change Status</title>
 <link rel="icon" href="assets/hal-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600&family=Sarabun:wght@400;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
@@ -11,21 +11,21 @@
 <style>
 :root {
   --bg: #f0f2f5; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --line: #d1d5db;
-  --navy: #2c4f7c; --navy-hover: #23426a; --on-navy: #ffffff; --input-bg: #ffffff;
+  --navy: #2c4f7c; --navy-hover: #23426a; --navy-text: #2c4f7c; --on-navy: #ffffff; --input-bg: #ffffff;
   --ok: #1a7f4b; --ok-soft: #e3f4ea;
   --warn: #9a5b00; --warn-soft: #fdf1dc; --hl: #fff2a8; --hl-text: #1f2937;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #12161d; --card: #1b212b; --text: #e6e9ef; --muted: #9aa3b2; --line: #343c4a;
-    --navy: #2c4f7c; --navy-hover: #3a6399; --on-navy: #ffffff; --input-bg: #141920;
+    --navy: #2c4f7c; --navy-hover: #3a6399; --navy-text: #9dbbe6; --on-navy: #ffffff; --input-bg: #141920;
     --ok: #5fd39a; --ok-soft: #173326;
     --warn: #f0b457; --warn-soft: #3a2d15; --hl: #5c4d00; --hl-text: #fff6c7;
   }
 }
 :root[data-theme="dark"] {
   --bg: #12161d; --card: #1b212b; --text: #e6e9ef; --muted: #9aa3b2; --line: #343c4a;
-  --navy: #2c4f7c; --navy-hover: #3a6399; --on-navy: #ffffff; --input-bg: #141920;
+  --navy: #2c4f7c; --navy-hover: #3a6399; --navy-text: #9dbbe6; --on-navy: #ffffff; --input-bg: #141920;
   --ok: #5fd39a; --ok-soft: #173326;
   --warn: #f0b457; --warn-soft: #3a2d15; --hl: #5c4d00; --hl-text: #fff6c7;
 }
@@ -34,22 +34,22 @@ body { margin: 0; background: var(--bg); color: var(--text);
   font: 15px/1.6 "Sarabun", system-ui, sans-serif; }
 header.bar { background: var(--navy); color: var(--on-navy); padding: 16px 28px;
   display: flex; justify-content: space-between; align-items: center; gap: 8px 24px; flex-wrap: wrap; }
+header.bar .by { font: 14px/1.5 "Sarabun", sans-serif; text-align: right; opacity: .9; }
+@media (max-width: 640px) { header.bar .by { text-align: left; } }
 header.bar h1 { font: 600 24px/1.4 "Kanit", sans-serif; margin: 0; }
 header.bar .brand { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; min-width: 0; }
-.logo-badge { background: #ffffff; border-radius: 6px; padding: 5px 10px; display: inline-flex; line-height: 0; flex: none; }
+.logo-badge { background: #fff; border-radius: 6px; padding: 5px 10px; display: inline-flex; line-height: 0; flex: none; }
 .logo-badge img { height: 30px; width: auto; display: block; }
-@media (max-width: 640px) { .logo-badge img { height: 24px; } header.bar h1 { font-size: 20px; } }
-header.bar .credit { font: 400 13.5px/1.45 "Sarabun", sans-serif; text-align: right; opacity: .9; }
-header.bar .credit b { font-weight: 600; }
-@media (max-width: 640px) { header.bar .credit { text-align: left; } }
 main { max-width: 1200px; margin: 0 auto; padding: 24px 28px 60px; }
 @media (max-width: 640px) { header.bar, main { padding-left: 16px; padding-right: 16px; } }
 .card { background: var(--card); border-radius: 10px; padding: 24px 26px; margin-bottom: 18px;
   box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 14px rgba(0,0,0,.04); }
-.form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 18px; align-items: end; }
-.form.row2 { grid-template-columns: repeat(2, minmax(0, 380px)); margin-top: 18px; }
+.form { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr .8fr .8fr auto; gap: 18px; align-items: end; }
+.fld select { width: 100%; font: 17px "Sarabun", sans-serif; padding: 9px 10px; border: 1px solid var(--line);
+  border-radius: 5px; background: var(--input-bg); color: var(--text); }
+.fld select:focus { outline: 2px solid var(--navy); outline-offset: -1px; }
 .form > * { min-width: 0; }
-@media (max-width: 1000px) { .form, .form.row2 { grid-template-columns: 1fr; } .form button { width: 100%; } }
+@media (max-width: 1000px) { .form { grid-template-columns: 1fr; } .form button { width: 100%; } }
 @media (max-width: 640px) { .card { padding: 18px 16px; } }
 .fld > .lb { display: block; font: 500 17px/1.4 "Kanit", sans-serif; margin-bottom: 10px; }
 .fld input[type=file] { font: 14px "Sarabun", sans-serif; color: var(--muted); max-width: 100%; }
@@ -68,6 +68,10 @@ button:hover:not(:disabled) { background: var(--navy-hover); }
 button:disabled { opacity: .45; cursor: not-allowed; }
 button.sec { background: #2f7a4f; }
 button.sec:hover:not(:disabled) { background: #256340; }
+button.ghost { background: var(--card); color: var(--navy-text); border: 1.5px solid var(--navy-text); padding: 10.5px 20px; }
+button.ghost:hover:not(:disabled) { background: var(--bg); }
+.btns { display: flex; gap: 10px; }
+@media (max-width: 1000px) { .btns > button { flex: 1; } }
 .res-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
 h2 { font: 500 18px "Kanit", sans-serif; margin: 0; }
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
@@ -84,25 +88,13 @@ code, .mono { font-family: "IBM Plex Mono", monospace; font-size: 13px; }
 mark { background: var(--hl); color: var(--hl-text); border-radius: 2px; }
 .pre { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; background: var(--bg); padding: 10px; border-radius: 8px; }
 details summary { cursor: pointer; color: var(--muted); }
-.btns { display: flex; gap: 10px; }
-.btns button { flex: 1; }
-button.ghost { background: var(--card); color: var(--navy); border: 1.5px solid var(--navy); padding: 10.5px 20px; }
-button.ghost:hover:not(:disabled) { background: #eef3f9; }
-:root[data-theme="dark"] button.ghost { color: #9cc0ee; border-color: #6f96c6; }
-:root[data-theme="dark"] button.ghost:hover:not(:disabled) { background: #1f2a3a; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) button.ghost { color: #9cc0ee; border-color: #6f96c6; }
-  :root:not([data-theme="light"]) button.ghost:hover:not(:disabled) { background: #1f2a3a; } }
 .hidden { display: none; }
 </style>
 <script src="embed.js"></script>
 </head>
 <body>
-<header class="bar">
-  <div class="brand">
-    <span class="logo-badge"><img src="assets/hal-logo-hd.png" alt="Heung A Line"></span>
-    <h1>Change Status — MMAN × STATUS → MMAN_EDI.txt</h1>
-  </div>
-  <div class="credit">Project by <b>Ms. Rattana Mudlae</b><br>Position Import DOC.<br><span style="opacity:.75;font-size:12px">Version 30/10/2026 · 9 N: O → 5</span></div>
+<header class="bar"><div class="brand"><span class="logo-badge"><img src="assets/hal-logo-hd.png" alt="Heung A Line"></span><h1>MMAN — Cut B/Ls + Change Status → <span id="outName">MMAN_LCH.txt</span></h1></div>
+  <div class="by">Project by Ms. Rattana Mudlae<br>Position Import DOC.<br><span style="opacity:.75;font-size:12px">Version 11/11/2026 · 2 SHED boxes + guide</span></div>
 </header>
 <main>
   <div class="card">
@@ -118,59 +110,65 @@ button.ghost:hover:not(:disabled) { background: #eef3f9; }
         <span class="fn" id="fnList"></span>
       </div>
       <div class="fld">
-        <span class="lb">SHED NO. (with Status / others)</span>
-        <div class="shed">
-          <input id="shedYes" value="0145" maxlength="4" placeholder="0145" aria-label="Shed for B/Ls with a Status">
-          <input id="shedNo" value="0122" maxlength="4" placeholder="empty = use left box" aria-label="Shed for other B/Ls (empty = left box for every B/L)">
-        </div>
-      </div>
-      <div class="btns">
-        <button id="run" disabled>Change</button>
-        <button type="button" id="clearAll" class="ghost">Clear files</button>
-      </div>
-    </div>
-    <div class="form row2">
-      <div class="fld">
-        <label class="lb" for="startBl">Start B/L</label>
+        <label class="lb" for="startBl">Keep from B/L</label>
         <input type="text" id="startBl" maxlength="35" placeholder="empty = from the first B/L" autocomplete="off" spellcheck="false">
       </div>
       <div class="fld">
-        <label class="lb" for="endBl">End B/L</label>
+        <label class="lb" for="endBl">To B/L</label>
         <input type="text" id="endBl" maxlength="35" placeholder="empty = to the last line" autocomplete="off" spellcheck="false">
       </div>
+      <div class="fld">
+        <label class="lb" for="pod">POD</label>
+        <select id="pod">
+          <option value="THLCH">THLCH</option>
+          <option value="THBKK">THBKK</option>
+          <option value="THUCT">THUCT</option>
+        </select>
+      </div>
+      <div class="fld">
+        <label class="lb" for="shedYes">SHED NO. (B/Ls with a Status · other B/Ls)</label>
+        <div class="shed">
+          <input id="shedYes" value="2813" maxlength="4" placeholder="2813" aria-label="Shed for B/Ls with a Status">
+          <input id="shedNo" value="" maxlength="4" placeholder="empty = same as left" aria-label="Shed for other B/Ls (empty = the left box for every B/L)">
+        </div>
+      </div>
+      <div class="btns">
+        <button id="run" disabled>Cut + Change status</button>
+        <button id="clear" class="ghost" type="button">Clear files</button>
+      </div>
     </div>
-    <p class="note">Start B/L … End B/L: keeps the PSKV line, then keeps only the B/Ls from the start B/L to the end B/L (including sub-B/Ls …A, …B and their container lines); the rest is cut · Both empty = no cut, whole file · SHED NO.: B/Ls with a Status use the left box (0145), the rest use the right box (0122) · Clear the right box = use the left SHED NO. for every B/L (e.g. LCH jobs) · Processed in your browser, no file upload · <a href="guide-change-status-en.html" style="color:inherit;font-weight:600">User guide</a></p>
+    <p class="note">Keep from B/L … to B/L: keeps the PSKV line, then only the given first to last B/L (with sub-B/Ls …A, …B and that B/L's container lines); everything else is cut · first box empty = from the first B/L · second box empty = to the last line · both empty = no cut · SHED NO.: left box = B/Ls with a Status · right box = other B/Ls (empty = the left box for every B/L) · choosing the POD fills them in: THLCH 2813 · THBKK 0145 / 0122 (editable) · fixed ports do not use these boxes: THLCH DG 2826 · BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THBKK to LAOS 0124 · POD: THLCH / THBKK work as before (fixed) · THUCT = every B/L gets col 41-50 THUCTTHUCT and SHED 0113 (the file comes as THBKK) · processed in your browser, no file is uploaded · <a href="guide-mman-vn-en.html" style="color:inherit;font-weight:600">User guide</a></p>
   </div>
 
   <div class="card hidden" id="result">
     <div class="res-head">
-      <h2>Status change results</h2>
-      <button id="dl" class="sec hidden">Download MMAN_EDI.txt</button>
+      <h2>Cut and Status change results</h2>
+      <button id="dl" class="sec hidden">Download <span id="dlName">MMAN_LCH.txt</span></button>
     </div>
     <div id="msgs"></div>
     <div class="stats" id="stats"></div>
     <div class="tbl-wrap"><table id="tbl"></table></div>
-    <details style="margin-top:12px"><summary>Sample changed lines (highlight = changed position)</summary><div class="pre" id="preview"></div></details>
+    <details style="margin-top:12px"><summary>Sample changed lines (highlight = changed positions)</summary><div class="pre" id="preview"></div></details>
   </div>
 
   <div class="card">
     <details><summary>Rules applied</summary>
-      <p><b>Step 1 Cut (if B/Ls are given)</b> — always keeps the first line (PSKV), keeps from "Start B/L" to "End B/L" (including sub-B/Ls and the container lines of the last B/L); lines before and after the range are cut · Both empty = no cut</p>
-      <p><b>Step 2 Change status</b> (on the remaining B/Ls)</p>
+      <p><b>Step 1 Cut</b> — always keeps the first line (PSKV), keeps from "Keep from B/L" to "To B/L" (with the last B/L's sub-B/Ls and container lines); every line before and after this range is cut</p>
+      <p><b>Step 2 Change status</b> (on the B/Ls kept)</p>
       <ol>
         <li>col 36-40 = POL (column C)</li>
-        <li>col 41-45 = port of most B/Ls in the file (e.g. THBKK, THLCH) · e.g. CNTAO<b>THLCH</b>THLKR0332</li>
-        <li>col 46-50 = port as in the original (THBKK, THLCH, THLKR, …), kept, never changed</li>
-        <li>col 51-54 = Shed locked by the original port: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · LCH with DG (has UN/CLASS) 2826 · BKK going to LAOS 0124 · other BKK and LCH B/Ls use the SHED NO. boxes (0145 if the B/L has a Status / 0122 for the rest · right box empty = use the left box)</li>
+        <li>col 41-45 = the port most B/Ls in the file have (e.g. THBKK, THLCH)</li>
+        <li>col 46-50 = original port (THLCH, THLKR, …), kept unchanged</li>
+        <li>col 51-54 = Shed by original port: BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · THLCH DG (with UN/CLASS) 2826 · THBKK to LAOS 0124 · the rest from SHED NO. (B/Ls with a Status = left box · other B/Ls = right box)</li>
         <li>col 844-845 = first 2 letters of the POL (in place of TH)</li>
-        <li>Container line = Status from column B (e.g. 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N), empty = unchanged</li>
-        <li>Package unit PG → PX on every B/L · The letter O before the description (col 3804) → 5 only for B/Ls with Status 9 N · other B/Ls keep O (TRANSIT/TRANSHIPMENT use 7/3/L, see below)</li>
-        <li>Consignee name (col 881, 974) and notify name (col 1765) = always the notify name at col 1672 (the TH + name position), single-spaced only, on every B/L (BKK and LCH) · At col 974 and 1765 only the name part changes, the address after it is kept · Except TRANSIT/TRANSHIPMENT B/Ls, which are left unchanged</li>
+        <li>Container lines = Status from column B (e.g. 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N); empty = unchanged</li>
+        <li>Package unit PG → PX on every B/L · the O before the description (col 3804) → 5 only on B/Ls with Status 9 N · other B/Ls keep O (TRANSIT/TRANSHIPMENT use 7/3/L, see below)</li>
+        <li>Consignee name (col 881, 974) and notify name (col 1765) = the notify name at col 1672 (TH + name), single-spaced only, on every B/L (BKK and LCH) · at col 974 and 1765 only the name part changes, the address after it stays · except TRANSIT/TRANSHIPMENT B/Ls, never changed</li>
         <li>TRANSIT/TRANSHIPMENT B/Ls: col 1670-1671 (the TH before the notify name) = destination country LA=LAO · MM=MYANMAR · KH=CAMBODIA · CN=CHINA · PG=PAPUA NEW GUINEA · MY=MALAYSIA</li>
-        <li>Every B/L except TRANSIT/TRANSHIPMENT: clears the notify tax ID (col 1742-1754) and the consignee (col 1416-1669) / notify (col 2207-2460) addresses · The consignee tax ID and branch code are kept</li>
-        <li>TRANSIT/TRANSHIPMENT B/Ls: col 3804 (letter before the description) TRANSIT = 7 · TRANSIT to LAOS = per "CARGO MOVEMENT = L / 7" in the MMAN (none = 7) · TRANSHIPMENT = 3 · Other B/Ls keep O (Status 9 N = 5)</li>
+        <li>Every B/L except TRANSIT/TRANSHIPMENT: clears the notify tax ID (col 1742-1754) and the consignee (col 1416-1669) / notify (col 2207-2460) addresses · the consignee tax ID and branch code stay</li>
+        <li>TRANSIT/TRANSHIPMENT B/Ls: col 3804 (the letter before the description) TRANSIT = 7 · TRANSIT to LAOS = per "CARGO MOVEMENT = L / 7" in the MMAN (none = 7) · TRANSHIPMENT = 3 · other B/Ls keep O (Status 9 N = 5)</li>
       </ol>
-      A B/L in column A also covers its sub-B/Ls (…462A, …462B) · Line lengths and line endings (CRLF) stay identical byte for byte · Without a cut, the file size equals the original
+      A B/L in column A covers its sub-B/Ls too (…462A, …462B) · after the cut, line lengths and line breaks (CRLF) stay byte for byte
     </details>
   </div>
 </main>
@@ -179,6 +177,9 @@ button.ghost:hover:not(:disabled) { background: #eef3f9; }
 const COL = { POL: 35, COPY: 40, PORT: 45, SHED: 50, CTRY: 843, STATUS: 17 };
 // consignee name (880), consignee name+address (973), notify name (1671) <- name at notify name+address (1764)
 const NAME = { C_NAME: 880, C_FULL: 973, N_NAME: 1671, N_FULL: 1764, W: 70, W_FULL: 696 };  // name = 70 chars; tax ID + branch follow, never touched
+// shed by the original port (col 46-50); THLCH DG (UN/CLASS) = 2826; the rest = SHED NO.
+const PORT_SHED = { THBMT: "0110", THSCT: "0302", THLKR: "0332", THUCT: "0113" }, SHED_LCH_DG = "2826", SHED_BKK_LAOS = "0124";  // THBKK B/L going to LAOS = 0124 every time
+const DG_RE = /\bUN\s?(?:NO\.?\s?)?\d{4}\b|\bIMO\b|\bIMDG\b|\bCLASS\s?\d/i;
 const TRANSIT_RE = /TRANSIT\b|\bTRANS[\s-]?S?HIP/i;  // also "INTRANSIT"
 // TRANSIT/TRANSHIPMENT: notify country (col 1669, "TH") = destination country,
 // found in the consignee name+address (col 973, last mention), else in the description (first mention)
@@ -205,9 +206,6 @@ function destCountry(line) {
 const words = t => t.trim().split(/\s+/).filter(Boolean).join(" ");
 const setAt = (t, pos, v) => t.slice(0, pos) + v + t.slice(pos + v.length);
 
-// PORT-locked SHED (col 46-50 original port); THLCH with DG (UN/CLASS) = 2826; THBKK / other THLCH = SHED NO. boxes
-const PORT_SHED = { THBMT: "0110", THSCT: "0302", THLKR: "0332", THUCT: "0113" }, SHED_LCH_DG = "2826", SHED_BKK_LAOS = "0124";  // THBKK B/L going to LAOS = 0124 every time
-const DG_RE = /\bUN\s?(?:NO\.?\s?)?\d{4}\b|\bIMO\b|\bIMDG\b|\bCLASS\s?\d/i;
 // Master name = the notify name at col 1672 (after "TH"), single spaces only -> consignee name (881),
 // name part of consignee name+address (974) and of notify name+address (1765). TRANSIT/TRANSHIPMENT: names kept.
 // returns [line, result]: changed / same / transit (kept) / differ (no notify name and no name at 1765, kept)
@@ -279,7 +277,7 @@ bindDrop("dropList", "inList", "fnList", async f => {
   const head = (rows[0] || []).slice(0, 3).map(key);
   const find = p => head.findIndex(h => h.startsWith(p));
   let ci = { bl: find("bl"), st: find("status"), pol: find("pol") };
-  const dgCol = (rows[0] || []).map(key).indexOf("dg");  // SUR form may have a DG column ("DG:3  UN:1245")
+  const dgCol = (rows[0] || []).map(key).indexOf("dg");  // SUR form has a DG column ("DG:3  UN:1245")
   if (Object.values(ci).some(i => i < 0)) ci = { bl: 0, st: 1, pol: 2 };
   const cfg = {};
   rows.slice(1).forEach(r => {
@@ -298,7 +296,7 @@ function normStatus(st) {
   let t = st.trim().split(/\s+/);
   if (t.length === 1 && t[0].length === 2) t = [t[0][0], t[0][1]];
   if (t.length === 2 && t[0].length === 1 && t[1].length === 1) return (t[0] + "  " + t[1]).toUpperCase();
-  throw new Error("Unrecognised Status: " + st);
+  throw new Error("Status in the wrong format: " + st);
 }
 
 const str = (b, s, e) => { let o = ""; for (let i = s; i < e; i++) o += String.fromCharCode(b[i]); return o; };
@@ -346,9 +344,8 @@ function run() {
     return;
   }
   const src = cutBuf, out = new Uint8Array(src);
-  // ช่อง "อื่น" ว่าง = ใช้ SHED NO. ช่องซ้ายกับทุก B/L (เช่นงาน LCH ที่ไม่มี Status)
-  const yes = $("shedYes").value.trim(), no = $("shedNo").value.trim() || yes;
-  const shedYes = yes.padEnd(4).slice(0, 4), shedNo = no.padEnd(4).slice(0, 4);
+  const shedYes = $("shedYes").value.trim() || "2813", shedNo = $("shedNo").value.trim() || shedYes;
+  const shed = shedYes.padEnd(4).slice(0, 4), shed2 = shedNo.padEnd(4).slice(0, 4);  // B/L with Status / other B/Ls
   const rep = { bl: [], statusCount: {}, pg: [], notInList: [], noPol: [], layout: [], cut: cutInfo, sheds: {}, dg: [], transitCtry: [], transitNoCtry: [], cleared: [], o5: [],
                 names: { changed: [], same: [], transit: [], differ: [] } };
   const lines = [];
@@ -359,11 +356,12 @@ function run() {
       lines.push([start, end]); start = i + 1;
     }
   }
-  // port of discharge (col 41-45) = the port most B/Ls have in col 46-50 (THBKK, THLCH); THLKR etc. stay in col 46-50
+  // port of discharge = the port most B/Ls have in col 46-50 (THBKK, THLCH); THLKR and others stay in col 46-50
   const ports = {};
-  for (const [s] of lines) if (str(src, s, s + 4) === "HASL") { const p = str(src, s + COL.PORT, s + COL.PORT + 5); if (p.trim()) ports[p] = (ports[p] || 0) + 1; }
-  const portMain = Object.keys(ports).sort((a, b) => ports[b] - ports[a])[0] || "";
-  rep.port = portMain;
+  for (const [s, e] of lines) if (str(src, s, s + 4) === "HASL") { const p = str(src, s + COL.PORT, s + COL.PORT + 5); if (p.trim()) ports[p] = (ports[p] || 0) + 1; }
+  const port = Object.keys(ports).sort((a, b) => ports[b] - ports[a])[0] || "";
+  const force = $("pod").value === "THUCT" ? "THUCT" : "";  // THLCH / THBKK = automatic (locked)
+  rep.port = force || port;
   const previews = [];
   for (const [s, e] of lines) {
     const head = str(src, s, Math.min(e, s + 20));
@@ -374,12 +372,13 @@ function run() {
       if (e - s < COL.CTRY + 2 || !str(src, s + COL.PORT, s + COL.PORT + 5).trim() || str(src, s + COL.POL, s + COL.COPY).trim()) rep.layout.push(bl);
       if (c.pol) { put(out, s + COL.POL, c.pol.padEnd(5).slice(0, 5)); put(out, s + COL.CTRY, c.pol.slice(0, 2)); }
       else rep.noPol.push(bl);
-      put(out, s + COL.COPY, portMain || str(src, s + COL.PORT, s + COL.PORT + 5));
-      const port = str(src, s + COL.PORT, s + COL.PORT + 5), dg = !!c.dg || DG_RE.test(str(src, s + 3302, e));
-      const sh = port === "THBKK" && destCountry(str(src, s, e)) === "LA" ? SHED_BKK_LAOS
-        : PORT_SHED[port] || (port === "THLCH" && dg ? SHED_LCH_DG : (c.status ? shedYes : shedNo));
+      if (force) { put(out, s + COL.PORT, force); put(out, s + COL.COPY, force); }
+      else put(out, s + COL.COPY, port || str(src, s + COL.PORT, s + COL.PORT + 5));
+      const dg = !!c.dg || DG_RE.test(str(src, s + 3302, e)), orig = str(out, s + COL.PORT, s + COL.PORT + 5);
+      const sh = orig === "THBKK" && destCountry(str(src, s, e)) === "LA" ? SHED_BKK_LAOS
+        : PORT_SHED[orig] || (orig === "THLCH" && dg ? SHED_LCH_DG : (c.status ? shed : shed2));
       put(out, s + COL.SHED, sh);
-      rep.sheds[`${sh} (${port})`] = (rep.sheds[`${sh} (${port})`] || 0) + 1;
+      rep.sheds[sh] = (rep.sheds[sh] || 0) + 1;
       if (dg) rep.dg.push(bl);
       const m = /\d{11}KGM\d{8}PG\d{11}MTQ/.exec(str(src, s, e));
       if (m) { put(out, s + m.index + 22, "PX"); rep.pg.push(bl); }
@@ -395,7 +394,7 @@ function run() {
         }
         if (res === "transit") { const c = nl.slice(N_CTRY, N_CTRY + 2); if (c !== "TH") rep.transitCtry.push(`${bl}=${c} (${nl[MOVE]})`); else rep.transitNoCtry.push(bl); }
       }
-      rep.bl.push({ bl, status: c.status, pol: c.pol, shed: sh, port, dg });
+      rep.bl.push({ bl, status: c.status, pol: c.pol, shed: sh, port: orig, dg });
       if (previews.length < 6) previews.push([s, Math.min(e, s + 70)]);
     } else if (cur && /^[A-Z]{4}\d{7} /.test(head)) {
       put(out, s + COL.STATUS, cur);
@@ -403,33 +402,36 @@ function run() {
       if (previews.length < 6) previews.push([s, e]);
     }
   }
+  if (!rep.bl.length) {  // the list belongs to another vessel
+    $("msgs").innerHTML = `<div class="warn">No B/L in the MMAN file matches the STATUS list — check the list is for the same vessel</div>`;
+    $("stats").innerHTML = $("tbl").innerHTML = $("preview").innerHTML = "";
+    $("result").classList.remove("hidden"); $("dl").classList.add("hidden");
+    return;
+  }
   let changed = 0; for (let i = 0; i < src.length; i++) if (src[i] !== out[i]) changed++;
   outBytes = out;
-  render(rep, changed, previews, shedYes, shedNo);
+  render(rep, changed, previews, shed);
 }
 
 function esc(t) { return t.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
 
-function render(rep, changed, previews, shedYes, shedNo) {
+function render(rep, changed, previews, shed) {
   const nYes = rep.bl.filter(b => b.status).length;
   const statusTxt = Object.entries(rep.statusCount).map(([k, v]) => `${k.trim()} ×${v}`).join(", ") || "none";
   $("stats").innerHTML = [
-    [rep.bl.length, "B/Ls changed"],
-    ...Object.entries(rep.sheds).sort().map(([k, v]) => [v, `Shed ${k}`]), [rep.dg.length, "B/L DG"],
-    [Object.values(rep.statusCount).reduce((a, b) => a + b, 0), "Container lines with Status changed"], [rep.pg.length, "PG → PX"], [changed, "Bytes changed"]
+    [rep.bl.length, "B/Ls changed"], [nYes, "B/Ls with a Status"], ...Object.entries(rep.sheds).map(([k, v]) => [v, `Shed ${k}`]), [rep.dg.length, "B/L DG"],
+    [Object.values(rep.statusCount).reduce((a, b) => a + b, 0), "Container lines with a new Status"], [rep.pg.length, "PG → PX"], [changed, "Bytes changed"]
   ].map(([n, l]) => `<div class="stat"><div class="n">${n}</div><div class="l">${esc(l)}</div></div>`).join("");
-  const cutTxt = rep.cut ? `Cut ${rep.cut.removed} line(s) (${rep.cut.total} → ${rep.cut.kept} line(s)) · File size ${outBytes.length.toLocaleString()} bytes`
-                         : `Not cut · File size unchanged ${outBytes.length.toLocaleString()} bytes`;
-  let msgs = `<div class="okmsg">${cutTxt} · Status: ${esc(statusTxt)}${rep.pg.length ? " · PG→PX: " + rep.pg.join(", ") : ""}</div>`;
+  const cutTxt = rep.cut ? `Cut ${rep.cut.removed} lines (${rep.cut.total} → ${rep.cut.kept} lines) · ` : "No cut (no B/L given) · ";
+  let msgs = `<div class="okmsg">${cutTxt}File size ${outBytes.length.toLocaleString()} bytes · Status: ${esc(statusTxt)}${rep.pg.length ? " · PG→PX: " + rep.pg.join(", ") : ""}</div>`;
   if (rep.notInList.length) msgs += `<div class="warn">B/Ls not in the list (not changed): ${rep.notInList.join(", ")}</div>`;
   if (rep.noPol.length) msgs += `<div class="warn">B/Ls with no POL: ${rep.noPol.join(", ")}</div>`;
-  msgs += `<div class="okmsg">Port col 41-45: ${esc(rep.port || "-")}</div>`;
-  msgs += `<div class="okmsg">Consignee / notify names per col 1672 (single-spaced): changed ${rep.names.changed.length} B/L${rep.names.changed.length ? " (" + rep.names.changed.join(", ") + ")" : ""} · already correct ${rep.names.same.length} B/L</div>`;
-  if (rep.names.transit.length) msgs += `<div class="warn">TRANSIT/TRANSHIPMENT B/Ls, names kept: ${rep.names.transit.join(", ")}${rep.transitCtry.length ? " · destination country col 1670 (and description code): " + rep.transitCtry.join(", ") : ""}</div>`;
-  if (rep.o5.length) msgs += `<div class="okmsg">O → 5 (Status 9 N): ${rep.o5.length} B/L</div>`;
-  if (rep.cleared.length) msgs += `<div class="okmsg">Cleared notify tax ID and consignee / notify addresses: ${rep.cleared.length} B/L</div>`;
-  if (rep.transitNoCtry.length) msgs += `<div class="warn">TRANSIT B/Ls with no destination country found (TH kept, please check): ${rep.transitNoCtry.join(", ")}</div>`;
-  if (rep.names.differ.length) msgs += `<div class="warn">No notify name at col 1672 (kept, please check): ${rep.names.differ.join(", ")}</div>`;
+  msgs += `<div class="okmsg">Port col 41-45: ${esc(rep.port || "-")} · Names per col 1672: changed ${rep.names.changed.length} B/L${rep.names.changed.length ? " (" + rep.names.changed.join(", ") + ")" : ""} · already matching ${rep.names.same.length} B/L</div>`;
+  if (rep.names.transit.length) msgs += `<div class="warn">TRANSIT/TRANSHIPMENT B/Ls, names unchanged: ${rep.names.transit.join(", ")}${rep.transitCtry.length ? " · destination country col 1670 (and the code before the description): " + rep.transitCtry.join(", ") : ""}</div>`;
+  if (rep.o5.length) msgs += `<div class="okmsg">O → 5 (Status 9 N): ${rep.o5.join(", ")}</div>`;
+  if (rep.cleared.length) msgs += `<div class="okmsg">Notify tax ID and consignee / notify addresses cleared: ${rep.cleared.join(", ")}</div>`;
+  if (rep.transitNoCtry.length) msgs += `<div class="warn">TRANSIT B/Ls with no destination country found (TH kept, check): ${rep.transitNoCtry.join(", ")}</div>`;
+  if (rep.names.differ.length) msgs += `<div class="warn">No notify name at col 1672 (unchanged, check): ${rep.names.differ.join(", ")}</div>`;
   if (rep.layout.length) msgs += `<div class="warn">Unusual column positions, check before use: ${rep.layout.join(", ")}</div>`;
   $("msgs").innerHTML = msgs;
   $("tbl").innerHTML = "<tr><th>B/L No.</th><th>POL</th><th>Port</th><th>Status</th><th>DG</th><th>Shed</th></tr>" +
@@ -443,22 +445,33 @@ function render(rep, changed, previews, shedYes, shedNo) {
 }
 
 $("run").addEventListener("click", run);
-
-// ลบไฟล์: clear both picked files, the B/L range and the results (page only — files on the computer are not touched)
-$("clearAll").addEventListener("click", () => {
+// download name follows the POD: THLCH -> MMAN_LCH.txt, THBKK -> MMAN_BKK.txt, THUCT -> MMAN_UCT.txt
+const outName = () => "MMAN_" + $("pod").value.slice(2) + ".txt";
+const showName = () => { $("outName").textContent = $("dlName").textContent = outName(); };
+// SHED NO. defaults follow the POD (can be edited): THBKK 0145 (with Status) / 0122 (others), the rest 2813
+const POD_SHEDS = { THBKK: ["0145", "0122"] };
+$("pod").addEventListener("change", () => {
+  const [y, n] = POD_SHEDS[$("pod").value] || ["2813", ""];
+  $("shedYes").value = y; $("shedNo").value = n;
+  showName(); $("dl").classList.add("hidden");
+});
+showName();
+// clear the chosen files, the B/L and the result so the next job starts fresh
+$("clear").addEventListener("click", () => {
   txtBuf = listRows = outBytes = cutBuf = null;
   ["inTxt", "inList", "startBl", "endBl"].forEach(id => $(id).value = "");
   ["fnTxt", "fnList"].forEach(id => $(id).textContent = "");
   ["dropTxt", "dropList"].forEach(id => $(id).classList.remove("done"));
+  ["msgs", "stats", "tbl", "preview"].forEach(id => $(id).innerHTML = "");
+  $("result").classList.add("hidden");
+  $("dl").classList.add("hidden");
   $("run").disabled = true;
-  $("result").classList.add("hidden"); $("dl").classList.add("hidden");
-  $("msgs").innerHTML = $("stats").innerHTML = $("tbl").innerHTML = $("preview").innerHTML = "";
 });
 ["startBl", "endBl"].forEach(id => $(id).addEventListener("input", () => $("dl").classList.add("hidden")));
 $("dl").addEventListener("click", () => {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([outBytes], { type: "text/plain" }));
-  a.download = "MMAN_EDI.txt"; a.click();
+  a.download = outName(); a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 });
 </script>

@@ -17,7 +17,7 @@ const ROOT = path.join(__dirname, ".."), TOOLS = path.join(ROOT, "tools");
 
 const SOURCES = [
   { id: "check-cntrs",   repo: "Check-cntrs",        guide: true, extra: ["core.js"] },
-  { id: "change-status", repo: "Change-status-mman", guide: true },
+  { id: "mman-vn",       repo: "5-mman-vnsgn",       guide: true },   // replaced Change Status (Change-status-mman) 2026-11-11
   { id: "cut-bl",        repo: "CUT-BL" },            // guide written for the combined site
   { id: "bayplan",       repo: "Bayplan" },          // guide written for the combined site
   { id: "sum-edi",       repo: "Sum-edi" },           // guide written for the combined site

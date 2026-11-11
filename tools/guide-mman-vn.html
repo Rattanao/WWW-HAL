@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Change Status MMAN</title>
+<title>MMAN คู่มือ</title>
 <link rel="icon" href="assets/hal-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&family=Anuphan:wght@600;700&display=swap">
@@ -143,17 +143,17 @@ footer .credit { color: var(--ink); }
   <header class="head">
     <span class="logo-badge"><img src="assets/hal-logo-hd.png" alt="Heung A Line"></span>
     <div class="tag">เครื่องมือแก้ไฟล์ MMAN EDI · ใบขนสินค้าขาเข้า</div>
-    <h1>Change Status → MMAN</h1>
-    <p class="lede">เติม POL, SHED NO., รหัสประเทศ และเปลี่ยน STATUS ตู้ ในไฟล์ MMAN ตามรายการ B/L ของงาน ได้ไฟล์ MMAN_EDI.txt ที่ความยาวทุกบรรทัดตรงเดิม พร้อมส่งต่อ</p>
+    <h1>MMAN — ตัด B/L + Change Status</h1>
+    <p class="lede">ตัดไฟล์ MMAN ให้เหลือเฉพาะ B/L ที่ต้องการ (หรือไม่ตัด) แล้วเติม POL, SHED NO., รหัสประเทศ, ชื่อ consignee / notify และเปลี่ยน STATUS ตู้ ตามรายการ B/L ของงาน ได้ไฟล์ชื่อตาม POD (MMAN_LCH.txt / MMAN_BKK.txt / MMAN_UCT.txt) ที่ความยาวทุกบรรทัดตรงเดิม พร้อมส่งต่อ</p>
     <div class="flow" aria-label="ขั้นตอนการทำงาน">
       <span class="doc">MMAN_*.txt</span><span class="op">+</span>
       <span class="doc">SUR.xls</span><span class="op">→</span>
-      <span class="out">MMAN_EDI.txt</span>
+      <span class="out">MMAN_&lt;POD&gt;.txt</span>
     </div>
     <div class="cta">
-      <a class="btn primary" href="../#change-status">ทำออนไลน์ (ไม่ต้องติดตั้ง)</a>
-      <a class="btn ghost" href="https://github.com/Rattanao/Change-status-mman/archive/refs/heads/main.zip">ดาวน์โหลดโปรแกรม (ZIP)</a>
-      <a class="btn ghost" href="https://github.com/Rattanao/Change-status-mman">เปิดหน้า GitHub</a>
+      <a class="btn primary" href="../#mman-vn">ทำออนไลน์ (ไม่ต้องติดตั้ง)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/5-mman-vnsgn/archive/refs/heads/main.zip">ดาวน์โหลดโปรแกรม (ZIP)</a>
+      <a class="btn ghost" href="https://github.com/Rattanao/5-mman-vnsgn">เปิดหน้า GitHub</a>
     </div>
   </header>
 
@@ -161,18 +161,18 @@ footer .credit { color: var(--ink); }
     <h2>ทำออนไลน์</h2>
     <p class="sub">เร็วที่สุด ไม่ต้องติดตั้งอะไร ไฟล์ประมวลผลในเบราว์เซอร์เท่านั้น ไม่ถูกอัปโหลดขึ้นเซิร์ฟเวอร์</p>
     <ol class="steps">
-      <li><div><p><b>เปิดหน้า <a href="../#change-status">ทำออนไลน์</a></b> แล้วเลือกไฟล์ MMAN (.txt)</p></div></li>
+      <li><div><p><b>เปิดหน้า <a href="../#mman-vn">ทำออนไลน์</a></b> แล้วเลือกไฟล์ MMAN (.txt)</p></div></li>
       <li><div><p><b>เลือกรายการ STATUS</b> (.xls / .xlsx / .csv)</p></div></li>
       <li><div>
         <p><b>เริ่มต้นเก็บ B/L … ถึง B/L</b> (ถ้าต้องการตัดไฟล์)</p>
         <p class="note">เก็บบรรทัด PSKV ไว้ แล้วเก็บเฉพาะ B/L ในช่วงนี้ (รวม sub-B/L …A, …B และบรรทัดตู้) ที่เหลือตัดออก · ว่างช่องเริ่มต้น = ตั้งแต่ B/L แรก · ว่างช่องถึง = ถึงบรรทัดสุดท้าย · ว่างทั้งสองช่อง = ไม่ตัด</p>
       </div></li>
       <li><div>
-        <p><b>ตรวจ SHED NO.</b> ช่องซ้าย = B/L ที่มี Status, ช่องขวา = B/L อื่น</p>
-        <p class="note">ค่าเริ่มต้น <code>0145</code> / <code>0122</code> เปลี่ยนได้ตามงาน · <b>งานที่ไม่มี Status (เช่น LCH)</b> ใส่ SHED NO. ช่องซ้าย แล้วลบช่องขวาให้ว่าง = ใช้ค่าเดียวกันทุก B/L</p>
+        <p><b>เลือก POD</b> แล้วตรวจ <b>SHED NO.</b> ช่องซ้าย = B/L ที่มี Status, ช่องขวา = B/L อื่น</p>
+        <p class="note">เลือก POD แล้วโปรแกรมใส่ SHED ให้เอง: <b>THLCH</b> <code>2813</code> ทุก B/L (ช่องขวาว่าง) · <b>THBKK</b> <code>0145</code> / <code>0122</code> · <b>THUCT</b> ทุก B/L เป็น THUCTTHUCT และ SHED <code>0113</code> · แก้ตัวเลขเองได้ · ช่องขวาว่าง = ใช้ค่าช่องซ้ายทุก B/L</p>
       </div></li>
       <li><div>
-        <p><b>กด Change</b> ดูสรุปผล แล้วกด <b>ดาวน์โหลด MMAN_EDI.txt</b></p>
+        <p><b>กด ตัด + Change status</b> ดูสรุปผล แล้วกด <b>ดาวน์โหลด</b> (ชื่อไฟล์ตาม POD เช่น MMAN_BKK.txt)</p>
         <p class="note">ถ้าหน้าเว็บยังเป็นแบบเก่า กด <code>Ctrl + F5</code></p>
       </div></li>
     </ol>
@@ -202,17 +202,17 @@ footer .credit { color: var(--ink); }
     <ol class="steps">
       <li><div>
         <p><b>วางไฟล์ในโฟลเดอร์ <code>input</code></b></p>
-        <p class="note">ลบไฟล์งานเก่าออกก่อน แล้ววางไฟล์ MMAN (.txt) และรายการ STATUS (.xls/.xlsx/.csv) อย่างละ 1 ไฟล์ ไฟล์ MMAN_EDI.txt เก่าที่ค้างอยู่ โปรแกรมจะไม่นับเป็นไฟล์ต้นฉบับ</p>
+        <p class="note">ลบไฟล์งานเก่าออกก่อน แล้ววางไฟล์ MMAN (.txt) และรายการ STATUS (.xls/.xlsx/.csv) อย่างละ 1 ไฟล์ ไฟล์ผลลัพธ์จะไปอยู่ในโฟลเดอร์ output</p>
       </div></li>
       <li><div>
-        <p><b>ดับเบิลคลิก <code>run-change-status.bat</code></b></p>
+        <p><b>ดับเบิลคลิก <code>run-mman.bat</code></b></p>
       </div></li>
       <li><div>
-        <p><b>พิมพ์ SHED NO.</b> แล้วกด Enter สองครั้ง</p>
-        <p class="note">ถามสองค่า: B/L ที่มี Status และ B/L อื่น ถ้ากด Enter ข้าม จะใช้ <code>0145</code> และ <code>0122</code> · ช่องที่สองพิมพ์ <code>=</code> = ใช้ค่าเดียวกับช่องแรกทุก B/L (งาน LCH)</p>
+        <p><b>ตอบคำถามบนหน้าจอดำ</b> แต่ละข้อกด Enter ข้ามได้</p>
+        <p class="note">เริ่มต้นเก็บ B/L / ถึง B/L (Enter ทั้งสองข้อ = ไม่ตัด) · POD <code>THLCH</code> / <code>THBKK</code> / <code>THUCT</code> (Enter = THLCH) · SHED NO. B/L ที่มี Status และ B/L อื่น (Enter = ค่าตาม POD: THLCH 2813 · THBKK 0145 / 0122) · ช่อง B/L อื่นพิมพ์ <code>=</code> = ใช้ค่าเดียวกับช่องแรก</p>
       </div></li>
       <li><div>
-        <p><b>เปิดผลที่ <code>output\MMAN_EDI.txt</code></b></p>
+        <p><b>เปิดผลที่ <code>output\MMAN_LCH.txt</code></b> (หรือ MMAN_BKK.txt / MMAN_UCT.txt ตาม POD)</p>
         <p class="note">หน้าจอดำสรุปจำนวน B/L, Status ที่เปลี่ยน และ PG→PX ให้ ถ้ามีบรรทัด <code>WARNING</code> ให้อ่านก่อนใช้ไฟล์</p>
       </div></li>
     </ol>
@@ -275,7 +275,8 @@ footer .credit { color: var(--ink); }
           <tr><td><span class="chip b">1</span></td><td class="pos">col 36–40</td><td>POL จากรายการ เช่น KRPUS</td></tr>
           <tr><td><span class="chip g">2</span></td><td class="pos">col 41–45</td><td>ท่าเรือของ B/L ส่วนใหญ่ในไฟล์ (THBKK หรือ THLCH) เช่น CNTAO<b>THLCH</b>THLKR0332</td></tr>
           <tr><td><span class="chip">3</span></td><td class="pos">col 46–50</td><td>ท่าเรือตามต้นฉบับ (THBKK, THLCH, THLKR, …) ไม่แก้</td></tr>
-          <tr><td><span class="chip o">4</span></td><td class="pos">col 51–54</td><td>SHED NO. ล็อคตามท่าต้นฉบับ: <b>BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · LCH ที่เป็น DG (มี UN/CLASS) 2826 · BKK ที่ไป LAOS 0124</b> · BKK และ LCH อื่นๆ ตามช่อง SHED NO. (<code>0145</code> ถ้า B/L มี Status, <code>0122</code> ที่เหลือ · ช่อง “อื่น” ว่าง = ใช้ค่าช่องซ้าย)</td></tr>
+          <tr><td><span class="chip g">POD</span></td><td class="pos">col 41–50</td><td>เลือก POD <b>THUCT</b> (ไฟล์มาเป็น THBKK) = ทุก B/L เป็น <b>THUCTTHUCT</b> และ SHED 0113 · THLCH / THBKK = ตามข้อ 2–3 (ล็อคไว้)</td></tr>
+          <tr><td><span class="chip o">4</span></td><td class="pos">col 51–54</td><td>SHED NO. ล็อคตามท่าต้นฉบับ: <b>BMT 0110 · SCT 0302 · LKR 0332 · UCT 0113 · LCH ที่เป็น DG (มี UN/CLASS) 2826 · BKK ที่ไป LAOS 0124</b> · BKK และ LCH อื่นๆ ตามช่อง SHED NO. (ช่องซ้าย = B/L ที่มี Status, ช่องขวา = B/L อื่น · ค่าตาม POD: THLCH <code>2813</code> · THBKK <code>0145</code> / <code>0122</code> · ช่องขวาว่าง = ใช้ค่าช่องซ้าย)</td></tr>
           <tr><td><span class="chip b">5</span></td><td class="pos">col 844–845</td><td>อักษร 2 ตัวแรกของ POL แทน TH (KR, CN)</td></tr>
           <tr><td><span class="chip y">6</span></td><td class="pos">บรรทัดตู้</td><td>Status ตามรายการ เช่น 8&nbsp;&nbsp;N → 9&nbsp;&nbsp;N</td></tr>
           <tr><td><span class="chip r">PX</span></td><td class="pos">หน่วยหีบห่อ</td><td>PG → PX ทุก B/L</td></tr>
@@ -301,10 +302,10 @@ footer .credit { color: var(--ink); }
         <h3>สรุปผลที่ต้องดูทุกครั้ง</h3>
         <ul class="check-list">
           <li>จำนวน B/L ที่แก้ ตรงกับจำนวนในรายการ</li>
-          <li>จำนวน SHED 0145 / 0122</li>
+          <li>จำนวน B/L ตาม SHED แต่ละเลข</li>
           <li>Status ที่เปลี่ยน และจำนวนบรรทัดตู้</li>
           <li>B/L ที่เปลี่ยน PG → PX</li>
-          <li>ขนาดไฟล์เท่าต้นฉบับ</li>
+          <li>จำนวนบรรทัดที่ตัดออก และช่วง B/L ที่เก็บไว้</li>
         </ul>
       </div>
     </div>
@@ -312,12 +313,12 @@ footer .credit { color: var(--ink); }
 
   <section class="panel" id="claude">
     <h2>ใช้กับ Claude Code</h2>
-    <p class="sub">สำหรับคนที่ใช้ Claude Code อยู่แล้ว ติดตั้ง skill ครั้งเดียว แล้วสั่งงานด้วยคำว่า Change status</p>
+    <p class="sub">สำหรับคนที่ใช้ Claude Code อยู่แล้ว ติดตั้ง skill ครั้งเดียว แล้วสั่งงานด้วยคำว่า mman vn / Change status</p>
     <div class="cmd">
-      <pre id="clone">git clone https://github.com/Rattanao/Change-status-mman.git %TEMP%\csm &amp;&amp; xcopy /E /I /Y %TEMP%\csm\change-status %USERPROFILE%\.claude\skills\change-status</pre>
+      <pre id="clone">git clone https://github.com/Rattanao/5-mman-vnsgn.git %TEMP%\mmanvn &amp;&amp; xcopy /E /I /Y %TEMP%\mmanvn\skill\mman-vn %USERPROFILE%\.claude\skills\mman-vn &amp;&amp; xcopy /I /Y %TEMP%\mmanvn\*.py %USERPROFILE%\.claude\skills\mman-vn\scripts</pre>
       <button type="button" data-target="clone">คัดลอก</button>
     </div>
-    <p class="note">เปิด Claude Code ใหม่ ไปที่โฟลเดอร์งานที่มี input แล้วพิมพ์ “Change status”</p>
+    <p class="note">เปิด Claude Code ใหม่ ไปที่โฟลเดอร์งานที่มี input แล้วพิมพ์ เช่น “ทำ mman vn เริ่มต้นเก็บ BL HASLS21260801066 ถึง BL HASLS21260801762 POD THBKK” หรือ “Change status” (ไม่ตัด)</p>
   </section>
 
   <section class="panel" id="help">
@@ -327,11 +328,12 @@ footer .credit { color: var(--ink); }
         <thead><tr><th>ข้อความ / อาการ</th><th>วิธีแก้</th></tr></thead>
         <tbody>
           <tr><td>ไม่พบ Python / Python was not found</td><td>ติดตั้ง Python ใหม่ และติ๊ก Add python.exe to PATH</td></tr>
-          <tr><td>ERROR: need exactly 1 MMAN .txt and 1 list file</td><td>ใน input ต้องมีไฟล์ MMAN 1 ไฟล์ และรายการ STATUS 1 ไฟล์ ลบไฟล์งานเก่าออก</td></tr>
+          <tr><td>ERROR: need exactly 1 MMAN_*.txt / list file</td><td>ใน input ต้องมีไฟล์ MMAN 1 ไฟล์ และรายการ STATUS 1 ไฟล์ ลบไฟล์งานเก่าออก</td></tr>
           <tr><td>ERROR: no B/L in the MMAN file matches the list</td><td>รายการ STATUS ไม่ใช่ของเรือลำนี้ ตรวจว่าใช้ไฟล์คู่กันถูก</td></tr>
           <tr><td>WARNING B/L NOT in list</td><td>B/L ในไฟล์ MMAN ที่ไม่มีในรายการ จะไม่ถูกแก้ เพิ่มในรายการแล้วรันใหม่</td></tr>
           <tr><td>ERROR: unrecognised Status</td><td>ช่อง Status ต้องเป็นตัวเลข 1 ตัว + ตัวอักษร 1 ตัว เช่น 9  N</td></tr>
-          <tr><td>PermissionError: [Errno 13]</td><td>ปิดไฟล์ MMAN_EDI.txt ที่เปิดค้างไว้ แล้วรันใหม่</td></tr>
+          <tr><td>PermissionError: [Errno 13]</td><td>ปิดไฟล์ผลลัพธ์ (MMAN_LCH.txt ฯลฯ) ที่เปิดค้างไว้ แล้วรันใหม่</td></tr>
+          <tr><td>ERROR: start B/L … / end B/L … not found</td><td>เลข B/L ที่พิมพ์ไม่มีในไฟล์ MMAN ตรวจเลข B/L อีกครั้ง</td></tr>
           <tr><td>ไม่พบ B/L เริ่มต้น … / ไม่พบ B/L … ในไฟล์ MMAN</td><td>พิมพ์เลข B/L ให้ตรงกับในไฟล์ MMAN (B/L หลัก ไม่ต้องใส่ A, B ท้าย) และ “ถึง B/L” ต้องอยู่หลัง B/L เริ่มต้น</td></tr>
           <tr><td>หน้าเว็บยังเป็นแบบเก่า</td><td>กด Ctrl + F5</td></tr>
         </tbody>
@@ -341,8 +343,8 @@ footer .credit { color: var(--ink); }
 
   <footer>
     <p class="credit">Project by <b>Ms. Rattana Mudlae</b> · Position Import DOC.</p>
-    <p>ตรวจสรุปผลทุกครั้งก่อนส่งไฟล์ MMAN_EDI.txt โดยเฉพาะบรรทัด WARNING</p>
-    <p>อัปเดตโปรแกรม: ดาวน์โหลด ZIP ใหม่แล้วแตกทับโฟลเดอร์เดิม · ดูโค้ดที่ <a href="https://github.com/Rattanao/Change-status-mman">github.com/Rattanao/Change-status-mman</a></p>
+    <p>ตรวจสรุปผลทุกครั้งก่อนส่งไฟล์ โดยเฉพาะบรรทัด WARNING</p>
+    <p>อัปเดตโปรแกรม: ดาวน์โหลด ZIP ใหม่แล้วแตกทับโฟลเดอร์เดิม · ดูโค้ดที่ <a href="https://github.com/Rattanao/5-mman-vnsgn">github.com/Rattanao/5-mman-vnsgn</a></p>
   </footer>
 </div>
 
