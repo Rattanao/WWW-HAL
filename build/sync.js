@@ -21,17 +21,19 @@ const SOURCES = [
   { id: "cut-bl",        repo: "CUT-BL" },            // guide written for the combined site
   { id: "bayplan",       repo: "Bayplan" },          // guide written for the combined site
   { id: "sum-edi",       repo: "Sum-edi" },           // guide written for the combined site
-  { id: "do",            repo: "DO",                 guide: true, bilingual: true, pages: { "checkdem.html": "do-checkdem.html" } },   // ① CHECK DEM → ② DO; page + guide already in English / TH-EN
+  { id: "do",            repo: "DO",                 guide: true, bilingual: true,   // page + guide already in English / TH-EN
+    index: "do-checkdem.html", pages: { "do.html": "do.html" }, links: { "checkdem.html": "do-checkdem.html" } },   // since 2026-11-13 the repo's index.html is ① CHECK DEM, do.html is ② DO
 ];
 
 // the repos' hal-logo.png is blurry: point every logo at the sharp tools/assets/hal-logo-hd.png (kept in this repo)
 const sharpLogo = h => h.split('src="assets/hal-logo.png"').join('src="assets/hal-logo-hd.png"');
-// links between a repo's pages (pages: {...}, or links: {...} for pages built elsewhere) and "./" (its index.html) -> the tools/ copies
+// index: the tools/ file for the repo's index.html (default <id>.html)
+const indexOf = t => t.index || `${t.id}.html`;
+// links between a repo's pages (pages: {...}; links: {...} for old page names) and "./" (its index.html) -> the tools/ copies
 function pageLinks(t, h) {
-  const map = t.pages || t.links;
-  if (!map) return h;
-  for (const [from, to] of Object.entries(map)) h = h.split(`href="${from}"`).join(`href="${to}"`);
-  return h.split('href="./"').join(`href="${t.id}.html"`).split('location.href = "./"').join(`location.href = "${t.id}.html"`);
+  if (!t.pages && !t.links) return h;
+  for (const [from, to] of Object.entries({ ...t.links, ...t.pages })) h = h.split(`href="${from}"`).join(`href="${to}"`);
+  return h.split('href="./"').join(`href="${indexOf(t)}"`).split('location.href = "./"').join(`location.href = "${indexOf(t)}"`);
 }
 const raw = (repo, file) => `https://raw.githubusercontent.com/Rattanao/${repo}/HEAD/${file}`;
 async function get(repo, file, binary) {
@@ -61,7 +63,7 @@ async function assets(repo, text) {
   for (const t of SOURCES) {
     const page = await get(t.repo, "index.html");
     if (!page) { console.log(`SKIP ${t.id}: cannot read ${t.repo}/index.html`); continue; }
-    const pages = [["index.html", `${t.id}.html`], ...Object.entries(t.pages || {})];
+    const pages = [["index.html", indexOf(t)], ...Object.entries(t.pages || {})];
     for (const [from, to] of pages) {
       const src = from === "index.html" ? page : await get(t.repo, from);
       if (!src) { console.log(`  cannot read ${t.repo}/${from}`); continue; }
