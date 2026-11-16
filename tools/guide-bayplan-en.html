@@ -120,7 +120,7 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
   <header class="head">
     <div class="tag">EDI file editing · Bayplan</div>
     <h1>Bayplan HUL</h1>
-    <p class="lede">Keeps only the HUL containers of a Bayplan file (.asc) for the ports you choose (LCH / BKK), changes agent HAL / HAC / HAS to HUL and lowers the reefer TEMP. Runs in your browser; no file is uploaded</p>
+    <p class="lede">Keeps only the HUL containers of a Bayplan file (.asc) for the ports you choose (LCH / BKK), changes agent HAL / HAC / HAS to HUL and lowers the TEMP of every reefer. Runs in your browser; no file is uploaded</p>
     <div class="flow" aria-label="How it works">
       <span class="doc">KHS1_2612S_KRUSN_SWIC.asc</span><span class="op">→</span><span class="out">KHS1_2612S_KRUSN_SWIC_HUL_BKK-LCH.asc</span>
     </div>
@@ -136,7 +136,7 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
       <li><b>Keeps</b> containers whose agent is HAL / HAC / HAS / HUL (edit the list in <b>Agents changed to HUL</b>) and whose port is ticked (LCH, BKK or both)</li>
       <li><b>Cuts</b> every other agent (SKR, KMD, EMC …) and every other port (SGN …)</li>
       <li>The agent of every kept container becomes <b>HUL</b></li>
-      <li><b>RF</b> containers: TEMP loses one digit, e.g. <code>-250C</code> → <code>-25C</code></li>
+      <li>Every reefer (<b>RF / 22RE / 45RE</b> …): TEMP loses one digit, e.g. <code>-250C</code> → <code>-25C</code>, <code>-180C</code> → <code>-18C</code>, also on containers that are HUL already</li>
       <li>The header lines and everything from <code>***Refer to the following remark.</code> (remark, IMDG, VGM) stay unchanged</li>
       <li>Output file name = source name + <code>_HUL_</code> + the ports, e.g. <code>_HUL_BKK-LCH.asc</code>, saved to your Downloads folder</li>
     </ul>

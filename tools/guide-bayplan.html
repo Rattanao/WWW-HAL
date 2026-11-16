@@ -120,7 +120,7 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
   <header class="head">
     <div class="tag">เครื่องมือแก้ไฟล์ EDI · Bayplan</div>
     <h1>Bayplan HUL</h1>
-    <p class="lede">เก็บเฉพาะตู้ HUL จากไฟล์ Bayplan (.asc) ของท่าที่เลือก (LCH / BKK) เปลี่ยน agent HAL / HAC / HAS เป็น HUL และลด TEMP ของตู้ RF ทำงานในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์</p>
+    <p class="lede">เก็บเฉพาะตู้ HUL จากไฟล์ Bayplan (.asc) ของท่าที่เลือก (LCH / BKK) เปลี่ยน agent HAL / HAC / HAS เป็น HUL และลด TEMP ของตู้เย็น ทำงานในเบราว์เซอร์ ไม่มีการอัปโหลดไฟล์</p>
     <div class="flow" aria-label="ขั้นตอนการทำงาน">
       <span class="doc">KHS1_2612S_KRUSN_SWIC.asc</span><span class="op">→</span><span class="out">KHS1_2612S_KRUSN_SWIC_HUL_BKK-LCH.asc</span>
     </div>
@@ -136,7 +136,7 @@ footer { color: var(--muted); font-size: 0.85rem; display: grid; gap: 4px; }
       <li><b>เก็บ</b> ตู้ที่ agent เป็น HAL / HAC / HAS / HUL (แก้รายชื่อได้ในช่อง <b>Agents changed to HUL</b>) และท่าปลายทางเป็นท่าที่ติ๊กไว้ (LCH, BKK หรือทั้งสอง)</li>
       <li><b>ตัดทิ้ง</b> ตู้ agent อื่นทั้งหมด (SKR, KMD, EMC …) และตู้ของท่าอื่น (SGN …)</li>
       <li>agent ของตู้ที่เก็บเปลี่ยนเป็น <b>HUL</b></li>
-      <li>ตู้ <b>RF</b> ลด TEMP 1 ตำแหน่ง เช่น <code>-250C</code> → <code>-25C</code></li>
+      <li>ตู้เย็นทุกแบบ (<b>RF / 22RE / 45RE</b> …) ลด TEMP 1 ตำแหน่ง เช่น <code>-250C</code> → <code>-25C</code>, <code>-180C</code> → <code>-18C</code> รวมตู้ที่เป็น HUL อยู่แล้ว</li>
       <li>บรรทัดหัวไฟล์ และทุกบรรทัดตั้งแต่ <code>***Refer to the following remark.</code> (remark, IMDG, VGM) คงเดิม</li>
       <li>ชื่อไฟล์ที่ได้ = ชื่อไฟล์ต้นฉบับ + <code>_HUL_</code> + ท่าที่เลือก เช่น <code>_HUL_BKK-LCH.asc</code> บันทึกลงโฟลเดอร์ Downloads</li>
     </ul>
