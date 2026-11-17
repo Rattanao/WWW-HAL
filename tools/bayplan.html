@@ -51,6 +51,9 @@ h2 { font: 500 18px/1.25 "Kanit", sans-serif; margin: 0 0 12px; }
 .job { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 18px; }
 .job .lb { font: 500 15px "Kanit", sans-serif; color: var(--muted); }
 #jobname { font: 600 22px/1.3 "IBM Plex Mono", monospace; color: var(--navy-text); overflow-wrap: anywhere; }
+.filerow { display: flex; gap: 10px; align-items: stretch; }
+.filerow .drop { flex: 1; min-width: 0; }
+button.small { padding: 4px 16px; font-size: 14px; }
 .drop { border: 1.5px dashed var(--line); border-radius: 6px; padding: 6px 14px; text-align: left; font-size: 14px; cursor: pointer; color: var(--muted); }
 .drop:hover, .drop.over { border-color: var(--navy-text); }
 .drop b { color: var(--navy-text); font-weight: 600; }
@@ -73,7 +76,6 @@ button.sec { background: #2f7a4f; }
 button.sec:hover:not(:disabled) { background: #256340; }
 button.ghost { background: var(--card); color: var(--navy-text); border: 1.5px solid var(--navy-text); padding: 10.5px 20px; }
 button.ghost:hover:not(:disabled) { background: var(--bg); }
-button.clear { margin-left: auto; }
 button:focus-visible, .drop:focus-visible { outline: 2px solid var(--navy-text); outline-offset: 2px; }
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
 .stat { background: var(--bg); border-radius: 8px; padding: 10px 12px; border-left: 4px solid var(--navy); }
@@ -96,7 +98,10 @@ mark { background: var(--hit); color: inherit; }
   <div class="card">
     <div class="job" id="job" hidden><span class="lb">Job file</span> <span id="jobname"></span></div>
     <h2>1. Bayplan file (.asc)</h2>
-    <div class="drop" id="drop" tabindex="0" role="button">Drop the file here, or <b>click to choose a file</b><span id="fname" class="fn"></span></div>
+    <div class="filerow">
+      <div class="drop" id="drop" tabindex="0" role="button">Drop the file here, or <b>click to choose a file</b><span id="fname" class="fn"></span></div>
+      <button id="clearFiles" class="ghost small" disabled>Clear files</button>
+    </div>
     <input type="file" id="file" accept=".asc,.txt,.edi,*/*" hidden>
   </div>
 
@@ -116,9 +121,7 @@ mark { background: var(--hit); color: inherit; }
     <div class="row">
       <button id="save" class="sec" disabled>Save file</button>
       <button id="copy" class="ghost" disabled>Copy text</button>
-      <span id="msg" class="msg"></span>
-      <button id="clear" class="ghost clear">Clear files</button>
-    </div>
+      <span id="msg" class="msg"></span>    </div>
     <p class="note">Highlight = what was changed (agent code / TEMP); every other line is identical to the source</p>
     <div class="out"><pre id="preview">No file chosen yet</pre></div>
   </div>
@@ -210,7 +213,7 @@ if (typeof document !== "undefined") {
       for (const [a, b] of m) { h += esc(l.slice(p, a)) + "<mark>" + esc(l.slice(a, b)) + "</mark>"; p = b; }
       return h + esc(l.slice(p));
     }).join("\n");
-    $("save").disabled = $("copy").disabled = false;
+    $("save").disabled = $("copy").disabled = $("clearFiles").disabled = false;
     $("msg").textContent = "";
   }
 
@@ -250,14 +253,15 @@ if (typeof document !== "undefined") {
     catch { $("msg").textContent = "Cannot copy — select the text in the box and press Ctrl+C"; }
   });
 
-  $("clear").addEventListener("click", () => {
+  function clearAll() {
     src = null; name = ""; result = null; chosen = new Set(DEFAULT_PORTS);
     $("file").value = ""; $("fname").textContent = "";
     $("job").hidden = true; $("jobname").textContent = ""; document.title = "Bayplan HUL Filter";
     $("stats").innerHTML = ""; $("preview").textContent = "No file chosen yet";
-    $("save").disabled = $("copy").disabled = true; $("msg").textContent = "";
+    $("save").disabled = $("copy").disabled = $("clearFiles").disabled = true; $("msg").textContent = "";
     renderPorts();
-  });
+  }
+  $("clearFiles").addEventListener("click", clearAll);
 
   renderPorts();
 }
