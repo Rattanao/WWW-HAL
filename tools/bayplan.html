@@ -133,8 +133,9 @@ const REMARK_START = "***Refer to the following remark.";
 const isContainer = l => /^\d{6} [A-Z]{4}\d{7} /.test(l);
 const agentOf = l => l.substr(19, 3);
 const portOf  = l => l.substr(30, 3);          // PUSBKK -> BKK
-// reefer = a temperature after the type code (RF20135F, 22RE238F, 45RE331F …)
-const isReefer = l => /^\s*-?\d+[CF]/.test(l.slice(52, 80));
+// reefer = a temperature after the type code (RF20135F, 22RE238F, 45RE331F …),
+// sometimes with an RF prefix: "-250C", "RF-200C", "RF  30C"
+const isReefer = l => /^\s*(RF)?\s*-?\d+[CF]/.test(l.slice(52, 80));
 
 // -250C -> -25C (keeps width by padding one space after C)
 function fixTemp(line) {
