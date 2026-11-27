@@ -166,7 +166,7 @@
     <div class="page" id="vPage"></div>
   </div>
 </main>
-<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-11-17b</footer>
+<footer><a href="https://github.com/Rattanao/Sum-edi">github.com/Rattanao/Sum-edi</a> · Version 2026-11-27a</footer>
 
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -701,8 +701,8 @@ async function buildMfGroup(sumBytes, idx, info, nos, blocks, att = {}, pols = {
     if (n === 1) { p.rect(348.7, 18.0, 518.8, 46.3); p.t(433.7, 36.6, "CARGO MANIFEST", "ab", 13, { center: true }); }
     else d = -28.5;
     // red note from the shed, on every page: LKB (ESCO GATE 2) above the port / LAEM CHABANG / BMT
-    if (info.note) p.t(337.8, 67.6 + d, info.note, "a", 8, { color: RED });
-    if (info.podNote) p.t(339.0 + F.a.widthOfTextAtSize(info.pod, 8) + 3, 81.9 + d, info.podNote, "t", 8.5, { color: RED });
+    if (info.note) p.t(339.0, 66.2 + d, info.note, "a", 8, { color: RED });
+    if (info.podNote) p.t(339.0 + F.a.widthOfTextAtSize(info.pod, 8) + 3, 81.9 + d, info.podNote, "a", 8, { color: RED });
     for (const [x, y, s, f] of [[34.5, 66.2, "VESSEL & VOYAGE", "ab"], [123.2, 66.2, info.vessel, "a"], [440.8, 66.2, "NATIONALITY  OF SHIP", "ab"],
         [631.3, 67.8, "ARRIVAL DATE", "ab"], [727.9, 67.8, "01/01/1900", "a"], [34.5, 81.9, "PORT OF LOADING", "ab"], [123.2, 81.9, info.pol, "a"],
         [239.2, 81.9, "PORT OF DISCHARGE", "ab"], [339.0, 81.9, info.pod, "a"], [442.4, 81.9, "NEXT PORT OF CALL", "ab"], [631.3, 81.9, "NAME OF MASTER", "ab"]])
@@ -816,7 +816,9 @@ async function buildCntrs(bytes, gate, date) {
   for (const c of rows) {
     const d = head.deliv === head.pod ? (SHED_DELIVERY[c.shed] || head.deliv) : head.deliv;
     const cons = c.cons.join(" "), own = RE_HAL.test(cons) ? "" : socOwner(cons);
-    const key = JSON.stringify([own ? 1 : 0, ORDER.includes(d) ? ORDER.indexOf(d) : 99, d, own]);
+    // HEUNG A empty (4=MTY): a list of its own like THLKR
+    const mty = !own && (c.status.startsWith("4=") || c.status.includes("MTY"));
+    const key = JSON.stringify(mty ? [0, ORDER.indexOf("EMPTY"), d, "EMPTY"] : [own ? 1 : 0, ORDER.includes(d) ? ORDER.indexOf(d) : 99, d, own]);
     if (!sect.has(key)) sect.set(key, new Map());
     const sh = sect.get(key), sk = c.shed + "|" + c.shedname;
     if (!sh.has(sk)) sh.set(sk, []);
@@ -824,10 +826,11 @@ async function buildCntrs(bytes, gate, date) {
   }
   const cmp = (a, b) => { for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] < b[i] ? -1 : 1; return 0; };
   for (const key of [...sect.keys()].sort((a, b) => cmp(JSON.parse(a), JSON.parse(b)))) {
-    const [soc, , d, own] = JSON.parse(key);
+    const [soc, , d, own] = JSON.parse(key), mty = own === "EMPTY";
+    const bySize = cs => [...cs].sort((a, b) => a.size.localeCompare(b.size) || a.cntr.localeCompare(b.cntr));
     const sheds = [...sect.get(key).entries()].sort((a, b) => (+a[0].split("|")[0] || 0) - (+b[0].split("|")[0] || 0))
-      .map(([k, cs]) => [k.split("|")[0], k.split("|").slice(1).join("|"), cs]);
-    const note = d === "THLKR" && !soc ? `/GATE ${gate}` : "", pens = [];
+      .map(([k, cs]) => [k.split("|")[0], k.split("|").slice(1).join("|"), mty ? bySize(cs) : cs]);
+    const note = d === "THLKR" && !soc && !mty ? `/GATE ${gate}` : "", pens = [];
     let p;
     const page = () => {
       p = pen2(doc.addPage([841, 595]), F); pens.push(p);
@@ -836,7 +839,7 @@ async function buildCntrs(bytes, gate, date) {
       for (const [x, y, s, f] of [[43.3, 80.4, "CONTAINER LIST FOR FEEDER", "ab"], [181.4, 80.4, head.vessel, "a"], [341.6, 81.0, "VOYAGE", "ab"],
           [382.2, 81.0, head.voy, "a"], [436.0, 81.0, "ARRIVAL DATE", "ab"], [509.0, 81.0, head.arrival, "a"], [573.1, 78.6, "Port Of Discharge", "ab"],
           [651.5, 78.6, head.pod, "a"], [693.5, 78.6, "Port Of Delivery", "ab"], [764.9, 78.6, d, "a"]]) p.t(x, y, s, f, 8.5);
-      if (note) p.t(795.8, 80.0, note, "a", 8.5, { color: RED });              // THLKR /GATE n, every page
+      if (note) p.t(764.9 + F.a.widthOfTextAtSize(d, 8.5) + 2, 78.6, note, "a", 8.5, { color: RED });   // THLKR /GATE n, every page
       for (const y of [92.4, 111.9]) p.line(33.0, y, 816.0, y);
       for (const [x, s] of [[39.8, "CONTAINER NO."], [106.0, "ITEM"], [138.8, "TYPE"], [180.2, "SIZE"], [297.4, "CONSIGNEE"],
           [437.0, "GROSS WEIGHT"], [520.5, "STATUS"], [571.5, "POL"], [615.5, "REMARK"]]) p.t(x, 104.4, s, "ab");
@@ -890,7 +893,7 @@ async function buildCntrs(bytes, gate, date) {
       q.t(747.2, 35.1, "Page", "a", 9); q.t(785.7, 35.1, String(i + 1), "a", 9, { right: true });
       q.t(789.2, 35.7, "/", "a", 10); q.t(793.2, 35.1, String(pens.length), "a", 9);
     });
-    lines.push(`${own || "HEUNG A"} ${d}: ${all.length} containers, ${pens.length} pages`);
+    lines.push(`${mty ? `HEUNG A ${d} EMPTY (4=MTY)` : `${own || "HEUNG A"} ${d}`}: ${all.length} containers, ${pens.length} pages`);
   }
   return { bytes: await doc.save(), lines };
 }
